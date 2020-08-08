@@ -2,8 +2,8 @@
 //! 駒たちが躍動するぜ☆（＾～＾）
 //!
 
+use crate::computer_player::evaluator::REPITITION_VALUE;
 use crate::cosmic::recording::{Movement, Phase, SENNTITE_NUM};
-use crate::cosmic::smart::evaluator::REPITITION_VALUE;
 use crate::cosmic::smart::features::PieceType;
 use crate::cosmic::universe::Universe;
 use crate::law::generate_move::{MoveGen, Ways};

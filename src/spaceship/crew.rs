@@ -27,10 +27,7 @@ impl Kifuwarabe {
         // go btime 40000 wtime 50000 binc 10000 winc 10000
         let go1 = engine::Go::parse(p);
         Log::debug(&format!("Debug   | go=|{}|", go1));
-        let mut tree = Search::new(
-            universe.option_komawari_weight,
-            universe.option_depth_not_to_give_up,
-        );
+        let mut tree = Search::new(universe.option_depth_not_to_give_up);
 
         // 残り時間と、追加時間☆（＾～＾）
         fn margined_msec(msec: u64) -> u64 {
@@ -111,32 +108,8 @@ impl Kifuwarabe {
                         }
                     };
                 }
-                "ManyWaysPer1000" => {
-                    universe.option_many_ways_weight = match value.parse() {
-                        Result::Ok(val) => val,
-                        Result::Err(e) => {
-                            panic!(Log::print_fatal(&format!("Invalid value=|{}|", e)))
-                        }
-                    };
-                }
                 "DepthNotToGiveUp" => {
                     universe.option_depth_not_to_give_up = match value.parse() {
-                        Result::Ok(val) => val,
-                        Result::Err(e) => {
-                            panic!(Log::print_fatal(&format!("Invalid value=|{}|", e)))
-                        }
-                    };
-                }
-                "KomawariWeightPer1000" => {
-                    universe.option_komawari_weight = match value.parse() {
-                        Result::Ok(val) => val,
-                        Result::Err(e) => {
-                            panic!(Log::print_fatal(&format!("Invalid value=|{}|", e)))
-                        }
-                    };
-                }
-                "PromotionWeightPer1000" => {
-                    universe.option_promotion_weight = match value.parse() {
                         Result::Ok(val) => val,
                         Result::Err(e) => {
                             panic!(Log::print_fatal(&format!("Invalid value=|{}|", e)))

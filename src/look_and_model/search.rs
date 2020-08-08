@@ -1,7 +1,6 @@
-use crate::computer_player::search::Value;
+use crate::computer_player::{evaluator::Evaluation, search::Value};
 use crate::config::INFO_INTERVAL_MSEC;
 use crate::cosmic::recording::Movement;
-use crate::cosmic::smart::evaluator::Evaluation;
 use crate::spaceship::equipment::PvString;
 use std::time::{Duration, Instant};
 
@@ -28,12 +27,12 @@ pub struct Search {
 }
 
 impl Search {
-    pub fn new(komawari_weight: isize, depth_not_to_give_up: usize) -> Self {
+    pub fn new(depth_not_to_give_up: usize) -> Self {
         Search {
             stopwatch: Instant::now(),
             nodes: 0,
             think_msec: 0,
-            evaluation: Evaluation::new(komawari_weight),
+            evaluation: Evaluation::new(),
             depth_not_to_give_up: depth_not_to_give_up,
             max_depth0: 0,
             info: InfoDisplay::default(),
