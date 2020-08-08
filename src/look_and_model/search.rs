@@ -29,7 +29,6 @@ pub struct Search {
 
 impl Search {
     pub fn new(
-        many_ways_weight: isize,
         komawari_weight: isize,
         promotion_weight: isize,
         depth_not_to_give_up: usize,
@@ -38,7 +37,7 @@ impl Search {
             stopwatch: Instant::now(),
             nodes: 0,
             think_msec: 0,
-            evaluation: Evaluation::new(many_ways_weight, komawari_weight, promotion_weight),
+            evaluation: Evaluation::new(komawari_weight, promotion_weight),
             depth_not_to_give_up: depth_not_to_give_up,
             max_depth0: 0,
             info: InfoDisplay::default(),

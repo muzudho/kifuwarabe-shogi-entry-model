@@ -28,7 +28,6 @@ impl Kifuwarabe {
         let go1 = engine::Go::parse(p);
         Log::debug(&format!("Debug   | go=|{}|", go1));
         let mut tree = Search::new(
-            universe.option_many_ways_weight,
             universe.option_komawari_weight,
             universe.option_promotion_weight,
             universe.option_depth_not_to_give_up,

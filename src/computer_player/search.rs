@@ -166,15 +166,6 @@ impl Search {
             }
         }
 
-        // TODO ターン切替にしたいぜ☆（＾～＾）
-        let coverage_sign = if pos.pv_len() % 2 == 0 {
-            // 先手が指すところだぜ☆（＾～＾）
-            1
-        } else {
-            // 後手が指すところだぜ☆（＾～＾）
-            -1
-        };
-        self.evaluation.add_control(coverage_sign, &ways);
         for index in ways.indexes.iter() {
             let move_ = ways.get(*index);
 
@@ -273,8 +264,7 @@ impl Search {
                                 None,
                                 None,
                                 &Some(PvString::String(format!(
-                                    "ways={} | komawari={} | promotion={}", //  | {} {} {} |
-                                    self.evaluation.ways(),
+                                    "komawari={} | promotion={}",
                                     self.evaluation.komawari(),
                                     self.evaluation.promotion(),
                                 ))),
@@ -379,7 +369,6 @@ impl Search {
                 }
             }
         }
-        self.evaluation.add_control(-1 * coverage_sign, &ways);
 
         if !exists_lose {
             if let None = ts.bestmove.movement {

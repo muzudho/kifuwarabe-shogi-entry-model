@@ -2,14 +2,11 @@
 //! １手指して、何点動いたかを評価するぜ☆（＾～＾）
 //!
 use crate::cosmic::smart::features::PieceType;
-use crate::law::generate_move::Ways;
 
 /// TODO 千日手の価値☆（＾～＾） ENGIN OPTIONにしたいぜ☆（＾～＾）
 pub const REPITITION_VALUE: isize = -300;
 
 pub struct Evaluation {
-    // 指し手がいっぱいあることを評価する重み☆（＾～＾）1000分率☆（＾～＾）
-    many_ways_weight: isize,
     /// 駒割の重み☆（＾～＾）1000分率☆（＾～＾）
     komawari_weight: isize,
     /// 成りの重み☆（＾～＾）1000分率☆（＾～＾）
@@ -18,25 +15,18 @@ pub struct Evaluation {
     piece_allocation_value: isize,
     /// 成り駒ボーナスだぜ☆（＾～＾）
     promotion_value: isize,
-    /// 指し手生成でその升に移動したら、先手なら＋１、後手なら－１しろだぜ☆（＾～＾）
-    ways_value: isize,
 }
 impl Evaluation {
-    pub fn new(many_ways_weight: isize, komawari_weight: isize, promotion_weight: isize) -> Self {
+    pub fn new(komawari_weight: isize, promotion_weight: isize) -> Self {
         Evaluation {
-            many_ways_weight: many_ways_weight,
             komawari_weight: komawari_weight,
             promotion_weight: promotion_weight,
             piece_allocation_value: 0,
             promotion_value: 0,
-            ways_value: 0,
         }
     }
     pub fn centi_pawn(&self) -> isize {
-        self.ways() + self.komawari() + self.promotion()
-    }
-    pub fn ways(&self) -> isize {
-        self.many_ways_weight * self.ways_value / 1000
+        self.komawari() + self.promotion()
     }
     pub fn komawari(&self) -> isize {
         self.komawari_weight * self.piece_allocation_value / 1000
@@ -109,10 +99,5 @@ impl Evaluation {
         } else {
             0
         }
-    }
-
-    pub fn add_control(&mut self, sign: isize, ways: &Ways) {
-        // 駒を動かせたんなら、利きが広いと考えるぜ☆（＾～＾）
-        self.ways_value += sign * ways.len() as isize;
     }
 }
