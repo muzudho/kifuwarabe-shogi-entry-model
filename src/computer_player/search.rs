@@ -251,16 +251,6 @@ impl Search {
                             // PV を表示するには、葉のタイミングで出すしかないぜ☆（＾～＾）
                             let movement = ts.bestmove.movement;
                             Log::print_info(&Search::info_str(
-                                None,
-                                None,
-                                None,
-                                None,
-                                &Some(PvString::String(format!(
-                                    "komawari={}",
-                                    self.evaluation.komawari(),
-                                ))),
-                            ));
-                            Log::print_info(&Search::info_str(
                                 Some(pos.pv_len()),
                                 Some((self.nodes, self.nps())),
                                 Some(ts.bestmove.value),

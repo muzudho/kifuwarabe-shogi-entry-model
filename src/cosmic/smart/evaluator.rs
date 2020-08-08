@@ -22,7 +22,7 @@ impl Evaluation {
     pub fn centi_pawn(&self) -> isize {
         self.komawari()
     }
-    pub fn komawari(&self) -> isize {
+    fn komawari(&self) -> isize {
         self.komawari_weight * self.piece_allocation_value / 1000
     }
 
