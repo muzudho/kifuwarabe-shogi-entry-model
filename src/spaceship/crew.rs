@@ -13,7 +13,7 @@ use crate::log::LogExt;
 use crate::look_and_model::facility::{CommandRoom, GameRoom, Kitchen, TheaterRoom1, TheaterRoom2};
 use crate::look_and_model::search::Search;
 use crate::spaceship::engine;
-use crate::spaceship::equipment::{PvString, Telescope};
+use crate::spaceship::equipment::PvString;
 use casual_logger::{Log, Table};
 use rand::Rng;
 
@@ -366,14 +366,5 @@ impl Chiyuri {
                 universe.game.history.ply
             ));
         }
-    }
-}
-
-/// 乗組員：夢美
-pub struct Yumemi {}
-impl Yumemi {
-    /// 望遠鏡を覗き込みましょう。
-    pub fn look_into_the_telescope() {
-        Telescope::look();
     }
 }

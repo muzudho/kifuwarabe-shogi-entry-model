@@ -29,16 +29,19 @@ mod look_and_model;
 mod performance_measurement;
 mod position;
 mod spaceship;
+mod test;
 
 use crate::command_line_seek::CommandLineSeek;
 use crate::config::LOG_FILE;
 use crate::cosmic::universe::Universe;
 use crate::log::LogExt;
-use crate::spaceship::crew::{Chiyuri, Kifuwarabe, Yumemi};
-use casual_logger::{Log, Table};
+use crate::spaceship::crew::{Chiyuri, Kifuwarabe};
+use casual_logger::{Log, Opt, Table};
+use test::test;
 
 fn main() {
     Log::set_file_name(LOG_FILE);
+    Log::set_opt(Opt::Release);
     // Log::set_level(Level::Notice);
     Log::remove_old_logs();
     // 宇宙☆（＾～＾）変化するぜ☆（＾～＾）
@@ -47,8 +50,7 @@ fn main() {
     // ビッグバン
     universe.big_bang();
 
-    // 「何が見えんの？」
-    Yumemi::look_into_the_telescope();
+    test();
 
     main_loop(&mut universe);
     // [Ctrl]+[C] で強制終了
@@ -103,7 +105,7 @@ fn main_loop(universe: &mut Universe) {
         }
     } //loop
 
-    Log::wait();
+    Log::flush();
 }
 
 /// 独自コマンド☆（＾～＾）

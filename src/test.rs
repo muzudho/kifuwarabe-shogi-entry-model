@@ -1,10 +1,10 @@
-/*
 //! テスト。
 
-use kifuwarabe_shogi_entry_model::cosmic::smart::square::*;
+use crate::cosmic::smart::square::{Angle, Degree45Orthant, DictOrthant, RelAdr2D};
+use crate::law::speed_of_light::Nine299792458;
 
 /// テスト。
-fn main() {
+pub fn test() {
     // 辞書象限のテスト
     {
         let mut ort = DictOrthant::from_file_and_rank(0, -1);
@@ -238,4 +238,3 @@ fn test_rsq(test_name: &str, expected: &str, actual: &RelAdr2D) {
         format!("{}: expected={} | actual={:?}", test_name, expected, actual)
     );
 }
-*/
