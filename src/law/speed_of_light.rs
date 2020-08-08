@@ -60,11 +60,6 @@ struct SpeedOfLight {
     /// 点対称☆（＾～＾）
     rotate180: [Angle; ANGLE_LEN],
 
-    /// 評価値☆（＾～＾）
-    /// 成らないよりは、成った方がお得という、それだけの差を付けるだけの加点だぜ☆（＾～＾）
-    /// 大きくすると、歩と交換に角が成り込むぜ☆（＾～＾）
-    promotion_value: [isize; PHYSICAL_PIECE_TYPE_LEN],
-
     west: RelAdr2D,
 
     hand_legal_all: [(Phase, FireAddress); PHYSICAL_PIECES_LEN - 2],
@@ -365,7 +360,6 @@ impl Default for SpeedOfLight {
             ],
 
             // 評価値☆（＾～＾）
-            promotion_value: [0, 1, 1, 0, 0, 1, 1, 1],
             double_faced_piece_to_captured_value: [
                 // 玉を取った時の評価は別にするから、ここではしないぜ☆（＾～＾）
                 15000, // TODO 玉は 0 にしたい,
@@ -533,9 +527,6 @@ impl DoubleFacedPiece {
 
 /// コーディングを短くするためのものだぜ☆（＾～＾）
 impl DoubleFacedPieceType {
-    pub fn promotion_value(self) -> isize {
-        NINE_299792458.promotion_value[self as usize]
-    }
     pub fn captured_value(self) -> isize {
         NINE_299792458.double_faced_piece_to_captured_value[self as usize]
     }

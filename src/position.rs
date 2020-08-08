@@ -663,24 +663,6 @@ impl GameTable {
             piece_num,
         ))
     }
-    pub fn promotion_value_at(&self, table: &GameTable, fire: &FireAddress) -> isize {
-        match fire {
-            FireAddress::Board(sq) => {
-                let piece_num = self.board[sq.serial_number() as usize];
-                if let Some(piece_num_val) = piece_num {
-                    table
-                        .get_double_faced_piece_type(piece_num_val)
-                        .promotion_value()
-                } else {
-                    // 打なら成りは無いぜ☆（＾～＾）
-                    0
-                }
-            }
-            FireAddress::Hand(_drop_type) => panic!(Log::print_fatal(&format!(
-                "(Err.254) まだ実装してないぜ☆（＾～＾）！",
-            ))),
-        }
-    }
     /// 指し手生成で使うぜ☆（＾～＾）有無を調べるぜ☆（＾～＾）
     pub fn last_hand_type(&self, turn: Phase, fire: &FireAddress) -> Option<PieceType> {
         if let Some(piece_num) = self.last_hand_num(turn, &fire) {

@@ -192,12 +192,6 @@ impl Search {
             // Let's put a stone for now.
             // とりあえず石を置きましょう。
             self.nodes += 1;
-            // * `promotion_value` - 評価値用。成ったら加点☆（＾～＾）
-            let promotion_value = if move_.promote {
-                pos.table.promotion_value_at(&pos.table, &move_.source)
-            } else {
-                0
-            };
 
             // 1手進める前に、これから取ることになる駒を盤上から読み取っておきます。
             let captured_piece_type = if let Some(captured) = move_.captured {
@@ -220,9 +214,7 @@ impl Search {
 
             pos.do_move(pos.history.get_turn(), &move_);
 
-            let (captured_piece_centi_pawn, delta_promotion_bonus) = self
-                .evaluation
-                .after_do_move(captured_piece_type, promotion_value);
+            let captured_piece_centi_pawn = self.evaluation.after_do_move(captured_piece_type);
 
             // TODO 廃止方針☆（＾～＾）
             let forward_cut_off2 = {
@@ -313,8 +305,7 @@ impl Search {
 
             // (2) Remove the placed stone.
             // (二) 置いた石は取り除きます。
-            self.evaluation
-                .before_undo_move(captured_piece_centi_pawn, delta_promotion_bonus);
+            self.evaluation.before_undo_move(captured_piece_centi_pawn);
             pos.undo_move();
 
             if let Some(forward_cut_off2) = &forward_cut_off2 {
