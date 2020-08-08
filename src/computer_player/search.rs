@@ -264,9 +264,8 @@ impl Search {
                                 None,
                                 None,
                                 &Some(PvString::String(format!(
-                                    "komawari={} | promotion={}",
+                                    "komawari={}",
                                     self.evaluation.komawari(),
-                                    self.evaluation.promotion(),
                                 ))),
                             ));
                             Log::print_info(&Search::info_str(

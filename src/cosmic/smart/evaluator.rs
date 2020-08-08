@@ -9,30 +9,24 @@ pub const REPITITION_VALUE: isize = -300;
 pub struct Evaluation {
     /// 駒割の重み☆（＾～＾）1000分率☆（＾～＾）
     komawari_weight: isize,
-    /// 成りの重み☆（＾～＾）1000分率☆（＾～＾）
-    promotion_weight: isize,
     // 駒割だぜ☆（＾～＾）
     piece_allocation_value: isize,
     /// 成り駒ボーナスだぜ☆（＾～＾）
     promotion_value: isize,
 }
 impl Evaluation {
-    pub fn new(komawari_weight: isize, promotion_weight: isize) -> Self {
+    pub fn new(komawari_weight: isize) -> Self {
         Evaluation {
             komawari_weight: komawari_weight,
-            promotion_weight: promotion_weight,
             piece_allocation_value: 0,
             promotion_value: 0,
         }
     }
     pub fn centi_pawn(&self) -> isize {
-        self.komawari() + self.promotion()
+        self.komawari()
     }
     pub fn komawari(&self) -> isize {
         self.komawari_weight * self.piece_allocation_value / 1000
-    }
-    pub fn promotion(&self) -> isize {
-        self.promotion_weight * self.promotion_value / 1000
     }
 
     pub fn before_search(&mut self) {
