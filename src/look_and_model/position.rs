@@ -2,8 +2,8 @@ use crate::cosmic::playing::PosNums;
 use crate::cosmic::recording::{FireAddress, HandAddress, Phase};
 use crate::cosmic::smart::{features::DoubleFacedPieceType, square::AbsoluteAddress2D};
 use crate::cosmic::toy_box::PieceNum;
-use crate::look_and_model::piece::PIECE_WHITE_SPACE;
-use crate::position::{GameTable, Position};
+use crate::look_and_model::{game_table::GameTable, piece::PIECE_WHITE_SPACE};
+use crate::position::Position;
 
 /// 局面
 pub struct PositionLook {}

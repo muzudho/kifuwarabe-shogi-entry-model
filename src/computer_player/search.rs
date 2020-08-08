@@ -203,7 +203,7 @@ impl Search {
                         {
                             piece_num
                         } else {
-                            panic!(Log::print_fatal("Invalid piece_num."));
+                            panic!(Log::print_fatal("(Err.206) Invalid piece_num."));
                         },
                     ),
                 )

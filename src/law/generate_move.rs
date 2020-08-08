@@ -284,7 +284,7 @@ impl MoveGen {
                     {
                         piece_num
                     } else {
-                        panic!(Log::print_fatal("Invalid piece_num."));
+                        panic!(Log::print_fatal("(Err.287) Invalid piece_num."));
                     },
                 );
 
@@ -337,7 +337,9 @@ impl MoveGen {
                                         {
                                             piece_num
                                         } else {
-                                            panic!(Log::print_fatal("Invalid piece_num."));
+                                            panic!(Log::print_fatal(
+                                                "(Err.340) Invalid piece_num."
+                                            ));
                                         },
                                         *source,
                                         *destination,
@@ -362,7 +364,7 @@ impl MoveGen {
                                     {
                                         piece_num
                                     } else {
-                                        panic!(Log::print_fatal("Invalid piece_num."));
+                                        panic!(Log::print_fatal("(Err.367) Invalid piece_num."));
                                     },
                                     *source,
                                     *destination,
@@ -391,7 +393,9 @@ impl MoveGen {
                                         {
                                             piece_num
                                         } else {
-                                            panic!(Log::print_fatal("Invalid piece_num."));
+                                            panic!(Log::print_fatal(
+                                                "(Err.396) Invalid piece_num."
+                                            ));
                                         },
                                         *source,
                                         *destination,
@@ -454,7 +458,7 @@ impl MoveGen {
                                 {
                                     piece_num
                                 } else {
-                                    panic!(Log::print_fatal("Invalid piece_num."));
+                                    panic!(Log::print_fatal("(Err.461) Invalid piece_num."));
                                 },
                                 fire_hand,    // 打った駒種類
                                 *destination, // どの升へ行きたいか

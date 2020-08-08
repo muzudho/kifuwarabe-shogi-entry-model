@@ -1,6 +1,6 @@
 use crate::cosmic::recording::{Movement, Phase};
 use crate::log::LogExt;
-use crate::position::GameTable;
+use crate::look_and_model::game_table::GameTable;
 use casual_logger::Log;
 
 /// 指令室はこちらだぜ☆（＾～＾）！
@@ -59,7 +59,7 @@ impl Kitchen {
                         if let Some(piece_num) = table.piece_num_at(turn, &captured_move.source) {
                             piece_num
                         } else {
-                            panic!(Log::print_fatal("Invalid piece_num."));
+                            panic!(Log::print_fatal("(Err.62) Invalid piece_num."));
                         },
                     );
                     format!(" ({})", piece_type)
