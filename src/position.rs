@@ -12,7 +12,10 @@ use crate::cosmic::toy_box::*;
 use crate::law::generate_move::Area;
 use crate::law::speed_of_light::Nine299792458;
 use crate::log::LogExt;
-use crate::look_and_model::{piece::Piece, position::GameTableLook};
+use crate::look_and_model::{
+    game_table::{GameTableLook1, GameTableLook2a, GameTableLook2b},
+    piece::Piece,
+};
 use casual_logger::{Log, Table};
 use num_traits::FromPrimitive;
 
@@ -441,7 +444,9 @@ impl GameTable {
                             .str("Turn", &format!("{:?}", turn))
                             .str("Move", &format!("{:?}", move_))
                             .str("Move2Dst", &format!("{}", &move2_val.destination))
-                            .str("GameTable", &GameTableLook::to_string(self))
+                            .str("GameTable1", &GameTableLook1::to_string(self))
+                            .str("GameTable2a", &GameTableLook2a::to_string(&self))
+                            .str("GameTable2b", &GameTableLook2b::to_string(&self))
                     ));
                 };
 

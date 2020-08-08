@@ -1,24 +1,18 @@
-use crate::cosmic::playing::PosNums;
 use crate::cosmic::recording::{FireAddress, HandAddress, Phase};
 use crate::cosmic::smart::{features::DoubleFacedPieceType, square::AbsoluteAddress2D};
 use crate::cosmic::toy_box::PieceNum;
 use crate::look_and_model::piece::PIECE_WHITE_SPACE;
-use crate::position::{GameTable, Position};
+use crate::position::GameTable;
 
-/// 局面
-pub struct PositionLook {}
-impl PositionLook {
+/// ゲーム卓表示1
+pub struct GameTableLook1 {}
+impl GameTableLook1 {
     /// 表示
-    pub fn to_string(pos: &Position, pos_nums: PosNums) -> String {
-        let table = pos.get_table(pos_nums);
-        let ply = pos.history.ply;
-        let phase = pos.history.get_turn();
-        let same_pos_count = pos.count_same_position();
-
+    pub fn to_string(table: &GameTable) -> String {
         // 局面表示
         format!(
             "\
-[{95} ply. {96} phase. {97} repeats.]
+[GameTable]
 
          9    8    7    6    5    4    3    2    1
         +----+----+----+----+----+----+----+----+----+
@@ -222,9 +216,6 @@ P x{87:2}   |{63}|{64}|{65}|{66}|{67}|{68}|{69}|{70}|{71}| h8   p x{94:2}
                     AbsoluteAddress2D::default()
                 ))
             ),
-            ply,
-            phase,
-            same_pos_count
         )
     }
     fn to_string3(table: &GameTable, file: u8, rank: u8) -> String {
@@ -239,25 +230,17 @@ P x{87:2}   |{63}|{64}|{65}|{66}|{67}|{68}|{69}|{70}|{71}| h8   p x{94:2}
 }
 
 /// シアター・ルーム１はこちらだぜ☆（＾～＾）！
-pub struct PositionLook2a {}
-impl PositionLook2a {
+pub struct GameTableLook2a {}
+impl GameTableLook2a {
     /// 表示
-    pub fn to_string(pos: &Position, pos_nums: PosNums) -> String {
-        let table = pos.get_table(pos_nums);
-        let ply = pos.history.ply;
-        let phase = pos.history.get_turn();
-        let same_pos_count = pos.count_same_position();
-
+    pub fn to_string(table: &GameTable) -> String {
         // 局面表示
         // フォーマットの引数は 98個まで。
         format!(
             "{}{}{}",
-            format!(
-                "[{0} ply. {1} phase. {2} repeats.]
+            "[GameTable2a]
 
 ",
-                ply, phase, same_pos_count
-            ),
             format!(
                 "  12   11   10    9    8    7    6    5    4    3    2    1    0
 +----+----+----+----+----+----+----+----+----+----+----+----+----+
@@ -424,12 +407,10 @@ impl PositionLook2a {
     }
 }
 /// シアター・ルーム２はこちらだぜ☆（＾～＾）！
-pub struct PositionLook2b {}
-impl PositionLook2b {
+pub struct GameTableLook2b {}
+impl GameTableLook2b {
     /// 表示
-    pub fn to_string(pos: &Position, pos_nums: PosNums) -> String {
-        let table = pos.get_table(pos_nums);
-
+    pub fn to_string(table: &GameTable) -> String {
         // 局面表示
         // フォーマットの引数は 98個まで。
         format!(

@@ -9,8 +9,8 @@ use crate::cosmic::{
 use crate::law::{cryptographic::*, generate_move::MoveGen, usi::*};
 use crate::log::LogExt;
 use crate::look_and_model::{
-    facility::{CommandRoom, Kitchen, TheaterRoom1, TheaterRoom2},
-    position::PositionLook,
+    facility::{CommandRoom, Kitchen},
+    position::{PositionLook, PositionLook2a, PositionLook2b},
     search::Search,
 };
 use crate::spaceship::{engine, equipment::PvString};
@@ -286,8 +286,8 @@ impl Chiyuri {
         // 現局面表示
         let s = format!(
             "{}{}",
-            TheaterRoom1::to_string(&universe.game, PosNums::Current),
-            TheaterRoom2::to_string(&universe.game, PosNums::Current)
+            PositionLook2a::to_string(&universe.game, PosNums::Current),
+            PositionLook2b::to_string(&universe.game, PosNums::Current)
         );
         Log::print_notice(&s);
     }
