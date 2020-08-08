@@ -1,5 +1,5 @@
 [package]
-name = "kifuwarabe-shogi-entry-model"
+name = "kifuwarabe_shogi_entry_model"
 version = "0.1.0"
 authors = ["muzudho <muzudho1@gmail.com>"]
 edition = "2018"
