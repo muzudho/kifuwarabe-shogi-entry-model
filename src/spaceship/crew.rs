@@ -1,19 +1,19 @@
 use crate::command_line_seek::CommandLineSeek;
 use crate::config::*;
-use crate::cosmic::playing::PosNums;
-use crate::cosmic::recording::Movement;
-use crate::cosmic::recording::Phase;
-use crate::cosmic::smart::square::AbsoluteAddress2D;
-use crate::cosmic::smart::square::FILE1U8;
-use crate::cosmic::universe::Universe;
-use crate::law::cryptographic::*;
-use crate::law::generate_move::MoveGen;
-use crate::law::usi::*;
+use crate::cosmic::{
+    playing::PosNums,
+    recording::{Movement, Phase},
+    smart::square::{AbsoluteAddress2D, FILE1U8},
+    universe::Universe,
+};
+use crate::law::{cryptographic::*, generate_move::MoveGen, usi::*};
 use crate::log::LogExt;
-use crate::look_and_model::facility::{CommandRoom, GameRoom, Kitchen, TheaterRoom1, TheaterRoom2};
-use crate::look_and_model::search::Search;
-use crate::spaceship::engine;
-use crate::spaceship::equipment::PvString;
+use crate::look_and_model::{
+    facility::{CommandRoom, Kitchen, TheaterRoom1, TheaterRoom2},
+    position::PositionLook,
+    search::Search,
+};
+use crate::spaceship::{engine, equipment::PvString};
 use casual_logger::{Log, Table};
 use rand::Rng;
 
@@ -273,13 +273,13 @@ impl Chiyuri {
             CommandRoom::print_title();
         } else {
             // 局面表示
-            let s = GameRoom::to_string(&universe.game, PosNums::Current);
+            let s = PositionLook::to_string(&universe.game, PosNums::Current);
             Log::print_notice(&s);
         }
     }
     pub fn pos(universe: &Universe) {
         // 現局面表示
-        let s = GameRoom::to_string(&universe.game, PosNums::Current);
+        let s = PositionLook::to_string(&universe.game, PosNums::Current);
         Log::print_notice(&s);
     }
     pub fn pos2(universe: &Universe) {
@@ -293,7 +293,7 @@ impl Chiyuri {
     }
     pub fn pos0(universe: &Universe) {
         // 初期局面表示
-        let s = GameRoom::to_string(&universe.game, PosNums::Start);
+        let s = PositionLook::to_string(&universe.game, PosNums::Start);
         Log::print_notice(&s);
     }
     pub fn rand() {

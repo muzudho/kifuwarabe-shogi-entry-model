@@ -3,22 +3,17 @@
 use crate::config::PV_BUFFER;
 use crate::cosmic::playing::{MovegenPhase, PosNums};
 use crate::cosmic::pos_hash::pos_hash::*;
-use crate::cosmic::recording::History;
-use crate::cosmic::recording::Phase;
-use crate::cosmic::recording::{FireAddress, HandAddress, Movement};
+use crate::cosmic::recording::{FireAddress, HandAddress, History, Movement, Phase};
 use crate::cosmic::smart::features::{
     DoubleFacedPiece, DoubleFacedPieceType, PieceType, PHYSICAL_PIECE_TYPE_LEN,
 };
-use crate::cosmic::smart::square::AbsoluteAddress2D;
-use crate::cosmic::smart::square::BOARD_MEMORY_AREA;
-use crate::cosmic::smart::square::RANK10U8;
-use crate::cosmic::smart::square::RANK1U8;
+use crate::cosmic::smart::square::{AbsoluteAddress2D, BOARD_MEMORY_AREA, RANK10U8, RANK1U8};
 use crate::cosmic::toy_box::*;
 use crate::law::generate_move::Area;
 use crate::law::speed_of_light::Nine299792458;
 use crate::log::LogExt;
-use crate::look_and_model::piece::Piece;
-use casual_logger::Log;
+use crate::look_and_model::{piece::Piece, position::GameTableLook};
+use casual_logger::{Log, Table};
 use num_traits::FromPrimitive;
 
 /// Position. A record of the game used to suspend or resume it.  
@@ -266,7 +261,7 @@ impl Position {
             // 取った駒が有ったか。
             // あれば、指し手で取った駒の先後をひっくり返せば、自分の駒台にある駒を取り出せるので取り出して、盤の上に指し手の取った駒のまま駒を置きます。
             self.table
-                .rotate_piece_hand_to_board(self.history.get_turn(), &move_);
+                .rotate_piece_hand_to_board_on_undo(self.history.get_turn(), &move_);
 
             // TODO 局面ハッシュを作り直したいぜ☆（＾～＾）
 
@@ -432,14 +427,22 @@ impl GameTable {
 
     /// アンドゥ時の動き。
     /// あれば、指し手で取った駒の先後をひっくり返せば、自分の駒台にある駒を取り出せるので取り出して、盤の上に指し手の取った駒のまま駒を置きます。
-    pub fn rotate_piece_hand_to_board(&mut self, turn: Phase, move_: &Movement) {
+    pub fn rotate_piece_hand_to_board_on_undo(&mut self, turn: Phase, move_: &Movement) {
         if let Some(move2_val) = move_.captured {
             // アンドゥだから盤にまだない。
             let piece_type =
                 if let Some(piece_type) = self.last_hand_type(turn, &move2_val.destination) {
                     piece_type
                 } else {
-                    panic!(Log::print_fatal("(Err.441) Invalid piece_type."));
+                    // 行き先に駒が無かった。
+                    panic!(Log::print_fatal_t(
+                        "(Err.441) Invalid piece_type.",
+                        Table::default()
+                            .str("Turn", &format!("{:?}", turn))
+                            .str("Move", &format!("{:?}", move_))
+                            .str("Move2Dst", &format!("{}", &move2_val.destination))
+                            .str("GameTable", &GameTableLook::to_string(self))
+                    ));
                 };
 
             // 取った方の駒台の先後に合わせるぜ☆（＾～＾）
