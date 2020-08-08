@@ -237,7 +237,7 @@ P x{87:2}   |{63}|{64}|{65}|{66}|{67}|{68}|{69}|{70}|{71}| h8   p x{94:2}
     }
 }
 
-/// 局面
+/// ゲーム卓表示1
 pub struct GameTableLook {}
 impl GameTableLook {
     /// 表示
@@ -448,6 +448,212 @@ P x{87:2}   |{63}|{64}|{65}|{66}|{67}|{68}|{69}|{70}|{71}| h8   p x{94:2}
                     DoubleFacedPieceType::Pawn,
                     AbsoluteAddress2D::default()
                 ))
+            ),
+        )
+    }
+    fn to_string3(table: &GameTable, file: u8, rank: u8) -> String {
+        if let Some(piece_info_val) =
+            table.piece_info_at1(&FireAddress::Board(AbsoluteAddress2D::new(file, rank)))
+        {
+            format!("{}", piece_info_val.text1)
+        } else {
+            PIECE_WHITE_SPACE.to_string()
+        }
+    }
+}
+
+/// ゲーム卓表示2
+pub struct GameTableLook2 {}
+impl GameTableLook2 {
+    /// 表示
+    pub fn to_string(table: &GameTable) -> String {
+        // 局面表示
+        format!(
+            "{}{}{}{}{}{}{}{}{}{}",
+            format!(
+                "\
+[GameTable2]
+
+ 12   11   10   9    8    7    6    5    4    3    2    1    0
++----+----+----+----+----+----+----+----+----+----+----+----+----+
+|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|
+",
+                Self::to_string3(table, 12, 0),
+                Self::to_string3(table, 11, 0),
+                Self::to_string3(table, 10, 0),
+                Self::to_string3(table, 9, 0),
+                Self::to_string3(table, 8, 0),
+                Self::to_string3(table, 7, 0),
+                Self::to_string3(table, 6, 0),
+                Self::to_string3(table, 5, 0),
+                Self::to_string3(table, 4, 0),
+                Self::to_string3(table, 3, 0),
+                Self::to_string3(table, 2, 0),
+                Self::to_string3(table, 1, 0),
+                Self::to_string3(table, 0, 0),
+            ),
+            format!(
+                "\
++----+----+----+----+----+----+----+----+----+----+----+----+----+
+|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|
+",
+                Self::to_string3(table, 12, 1),
+                Self::to_string3(table, 11, 1),
+                Self::to_string3(table, 10, 1),
+                Self::to_string3(table, 9, 1),
+                Self::to_string3(table, 8, 1),
+                Self::to_string3(table, 7, 1),
+                Self::to_string3(table, 6, 1),
+                Self::to_string3(table, 5, 1),
+                Self::to_string3(table, 4, 1),
+                Self::to_string3(table, 3, 1),
+                Self::to_string3(table, 2, 1),
+                Self::to_string3(table, 1, 1),
+                Self::to_string3(table, 0, 1),
+            ),
+            format!(
+                "\
++----+----+----+----+----+----+----+----+----+----+----+----+----+
+     |{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|
+",
+                Self::to_string3(table, 11, 2),
+                Self::to_string3(table, 10, 2),
+                Self::to_string3(table, 9, 2),
+                Self::to_string3(table, 8, 2),
+                Self::to_string3(table, 7, 2),
+                Self::to_string3(table, 6, 2),
+                Self::to_string3(table, 5, 2),
+                Self::to_string3(table, 4, 2),
+                Self::to_string3(table, 3, 2),
+                Self::to_string3(table, 2, 2),
+                Self::to_string3(table, 1, 2),
+                Self::to_string3(table, 0, 2),
+            ),
+            format!(
+                "\
++----+----+----+----+----+----+----+----+----+----+----+----+
+     |{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|
+",
+                Self::to_string3(table, 11, 3),
+                Self::to_string3(table, 10, 3),
+                Self::to_string3(table, 9, 3),
+                Self::to_string3(table, 8, 3),
+                Self::to_string3(table, 7, 3),
+                Self::to_string3(table, 6, 3),
+                Self::to_string3(table, 5, 3),
+                Self::to_string3(table, 4, 3),
+                Self::to_string3(table, 3, 3),
+                Self::to_string3(table, 2, 3),
+                Self::to_string3(table, 1, 3),
+                Self::to_string3(table, 0, 3),
+            ),
+            format!(
+                "\
++----+----+----+----+----+----+----+----+----+----+----+----+
+     |{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|
+",
+                Self::to_string3(table, 11, 4),
+                Self::to_string3(table, 10, 4),
+                Self::to_string3(table, 9, 4),
+                Self::to_string3(table, 8, 4),
+                Self::to_string3(table, 7, 4),
+                Self::to_string3(table, 6, 4),
+                Self::to_string3(table, 5, 4),
+                Self::to_string3(table, 4, 4),
+                Self::to_string3(table, 3, 4),
+                Self::to_string3(table, 2, 4),
+                Self::to_string3(table, 1, 4),
+                Self::to_string3(table, 0, 4),
+            ),
+            format!(
+                "\
++----+----+----+----+----+----+----+----+----+----+----+----+
+     |{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|
+",
+                Self::to_string3(table, 11, 5),
+                Self::to_string3(table, 10, 5),
+                Self::to_string3(table, 9, 5),
+                Self::to_string3(table, 8, 5),
+                Self::to_string3(table, 7, 5),
+                Self::to_string3(table, 6, 5),
+                Self::to_string3(table, 5, 5),
+                Self::to_string3(table, 4, 5),
+                Self::to_string3(table, 3, 5),
+                Self::to_string3(table, 2, 5),
+                Self::to_string3(table, 1, 5),
+                Self::to_string3(table, 0, 5),
+            ),
+            format!(
+                "\
++----+----+----+----+----+----+----+----+----+----+----+----+
+     |{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|
+",
+                Self::to_string3(table, 11, 6),
+                Self::to_string3(table, 10, 6),
+                Self::to_string3(table, 9, 6),
+                Self::to_string3(table, 8, 6),
+                Self::to_string3(table, 7, 6),
+                Self::to_string3(table, 6, 6),
+                Self::to_string3(table, 5, 6),
+                Self::to_string3(table, 4, 6),
+                Self::to_string3(table, 3, 6),
+                Self::to_string3(table, 2, 6),
+                Self::to_string3(table, 1, 6),
+                Self::to_string3(table, 0, 6),
+            ),
+            format!(
+                "\
++----+----+----+----+----+----+----+----+----+----+----+----+
+     |{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|
+",
+                Self::to_string3(table, 11, 7),
+                Self::to_string3(table, 10, 7),
+                Self::to_string3(table, 9, 7),
+                Self::to_string3(table, 8, 7),
+                Self::to_string3(table, 7, 7),
+                Self::to_string3(table, 6, 7),
+                Self::to_string3(table, 5, 7),
+                Self::to_string3(table, 4, 7),
+                Self::to_string3(table, 3, 7),
+                Self::to_string3(table, 2, 7),
+                Self::to_string3(table, 1, 7),
+                Self::to_string3(table, 0, 7),
+            ),
+            format!(
+                "\
++----+----+----+----+----+----+----+----+----+----+----+----+
+     |{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|
+",
+                Self::to_string3(table, 11, 8),
+                Self::to_string3(table, 10, 8),
+                Self::to_string3(table, 9, 8),
+                Self::to_string3(table, 8, 8),
+                Self::to_string3(table, 7, 8),
+                Self::to_string3(table, 6, 8),
+                Self::to_string3(table, 5, 8),
+                Self::to_string3(table, 4, 8),
+                Self::to_string3(table, 3, 8),
+                Self::to_string3(table, 2, 8),
+                Self::to_string3(table, 1, 8),
+                Self::to_string3(table, 0, 8),
+            ),
+            format!(
+                "\
++----+----+----+----+----+----+----+----+----+----+----+----+
+     |{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|
+",
+                Self::to_string3(table, 11, 9),
+                Self::to_string3(table, 10, 9),
+                Self::to_string3(table, 9, 9),
+                Self::to_string3(table, 8, 9),
+                Self::to_string3(table, 7, 9),
+                Self::to_string3(table, 6, 9),
+                Self::to_string3(table, 5, 9),
+                Self::to_string3(table, 4, 9),
+                Self::to_string3(table, 3, 9),
+                Self::to_string3(table, 2, 9),
+                Self::to_string3(table, 1, 9),
+                Self::to_string3(table, 0, 9),
             ),
         )
     }
