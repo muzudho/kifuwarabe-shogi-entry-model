@@ -305,8 +305,6 @@ pub struct GameTable {
     piece_list: [Piece; NAMED_PIECES_LEN],
     /// 駒の背番号を付けるのに使うぜ☆（＾～＾）
     double_faced_piece_type_index: [usize; PHYSICAL_PIECE_TYPE_LEN],
-    /// 持ち駒☆（＾～＾）TODO 固定長サイズのスタックを用意したいぜ☆（＾～＾）
-    phase_classification: PhaseClassification,
     /// 指し手生成に利用☆（＾～＾）
     pub area: Area,
 }
@@ -329,8 +327,6 @@ impl Default for GameTable {
                 PieceNum::Lance15 as usize,
                 PieceNum::Pawn23 as usize,
             ],
-            // 持ち駒
-            phase_classification: PhaseClassification::default(),
             area: Area::default(),
             hand_king1_cur: GameTable::hand_start(DoubleFacedPiece::King1),
             hand_rook1_cur: GameTable::hand_start(DoubleFacedPiece::Rook1),
@@ -368,8 +364,6 @@ impl GameTable {
             PieceNum::Lance15 as usize,
             PieceNum::Pawn23 as usize,
         ];
-        // 持ち駒☆（＾～＾）
-        self.phase_classification = PhaseClassification::default();
     }
 
     /// 開始盤面を、現盤面にコピーしたいときに使うぜ☆（＾～＾）
@@ -378,7 +372,6 @@ impl GameTable {
         self.address_list = table.address_list.clone();
         self.piece_list = table.piece_list.clone();
         self.double_faced_piece_type_index = table.double_faced_piece_type_index.clone();
-        self.phase_classification = table.phase_classification.clone();
     }
 
     pub fn get_phase(&self, num: PieceNum) -> Phase {

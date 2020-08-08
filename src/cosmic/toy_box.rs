@@ -2,7 +2,6 @@
 //! 駒 と 盤
 //!
 use crate::cosmic::smart::features::DoubleFacedPiece;
-use crate::cosmic::smart::square::BOARD_MEMORY_AREA;
 use crate::look_and_model::piece::Piece;
 use num_derive::FromPrimitive;
 use std::*;
@@ -187,64 +186,4 @@ impl fmt::Display for PieceNum {
             }
         )
     }
-}
-
-/// 以下の４つを、漏れなく被りなく　分類するぜ☆（＾～＾）
-/// * 盤上の先手の駒
-/// * 盤上の後手の駒
-/// * 駒台の先手の駒
-/// * 駒台の後手の駒
-/// 駒台だぜ☆（＾～＾）これ１つで２人分あるんで☆（＾～＾）
-#[derive(Clone)]
-pub struct PhaseClassification {
-    items: [Option<PieceNum>; BOARD_MEMORY_AREA],
-    // board1_cur: isize,
-    // board2_cur: isize,
-}
-impl Default for PhaseClassification {
-    // ゴミ値で埋めるぜ☆（＾～＾）
-    fn default() -> Self {
-        PhaseClassification {
-            items: [None; BOARD_MEMORY_AREA],
-            // board1_cur: 0,
-            // board2_cur: 39,
-        }
-    }
-}
-impl PhaseClassification {
-    /*
-    /// TODO
-    fn board_cur(&self, turn: Phase) -> isize {
-        0
-        /*
-        match turn {
-            Phase::First => self.board1_cur,
-            Phase::Second => self.board2_cur,
-        }
-        */
-    }
-    */
-    /*
-    /// TODO
-    fn add_board_cur(&mut self, turn: Phase, direction: isize) {
-        /*
-        match turn {
-            Phase::First => self.board1_cur += direction,
-            Phase::Second => self.board2_cur += direction,
-        }
-        */
-    }
-    */
-    /*
-    fn to_debug(&self, table: &GameTable) -> String {
-        let mut buffer = String::new();
-        for i in 0..=self.count {
-            buffer.push_str(&format!(
-                "({}, {:?}) ",
-                self.items[i].piece, self.items[i].num
-            ));
-        }
-        buffer.trim_end().to_string()
-    }
-    */
 }
