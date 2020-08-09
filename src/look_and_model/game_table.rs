@@ -990,20 +990,18 @@ impl GameTable {
         self.add_hand_next(drop, drop.hand_direction());
     }
     pub fn pop_hand(&mut self, drop: DoubleFacedPiece) -> PieceNum {
-        /* TODO
         if self.count_hand(drop) < 1 {
             panic!(Log::print_fatal_t(
                 "(Err.1045) 駒台にない駒を、駒台から取ろうとしました。",
                 Table::default()
-                    .str("DoubleFacedPiece", &format!("{:?}", drop))
-                    .str("GameTable1", &GameTableLook1::to_string(self))
-                    .str("GameTable2a", &GameTableLook2a::to_string(&self))
-                    .str("GameTable2b", &GameTableLook2b::to_string(&self))
-                    .str("GameTable2c", &GameTableLook2c::to_string(&self))
+                    .str("GameTable1", &self.pretty1())
+                    .str("GameTable2a", &self.pretty2a())
+                    .str("GameTable2b", &self.pretty2b())
+                    .str("GameTable2c", &self.pretty2c())
+                    .str("GameTable2d", &self.pretty2d())
                     .str("Drop", &format!("{:?}", drop))
             ));
         }
-        */
         // 位置を増減するぜ☆（＾～＾）
         self.add_hand_next(drop, -drop.hand_direction());
         // 駒台の駒をはがすぜ☆（＾～＾）
@@ -1013,10 +1011,11 @@ impl GameTable {
             panic!(Log::print_fatal_t(
                 "(Err.1151) Invalid num.",
                 Table::default()
-                    //.str("GameTable1", &GameTableLook1::to_string(self))
-                    //.str("GameTable2a", &GameTableLook2a::to_string(&self))
-                    //.str("GameTable2b", &GameTableLook2b::to_string(&self))
-                    //.str("GameTable2c", &GameTableLook2c::to_string(&self))
+                    .str("GameTable1", &self.pretty1())
+                    .str("GameTable2a", &self.pretty2a())
+                    .str("GameTable2b", &self.pretty2b())
+                    .str("GameTable2c", &self.pretty2c())
+                    .str("GameTable2d", &self.pretty2d())
                     .str("Drop", &format!("{:?}", drop))
             ));
         };
