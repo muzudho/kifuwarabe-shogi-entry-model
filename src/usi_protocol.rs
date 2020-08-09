@@ -17,31 +17,36 @@ impl Position {
     ///
     /// * `sfen_enable` - 真にすると、将棋所の仕様に合わせます。
     pub fn to_xfen(&self, sfen_enable: bool) -> String {
-        let mut sfen = String::default();
+        let mut xfen = String::default();
+        if sfen_enable {
+            xfen.push_str("sfen ");
+        } else {
+            xfen.push_str("xfen ");
+        }
 
         // Starting board.
-        // 途中盤面。
-        sfen.push_str(&self.starting_table.to_sfen());
+        // 現在図を、途中図として出力します。
+        xfen.push_str(&self.table.to_sfen());
 
         // Next stone at the start.
         // 途中盤面で、次に置く石。 先手は b、後手は w と決められています。
         match self.history.starting_turn {
             Phase::First => match self.history.get_turn() {
-                Phase::First => sfen.push_str(" b"),
-                Phase::Second => sfen.push_str(" w"),
+                Phase::First => xfen.push_str(" b"),
+                Phase::Second => xfen.push_str(" w"),
             },
             Phase::Second => match self.history.get_turn() {
-                Phase::First => sfen.push_str(" w"),
-                Phase::Second => sfen.push_str(" b"),
+                Phase::First => xfen.push_str(" w"),
+                Phase::Second => xfen.push_str(" b"),
             },
         }
 
         // 途中盤面の次は何手目か
         if sfen_enable {
             // sfen では 1固定。
-            sfen.push_str(" 1");
+            xfen.push_str(" 1");
         } else {
-            sfen.push_str(&format!(
+            xfen.push_str(&format!(
                 " {}",
                 // 手数なんで 1 を足す。
                 self.history.total_length_from_the_beginning() + 1
@@ -59,14 +64,13 @@ impl Position {
                 }
         */
 
-        sfen.to_string()
+        xfen.to_string()
     }
 }
 
 impl GameTable {
     pub fn to_sfen(&self) -> String {
         let mut sfen = String::default();
-        sfen.push_str("sfen ");
         let mut spaces = 0;
         for rank in RANK1U8..RANK10U8 {
             for file in (FILE1U8..FILE10U8).rev() {
