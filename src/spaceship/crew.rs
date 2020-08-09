@@ -38,7 +38,7 @@ impl Kifuwarabe {
                 0
             }
         }
-        let (msec, _minc) = match universe.game.history.get_turn() {
+        let (msec, _minc) = match universe.position.history.get_turn() {
             // 2秒余裕を見ておけば、探索を中断できるだろ……☆（＾～＾）負の数になったらエラーな☆（＾～＾）
             Phase::First => (margined_msec(go1.btime), go1.binc),
             Phase::Second => (margined_msec(go1.wtime), go1.winc),
@@ -86,7 +86,7 @@ impl Kifuwarabe {
     }
     pub fn position(universe: &mut Universe, line: &str) {
         // positionコマンドの読取を丸投げ
-        set_position(&mut universe.game, &mut CommandLineSeek::new(line));
+        set_position(&mut universe.position, &mut CommandLineSeek::new(line));
     }
     pub fn setoption_name(universe: &mut Universe, p: &mut CommandLineSeek) {
         // Example: setoption name USI_Ponder value true
@@ -175,7 +175,7 @@ impl Kifuwarabe {
         Log::print_notice("usiok");
     }
     pub fn usinewgame(universe: &mut Universe) {
-        universe.game.clear();
+        universe.position.clear();
     }
 }
 
@@ -186,15 +186,15 @@ pub struct Chiyuri {}
 impl Chiyuri {
     pub fn do_(universe: &mut Universe, p: &mut CommandLineSeek) {
         // コマンド読取。棋譜に追加され、手目も増える
-        if read_sasite(&mut universe.game, p) {
+        if read_sasite(&mut universe.position, p) {
             // 手目を戻す
-            universe.game.history.ply -= 1;
+            universe.position.history.ply -= 1;
             // 入っている指し手の通り指すぜ☆（＾～＾）
-            let ply = universe.game.history.ply;
-            let move_ = universe.game.history.movements[ply as usize];
+            let ply = universe.position.history.ply;
+            let move_ = universe.position.history.movements[ply as usize];
             universe
-                .game
-                .redo_move(universe.game.history.get_turn(), &move_);
+                .position
+                .redo_move(universe.position.history.get_turn(), &move_);
         }
     }
     pub fn genmove(universe: &Universe) {
@@ -202,10 +202,10 @@ impl Chiyuri {
         // FIXME 合法手とは限らない
         let mut ways = Vec::<Movement>::new();
         MoveGen::make_move(
-            &universe.game,
-            match universe.game.history.get_turn() {
-                Phase::First => &universe.game.movegen_phase.first_movegen,
-                Phase::Second => &universe.game.movegen_phase.second_movegen,
+            &universe.position,
+            match universe.position.history.get_turn() {
+                Phase::First => &universe.position.movegen_phase.first_movegen,
+                Phase::Second => &universe.position.movegen_phase.second_movegen,
             },
             &mut |way| {
                 ways.push(way);
@@ -213,15 +213,15 @@ impl Chiyuri {
         );
         Log::print_notice("----指し手生成(合法手とは限らない) ここから----");
         Kitchen::print_ways(
-            universe.game.history.get_turn(),
-            &universe.game.table,
+            universe.position.history.get_turn(),
+            &universe.position.table,
             &ways,
         );
         Log::print_notice("----指し手生成(合法手とは限らない) ここまで----");
     }
     pub fn hash(universe: &Universe) {
         Log::print_notice("局面ハッシュ表示");
-        let s = universe.game.get_positions_hash_text();
+        let s = universe.position.get_positions_hash_text();
         Log::print_notice(&s);
     }
     pub fn how_much(line: &str) {
@@ -231,14 +231,14 @@ impl Chiyuri {
     }
     pub fn kifu(universe: &Universe) {
         Log::print_notice("棋譜表示");
-        let s = universe.game.get_moves_history_text();
+        let s = universe.position.get_moves_history_text();
         Log::print_notice(&s);
     }
     /// 表示するだけ☆（＾～＾）
     pub fn list40(universe: &Universe) {
         Log::print_notice("----駒リスト40表示 ここから----");
         universe
-            .game
+            .position
             .table
             .for_all_pieces_on_table(&mut |i, adr, piece| {
                 Log::print_notice(&format!(
@@ -269,28 +269,28 @@ impl Chiyuri {
             CommandRoom::print_title();
         } else {
             // 局面表示
-            let s = PositionLook::to_string(&universe.game, PosNums::Current);
+            let s = PositionLook::to_string(&universe.position, PosNums::Current);
             Log::print_notice(&s);
         }
     }
     pub fn pos(universe: &Universe) {
         // 現局面表示
-        let s = PositionLook::to_string(&universe.game, PosNums::Current);
+        let s = PositionLook::to_string(&universe.position, PosNums::Current);
         Log::print_notice(&s);
     }
     pub fn pos2(universe: &Universe) {
         // 現局面表示
         let s = format!(
             "{}{}{}",
-            PositionLook2a::to_string(&universe.game, PosNums::Current),
-            PositionLook2b::to_string(&universe.game, PosNums::Current),
-            GameTableLook2c::to_string(&universe.game.table)
+            PositionLook2a::to_string(&universe.position, PosNums::Current),
+            PositionLook2b::to_string(&universe.position, PosNums::Current),
+            GameTableLook2c::to_string(&universe.position.table)
         );
         Log::print_notice(&s);
     }
     pub fn pos0(universe: &Universe) {
         // 初期局面表示
-        let s = PositionLook::to_string(&universe.game, PosNums::Start);
+        let s = PositionLook::to_string(&universe.position, PosNums::Start);
         Log::print_notice(&s);
     }
     pub fn rand() {
@@ -299,13 +299,13 @@ impl Chiyuri {
         Log::print_notice(&format!("乱数={}", secret_number));
     }
     pub fn same(universe: &Universe) {
-        let count = universe.game.count_same_position();
+        let count = universe.position.count_same_position();
         Log::print_notice(&format!("同一局面調べ count={}", count));
     }
     pub fn startpos(universe: &mut Universe) {
         // 平手初期局面
         set_position(
-            &mut universe.game,
+            &mut universe.position,
             &mut CommandLineSeek::new(&POS_1.to_string()),
         );
     }
@@ -328,10 +328,10 @@ impl Chiyuri {
         }
     }
     pub fn undo(universe: &mut Universe) {
-        if !universe.game.undo_move() {
+        if !universe.position.undo_move() {
             Log::print_notice(&format!(
                 "info string ply={} を、これより戻せません",
-                universe.game.history.ply
+                universe.position.history.ply
             ));
         }
     }

@@ -821,12 +821,12 @@ impl GameTable {
     /// TODO Piece をカプセル化したい。外に出したくないぜ☆（＾～＾）
     /// 升で指定して駒を取得。
     /// 駒台には対応してない。 -> 何に使っている？
-    pub fn piece_num_at(&self, turn: Phase, fire: &FireAddress) -> Option<PieceNum> {
+    pub fn piece_num_at(&self, fire: &FireAddress) -> Option<PieceNum> {
         match fire {
             FireAddress::Board(sq) => self.board[sq.serial_number() as usize],
             FireAddress::Hand(drop) => {
-                let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.piece.type_());
-                self.last_hand_num(drop)
+                // let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.piece.type_());
+                self.last_hand_num(drop.piece)
             }
         }
     }
@@ -1034,7 +1034,6 @@ impl GameTable {
         self.add_hand_cur(drop, GameTable::hand_direction(drop));
     }
     pub fn pop_hand(&mut self, drop: DoubleFacedPiece) -> PieceNum {
-        // let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.piece.type_());
         // 位置を増減するぜ☆（＾～＾）
         self.add_hand_cur(drop, -GameTable::hand_direction(drop));
         // 駒台の駒をはがすぜ☆（＾～＾）
@@ -1049,7 +1048,6 @@ impl GameTable {
 
     /// 指し手生成で使うぜ☆（＾～＾）
     pub fn last_hand(&self, drop: DoubleFacedPiece) -> Option<(PieceType, FireAddress)> {
-        // let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.piece.type_());
         if let Some(piece_num) = self.last_hand_num(drop) {
             let piece = self.piece_list[piece_num as usize];
             Some((

@@ -236,7 +236,7 @@ pub fn read_sasite(pos: &mut Position, p: &mut CommandLineSeek) -> bool {
     }
 
     // 取られる駒を事前に調べてセットするぜ☆（＾～＾）！
-    let captured_piece_num = pos.table.piece_num_at(turn, &buffer.destination);
+    let captured_piece_num = pos.table.piece_num_at(&buffer.destination);
     buffer.captured = if let Some(captured_piece_num_val) = captured_piece_num {
         Some(CapturedMove::new(
             buffer.destination,

@@ -119,7 +119,7 @@ impl GameHashSeed {
             }
         }
         // 移動先に駒があれば、自分の持ち駒になります。
-        if let Some(dst_piece_num) = table.piece_num_at(history.get_turn(), &move_.destination) {
+        if let Some(dst_piece_num) = table.piece_num_at(&move_.destination) {
             if let Some(dst_piece_hash_index) = table.get_piece_board_hash_index(&move_.destination)
             {
                 match move_.destination {

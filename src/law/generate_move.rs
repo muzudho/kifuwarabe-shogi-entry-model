@@ -284,9 +284,7 @@ impl MoveGen {
         match source {
             FireAddress::Board(_src_sq) => {
                 let piece_type = game.table.get_type(
-                    if let Some(piece_num) =
-                        game.table.piece_num_at(game.history.get_turn(), &source)
-                    {
+                    if let Some(piece_num) = game.table.piece_num_at(&source) {
                         piece_num
                     } else {
                         panic!(Log::print_fatal_t(
@@ -309,9 +307,7 @@ impl MoveGen {
                           promotability,
                           _agility,
                           permission_type: Option<PermissionType>| {
-                        let pseudo_captured_num = game
-                            .table
-                            .piece_num_at(game.history.get_turn(), &destination);
+                        let pseudo_captured_num = game.table.piece_num_at(&destination);
 
                         let space = if let Some(pseudo_captured_num_val) = pseudo_captured_num {
                             if game.table.get_phase(pseudo_captured_num_val)
@@ -347,10 +343,7 @@ impl MoveGen {
                                 // 成ったり、成れなかったりできるとき。
                                 if !forbidden {
                                     listen_move(Movement::new(
-                                        if let Some(piece_num) = game
-                                            .table
-                                            .piece_num_at(game.history.get_turn(), &source)
-                                        {
+                                        if let Some(piece_num) = game.table.piece_num_at(&source) {
                                             piece_num
                                         } else {
                                             panic!(Log::print_fatal(
@@ -375,9 +368,7 @@ impl MoveGen {
                                     ));
                                 }
                                 listen_move(Movement::new(
-                                    if let Some(piece_num) =
-                                        game.table.piece_num_at(game.history.get_turn(), &source)
-                                    {
+                                    if let Some(piece_num) = game.table.piece_num_at(&source) {
                                         piece_num
                                     } else {
                                         panic!(Log::print_fatal("(Err.367) Invalid piece_num."));
@@ -402,10 +393,7 @@ impl MoveGen {
                                 // 成れるか、成れないかのどちらかのとき。
                                 if promotion || !forbidden {
                                     listen_move(Movement::new(
-                                        if let Some(piece_num) = game
-                                            .table
-                                            .piece_num_at(game.history.get_turn(), &source)
-                                        {
+                                        if let Some(piece_num) = game.table.piece_num_at(&source) {
                                             piece_num
                                         } else {
                                             panic!(Log::print_fatal(
@@ -440,10 +428,7 @@ impl MoveGen {
                 if let Some((piece_type, fire_hand)) = game.table.last_hand(src_drop.piece) {
                     // 打つぜ☆（＾～＾）
                     let drop_fn = &mut |destination: &FireAddress| {
-                        if let None = game
-                            .table
-                            .piece_num_at(game.history.get_turn(), &destination)
-                        {
+                        if let None = game.table.piece_num_at(&destination) {
                             // 駒が無いところに打つ
                             use crate::cosmic::smart::features::PieceType::*;
                             match piece_type {
@@ -466,9 +451,7 @@ impl MoveGen {
                                 _ => {}
                             }
                             listen_move(Movement::new(
-                                if let Some(piece_num) =
-                                    game.table.piece_num_at(game.history.get_turn(), &fire_hand)
-                                {
+                                if let Some(piece_num) = game.table.piece_num_at(&fire_hand) {
                                     piece_num
                                 } else {
                                     panic!(Log::print_fatal("(Err.461) Invalid piece_num."));

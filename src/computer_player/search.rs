@@ -21,13 +21,13 @@ impl Search {
 
         let max_ply = std::cmp::max(
             universe.option_max_depth,
-            universe.option_max_ply - universe.game.history.ply as usize,
+            universe.option_max_ply - universe.position.history.ply as usize,
         );
         // とりあえず 1手読み を叩き台にするぜ☆（＾～＾）
         // 初手の３０手が葉になるぜ☆（＾～＾）
         self.evaluation.before_search();
         self.max_depth0 = 0;
-        let mut best_ts = self.node(&mut universe.game, Value::Win);
+        let mut best_ts = self.node(&mut universe.position, Value::Win);
         self.evaluation.after_search();
 
         // 一番深く潜ったときの最善手を選ぼうぜ☆（＾～＾）
@@ -73,7 +73,7 @@ impl Search {
 
             // 探索局面数は引き継ぐぜ☆（＾～＾）積み上げていった方が見てて面白いだろ☆（＾～＾）
             self.evaluation.before_search();
-            let ts = self.node(&mut universe.game, Value::Win);
+            let ts = self.node(&mut universe.position, Value::Win);
             self.evaluation.after_search();
             if ts.timeout {
                 // 思考時間切れなら この探索結果は使わないぜ☆（＾～＾）
@@ -146,14 +146,13 @@ impl Search {
                 } else {
                     panic!(Log::print_fatal("(Err.147) Invalid captured_move."));
                 };
-                let piece_type = pos.table.get_type(
-                    if let Some(piece_type) = pos.table.piece_num_at(pos.history.get_turn(), &fire)
-                    {
-                        piece_type
-                    } else {
-                        panic!(Log::print_fatal("(Err.154) Invalid piece_type."));
-                    },
-                );
+                let piece_type =
+                    pos.table
+                        .get_type(if let Some(piece_type) = pos.table.piece_num_at(&fire) {
+                            piece_type
+                        } else {
+                            panic!(Log::print_fatal("(Err.154) Invalid piece_type."));
+                        });
                 match piece_type {
                     PieceType::King => {
                         // 玉を取った手は、リストの先頭に集めるぜ☆（＾～＾）
@@ -195,18 +194,13 @@ impl Search {
 
             // 1手進める前に、これから取ることになる駒を盤上から読み取っておきます。
             let captured_piece_type = if let Some(captured) = move_.captured {
-                Some(
-                    pos.table.get_type(
-                        if let Some(piece_num) = pos
-                            .table
-                            .piece_num_at(pos.history.get_turn(), &captured.source)
-                        {
-                            piece_num
-                        } else {
-                            panic!(Log::print_fatal("(Err.206) Invalid piece_num."));
-                        },
-                    ),
-                )
+                Some(pos.table.get_type(
+                    if let Some(piece_num) = pos.table.piece_num_at(&captured.source) {
+                        piece_num
+                    } else {
+                        panic!(Log::print_fatal("(Err.206) Invalid piece_num."));
+                    },
+                ))
             // Some(captured.piece_type)
             } else {
                 None

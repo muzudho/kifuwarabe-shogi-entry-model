@@ -8,7 +8,7 @@ use crate::position::Position;
 /// アプリケーション開始時に決め終えておくものだぜ☆（＾～＾）
 pub struct Universe {
     /// 対局
-    pub game: Position,
+    pub position: Position,
     /// 対話モード
     pub dialogue_mode: bool,
     /// 大会ルールの最大手数☆（＾～＾）
@@ -25,7 +25,7 @@ pub struct Universe {
 impl Default for Universe {
     fn default() -> Self {
         Universe {
-            game: Position::default(),
+            position: Position::default(),
             dialogue_mode: false,
             option_max_ply: 320,
             option_max_depth: 1,
@@ -39,6 +39,6 @@ impl Default for Universe {
 impl Universe {
     /// 宇宙誕生
     pub fn big_bang(&mut self) {
-        self.game.big_bang();
+        self.position.big_bang();
     }
 }

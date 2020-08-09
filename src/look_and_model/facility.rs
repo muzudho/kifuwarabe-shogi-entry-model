@@ -56,7 +56,7 @@ impl Kitchen {
                 format!("{}", move_),
                 if let Some(captured_move) = move_.captured {
                     let piece_type = table.get_type(
-                        if let Some(piece_num) = table.piece_num_at(turn, &captured_move.source) {
+                        if let Some(piece_num) = table.piece_num_at(&captured_move.source) {
                             piece_num
                         } else {
                             panic!(Log::print_fatal("(Err.62) Invalid piece_num."));
