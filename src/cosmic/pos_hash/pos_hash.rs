@@ -2,9 +2,7 @@
 //!
 
 use crate::cosmic::recording::Phase;
-use crate::cosmic::recording::{
-    FireAddress, HandAddress, History, Movement, PHASE_LEN, PHASE_SECOND,
-};
+use crate::cosmic::recording::{FireAddress, History, Movement, PHASE_LEN, PHASE_SECOND};
 use crate::cosmic::smart::features::DoubleFacedPiece;
 use crate::cosmic::smart::features::{HAND_MAX, PHYSICAL_PIECES_LEN};
 use crate::cosmic::smart::square::FILE10U8;
@@ -103,7 +101,7 @@ impl GameHashSeed {
             FireAddress::Hand(src_drop) => {
                 let src_drop =
                     DoubleFacedPiece::from_phase_and_type(history.get_turn(), src_drop.type_);
-                let count = table.count_hand(history.get_turn(), &move_.source);
+                let count = table.count_hand(src_drop);
                 // 打つ前の駒の枚数のハッシュ。
                 prev_hash ^= self.hands[src_drop as usize][count as usize];
                 // 移動後マスに、打った駒があるときのハッシュ。
@@ -129,13 +127,11 @@ impl GameHashSeed {
                             self.piece[dst_sq.serial_number() as usize][dst_piece_hash_index];
                         // 自分の持ち駒になるケースの追加
                         let double_faced_piece = table.get_double_faced_piece(dst_piece_num);
-                        let count = table.count_hand(
+                        let drop = DoubleFacedPiece::from_phase_and_type(
                             history.get_turn(),
-                            &FireAddress::Hand(HandAddress::new(
-                                double_faced_piece.type_(),
-                                AbsoluteAddress2D::default(),
-                            )),
+                            double_faced_piece.type_(),
                         );
+                        let count = table.count_hand(drop);
                         // 打つ前の駒の枚数のハッシュ。
                         prev_hash ^= self.hands[double_faced_piece as usize][count as usize + 1];
                     }
@@ -198,7 +194,7 @@ impl GameHashSeed {
                 FireAddress::Board(_sq) => panic!(Log::print_fatal("(Err.175) 未対応☆（＾～＾）")),
                 FireAddress::Hand(drop) => {
                     let drop = DoubleFacedPiece::from_phase_and_type(*turn, drop.type_);
-                    let count = table.count_hand(*turn, fire_hand);
+                    let count = table.count_hand(drop);
                     /*
                     debug_assert!(
                         count <= HAND_MAX,
