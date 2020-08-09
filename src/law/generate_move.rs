@@ -295,6 +295,7 @@ impl MoveGen {
                                 .str("GameTable2a", &game.table.pretty2a())
                                 .str("GameTable2b", &game.table.pretty2b())
                                 .str("GameTable2c", &game.table.pretty2c())
+                                .str("GameTable2d", &game.table.pretty2d())
                         ));
                     },
                 );

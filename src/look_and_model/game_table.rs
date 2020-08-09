@@ -6,16 +6,16 @@ use crate::cosmic::toy_box::*;
 use crate::law::generate_move::Area;
 use crate::law::speed_of_light::Nine299792458;
 use crate::log::LogExt;
+use crate::look_and_model::DOUBLE_FACED_PIECES_LEN;
 use crate::look_and_model::{
     piece::{Piece, PIECE_WHITE_SPACE},
-    DoubleFacedPiece, PHYSICAL_PIECE_TYPE_LEN,
+    DoubleFacedPiece, DOUBLE_FACED_PIECE_TYPE_LEN,
 };
 use casual_logger::{Log, Table};
 use num_traits::FromPrimitive;
 
-/// ゲーム卓表示1
 impl GameTable {
-    /// 表示
+    /// ゲーム卓表示1
     pub fn pretty1(&self) -> String {
         // 局面表示
         format!(
@@ -149,12 +149,9 @@ P x{87:2}   |{63}|{64}|{65}|{66}|{67}|{68}|{69}|{70}|{71}| h8   p x{94:2}
             PIECE_WHITE_SPACE.to_string()
         }
     }
-}
 
-/// Board display type 2.
-/// 盤表示２。
-impl GameTable {
-    /// 表示
+    /// Board display type 2.
+    /// 盤表示２。
     pub fn pretty2a(&self) -> String {
         // 局面表示
         // フォーマットの引数は 98個まで。
@@ -327,11 +324,8 @@ impl GameTable {
             "    ".to_string()
         }
     }
-}
-/// Address display type 2 of all pieces.
-/// 全ての駒の番地。
-impl GameTable {
-    /// 表示
+    /// Address display type 2 of all pieces.
+    /// 全ての駒の番地。
     pub fn pretty2b(&self) -> String {
         // 局面表示
         // フォーマットの引数は 98個まで。
@@ -457,11 +451,9 @@ impl GameTable {
             "    ".to_string()
         }
     }
-}
-/// Address display type 2 of hand piece peak.
-/// 全ての持ち駒の次の番地。
-impl GameTable {
-    /// 表示
+
+    /// Address display type 2 of hand piece peak.
+    /// 全ての持ち駒の次の番地。
     pub fn pretty2c(&self) -> String {
         // 局面表示
         // フォーマットの引数は 98個まで。
@@ -492,6 +484,37 @@ impl GameTable {
     fn to_string2c(&self, piece: DoubleFacedPiece) -> String {
         format!("{: >4}", self.hand_cur(piece)).to_string()
     }
+
+    /// Address display type 2d of hand piece count.
+    /// 全ての持ち駒の枚数。
+    pub fn pretty2d(&self) -> String {
+        format!(
+            " K2   K1   G2   G1   S2   S1   N2   N1   L2   L1   B2   B1   R2   R1   P2   P1
++----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+|{0 }|{1 }|{2 }|{3 }|{4 }|{5 }|{6 }|{7 }|{8 }|{9 }|{10}|{11}|{12}|{13}|{14}|{15}|
++----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+",
+            self.to_string2d(DoubleFacedPiece::King2),
+            self.to_string2d(DoubleFacedPiece::King1),
+            self.to_string2d(DoubleFacedPiece::Gold2),
+            self.to_string2d(DoubleFacedPiece::Gold1),
+            self.to_string2d(DoubleFacedPiece::Silver2),
+            self.to_string2d(DoubleFacedPiece::Silver1),
+            self.to_string2d(DoubleFacedPiece::Knight2),
+            self.to_string2d(DoubleFacedPiece::Knight1),
+            self.to_string2d(DoubleFacedPiece::Lance2),
+            self.to_string2d(DoubleFacedPiece::Lance1),
+            self.to_string2d(DoubleFacedPiece::Bishop2),
+            self.to_string2d(DoubleFacedPiece::Bishop1),
+            self.to_string2d(DoubleFacedPiece::Rook2),
+            self.to_string2d(DoubleFacedPiece::Rook1),
+            self.to_string2d(DoubleFacedPiece::Pawn2),
+            self.to_string2d(DoubleFacedPiece::Pawn1),
+        )
+    }
+    fn to_string2d(&self, piece: DoubleFacedPiece) -> String {
+        format!("{: >4}", self.count_hand(piece)).to_string()
+    }
 }
 
 /// 卓☆（＾～＾）
@@ -501,28 +524,13 @@ impl GameTable {
 pub struct GameTable {
     /// 盤に、駒が紐づくぜ☆（＾～＾）
     board: [Option<PieceNum>; BOARD_MEMORY_AREA as usize],
-    hand_king1_cur: isize,
-    hand_rook1_cur: isize,
-    hand_bishop1_cur: isize,
-    hand_gold1_cur: isize,
-    hand_silver1_cur: isize,
-    hand_knight1_cur: isize,
-    hand_lance1_cur: isize,
-    hand_pawn1_cur: isize,
-    hand_king2_cur: isize,
-    hand_rook2_cur: isize,
-    hand_bishop2_cur: isize,
-    hand_gold2_cur: isize,
-    hand_silver2_cur: isize,
-    hand_knight2_cur: isize,
-    hand_lance2_cur: isize,
-    hand_pawn2_cur: isize,
+    hand_cur: [isize; DOUBLE_FACED_PIECES_LEN],
     /// 背番号付きの駒に、番地が紐づいているぜ☆（＾～＾）
     address_list: [FireAddress; NAMED_PIECES_LEN],
     /// 駒の背番号に、駒が紐づくぜ☆（＾～＾）
     piece_list: [Piece; NAMED_PIECES_LEN],
     /// 駒の背番号を付けるのに使うぜ☆（＾～＾）
-    double_faced_piece_type_index: [usize; PHYSICAL_PIECE_TYPE_LEN],
+    double_faced_piece_type_index: [usize; DOUBLE_FACED_PIECE_TYPE_LEN],
     /// 指し手生成に利用☆（＾～＾）
     pub area: Area,
 }
@@ -546,22 +554,24 @@ impl Default for GameTable {
                 PieceNum::Pawn23 as usize,
             ],
             area: Area::default(),
-            hand_king1_cur: DoubleFacedPiece::King1.hand_start(),
-            hand_rook1_cur: DoubleFacedPiece::Rook1.hand_start(),
-            hand_bishop1_cur: DoubleFacedPiece::Bishop1.hand_start(),
-            hand_gold1_cur: DoubleFacedPiece::Gold1.hand_start(),
-            hand_silver1_cur: DoubleFacedPiece::Silver1.hand_start(),
-            hand_knight1_cur: DoubleFacedPiece::Knight1.hand_start(),
-            hand_lance1_cur: DoubleFacedPiece::Lance1.hand_start(),
-            hand_pawn1_cur: DoubleFacedPiece::Pawn1.hand_start(),
-            hand_king2_cur: DoubleFacedPiece::King2.hand_start(),
-            hand_rook2_cur: DoubleFacedPiece::Rook2.hand_start(),
-            hand_bishop2_cur: DoubleFacedPiece::Bishop2.hand_start(),
-            hand_gold2_cur: DoubleFacedPiece::Gold2.hand_start(),
-            hand_silver2_cur: DoubleFacedPiece::Silver2.hand_start(),
-            hand_knight2_cur: DoubleFacedPiece::Knight2.hand_start(),
-            hand_lance2_cur: DoubleFacedPiece::Lance2.hand_start(),
-            hand_pawn2_cur: DoubleFacedPiece::Pawn2.hand_start(),
+            hand_cur: [
+                DoubleFacedPiece::King1.hand_start(),
+                DoubleFacedPiece::Rook1.hand_start(),
+                DoubleFacedPiece::Bishop1.hand_start(),
+                DoubleFacedPiece::Gold1.hand_start(),
+                DoubleFacedPiece::Silver1.hand_start(),
+                DoubleFacedPiece::Knight1.hand_start(),
+                DoubleFacedPiece::Lance1.hand_start(),
+                DoubleFacedPiece::Pawn1.hand_start(),
+                DoubleFacedPiece::King2.hand_start(),
+                DoubleFacedPiece::Rook2.hand_start(),
+                DoubleFacedPiece::Bishop2.hand_start(),
+                DoubleFacedPiece::Gold2.hand_start(),
+                DoubleFacedPiece::Silver2.hand_start(),
+                DoubleFacedPiece::Knight2.hand_start(),
+                DoubleFacedPiece::Lance2.hand_start(),
+                DoubleFacedPiece::Pawn2.hand_start(),
+            ],
         }
     }
 }
@@ -670,6 +680,7 @@ impl GameTable {
                                 .str("GameTable2a", &self.pretty2a())
                                 .str("GameTable2b", &self.pretty2b())
                                 .str("GameTable2c", &self.pretty2c())
+                                .str("GameTable2d", &self.pretty2d())
                         ));
                     };
                     // 取った方の駒台の先後に合わせるぜ☆（＾～＾）
@@ -941,7 +952,7 @@ impl GameTable {
             }
         }
 
-        const FIRST_SECOND: [[DoubleFacedPiece; PHYSICAL_PIECE_TYPE_LEN - 1]; 2] = [
+        const FIRST_SECOND: [[DoubleFacedPiece; DOUBLE_FACED_PIECE_TYPE_LEN - 1]; 2] = [
             [
                 // King なし
                 DoubleFacedPiece::Rook1,
@@ -1027,7 +1038,7 @@ impl GameTable {
                         .isize("HandStart", drop.hand_start())
                         .isize("HandCur", self.hand_cur(drop))
                         .isize("Count", count)
-                        .str("Drop", &format!("{:?}", drop)) //.str("GameTable1", &GameTableLook1::to_string(self))
+                        .str("Drop", &format!("{:?}", drop)) // pretty1() は循環参照。
                         .str("GameTable2a", &self.pretty2a()) //.str("GameTable2b", &GameTableLook2b::to_string(&self)) //.str("GameTable2c", &GameTableLook2c::to_string(&self))
                 ));
             } else if count < 0 {
@@ -1039,7 +1050,7 @@ impl GameTable {
                         .isize("HandStart", drop.hand_start())
                         .isize("HandCur", self.hand_cur(drop))
                         .isize("Count", count)
-                        .str("Drop", &format!("{:?}", drop)) //.str("GameTable1", &GameTableLook1::to_string(self))
+                        .str("Drop", &format!("{:?}", drop)) // pretty1() は循環参照。
                         .str("GameTable2a", &self.pretty2a()) //.str("GameTable2b", &GameTableLook2b::to_string(&self))
                                                               //.str("GameTable2c", &GameTableLook2c::to_string(&self))
                 ));
@@ -1056,7 +1067,7 @@ impl GameTable {
                         .isize("HandStart", drop.hand_start())
                         .isize("HandCur", self.hand_cur(drop))
                         .isize("Count", count)
-                        .str("Drop", &format!("{:?}", drop)) // .str("GameTable1", &self.pretty1())
+                        .str("Drop", &format!("{:?}", drop)) // pretty1() は循環参照。
                         .str("GameTable2a", &self.pretty2a()) //.str("GameTable2b", &GameTableLook2b::to_string(&self)) //.str("GameTable2c", &GameTableLook2c::to_string(&self))
                 ));
             } else if count < 0 {
@@ -1068,7 +1079,7 @@ impl GameTable {
                         .isize("HandStart", drop.hand_start())
                         .isize("HandCur", self.hand_cur(drop))
                         .isize("Count", count)
-                        .str("Drop", &format!("{:?}", drop)) //.str("GameTable1", &GameTableLook1::to_string(self))
+                        .str("Drop", &format!("{:?}", drop)) // pretty1() は循環参照。
                         .str("GameTable2a", &self.pretty2a()) //.str("GameTable2b", &GameTableLook2b::to_string(&self))
                                                               //.str("GameTable2c", &GameTableLook2c::to_string(&self))
                 ));
@@ -1130,43 +1141,9 @@ impl GameTable {
     }
 
     fn hand_cur(&self, double_faced_piece: DoubleFacedPiece) -> isize {
-        match double_faced_piece {
-            DoubleFacedPiece::King1 => self.hand_king1_cur,
-            DoubleFacedPiece::Rook1 => self.hand_rook1_cur,
-            DoubleFacedPiece::Bishop1 => self.hand_bishop1_cur,
-            DoubleFacedPiece::Gold1 => self.hand_gold1_cur,
-            DoubleFacedPiece::Silver1 => self.hand_silver1_cur,
-            DoubleFacedPiece::Knight1 => self.hand_knight1_cur,
-            DoubleFacedPiece::Lance1 => self.hand_lance1_cur,
-            DoubleFacedPiece::Pawn1 => self.hand_pawn1_cur,
-            DoubleFacedPiece::King2 => self.hand_king2_cur,
-            DoubleFacedPiece::Rook2 => self.hand_rook2_cur,
-            DoubleFacedPiece::Bishop2 => self.hand_bishop2_cur,
-            DoubleFacedPiece::Gold2 => self.hand_gold2_cur,
-            DoubleFacedPiece::Silver2 => self.hand_silver2_cur,
-            DoubleFacedPiece::Knight2 => self.hand_knight2_cur,
-            DoubleFacedPiece::Lance2 => self.hand_lance2_cur,
-            DoubleFacedPiece::Pawn2 => self.hand_pawn2_cur,
-        }
+        self.hand_cur[double_faced_piece as usize]
     }
     fn add_hand_cur(&mut self, double_faced_piece: DoubleFacedPiece, direction: isize) {
-        match double_faced_piece {
-            DoubleFacedPiece::King1 => self.hand_king1_cur += direction,
-            DoubleFacedPiece::Rook1 => self.hand_rook1_cur += direction,
-            DoubleFacedPiece::Bishop1 => self.hand_bishop1_cur += direction,
-            DoubleFacedPiece::Gold1 => self.hand_gold1_cur += direction,
-            DoubleFacedPiece::Silver1 => self.hand_silver1_cur += direction,
-            DoubleFacedPiece::Knight1 => self.hand_knight1_cur += direction,
-            DoubleFacedPiece::Lance1 => self.hand_lance1_cur += direction,
-            DoubleFacedPiece::Pawn1 => self.hand_pawn1_cur += direction,
-            DoubleFacedPiece::King2 => self.hand_king2_cur += direction,
-            DoubleFacedPiece::Rook2 => self.hand_rook2_cur += direction,
-            DoubleFacedPiece::Bishop2 => self.hand_bishop2_cur += direction,
-            DoubleFacedPiece::Gold2 => self.hand_gold2_cur += direction,
-            DoubleFacedPiece::Silver2 => self.hand_silver2_cur += direction,
-            DoubleFacedPiece::Knight2 => self.hand_knight2_cur += direction,
-            DoubleFacedPiece::Lance2 => self.hand_lance2_cur += direction,
-            DoubleFacedPiece::Pawn2 => self.hand_pawn2_cur += direction,
-        }
+        self.hand_cur[double_faced_piece as usize] += direction
     }
 }

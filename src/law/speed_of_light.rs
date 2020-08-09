@@ -13,7 +13,7 @@ use crate::cosmic::smart::square::{AbsoluteAddress2D, Angle, RelAdr2D, ANGLE_LEN
 use crate::cosmic::toy_box::PieceNum;
 use crate::law::generate_move::{Agility, Mobility};
 use crate::look_and_model::{
-    DoubleFacedPiece, DoubleFacedPieceType, PHYSICAL_PIECES_LEN, PHYSICAL_PIECE_TYPE_LEN,
+    DoubleFacedPiece, DoubleFacedPieceType, DOUBLE_FACED_PIECES_LEN, DOUBLE_FACED_PIECE_TYPE_LEN,
 };
 
 // グローバル定数
@@ -48,10 +48,10 @@ struct SpeedOfLight {
     piece_type_to_double_faced_piece_type: [DoubleFacedPieceType; PIECE_TYPE_LEN],
     /// 持ち駒☆（＾～＾）
     /// 玉２枚引く☆（＾～＾）
-    double_faced_pieces: [[DoubleFacedPiece; PHYSICAL_PIECE_TYPE_LEN]; PHASE_LEN],
+    double_faced_pieces: [[DoubleFacedPiece; DOUBLE_FACED_PIECE_TYPE_LEN]; PHASE_LEN],
     // double_faced_piece_to_phase_table: [Phase; PHYSICAL_PIECES_LEN],
-    double_faced_piece_to_type_table: [DoubleFacedPieceType; PHYSICAL_PIECES_LEN],
-    double_faced_piece_to_captured_value: [isize; PHYSICAL_PIECE_TYPE_LEN],
+    double_faced_piece_to_type_table: [DoubleFacedPieceType; DOUBLE_FACED_PIECES_LEN],
+    double_faced_piece_to_captured_value: [isize; DOUBLE_FACED_PIECE_TYPE_LEN],
 
     // 相対番地と角度☆（＾～＾）
     west_ccw: [RelAdr2D; ANGLE_LEN],
@@ -62,7 +62,7 @@ struct SpeedOfLight {
 
     west: RelAdr2D,
 
-    hand_legal_all: [(Phase, FireAddress); PHYSICAL_PIECES_LEN - 2],
+    hand_legal_all: [(Phase, FireAddress); DOUBLE_FACED_PIECES_LEN - 2],
 }
 impl Default for SpeedOfLight {
     fn default() -> Self {

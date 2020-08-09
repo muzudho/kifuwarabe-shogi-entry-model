@@ -277,10 +277,11 @@ impl Chiyuri {
     pub fn pos2(universe: &Universe) {
         // 現局面表示
         let s = format!(
-            "{}{}{}",
+            "{}{}{}{}",
             PositionLook2a::to_string(&universe.position, PosNums::Current),
             PositionLook2b::to_string(&universe.position, PosNums::Current),
-            universe.position.table.pretty2c()
+            universe.position.table.pretty2c(),
+            universe.position.table.pretty2d()
         );
         Log::print_notice(&s);
     }
