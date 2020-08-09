@@ -1038,7 +1038,15 @@ impl GameTable {
         let num = if let Some(num) = self.board[self.hand_cur(drop) as usize] {
             num
         } else {
-            panic!(Log::print_fatal("(Err.1151) Invalid num."));
+            panic!(Log::print_fatal_t(
+                "(Err.1151) Invalid num.",
+                Table::default()
+                    .str("DoubleFacedPiece", &format!("{:?}", drop))
+                    .str("GameTable1", &GameTableLook1::to_string(self))
+                    .str("GameTable2a", &GameTableLook2a::to_string(&self))
+                    .str("GameTable2b", &GameTableLook2b::to_string(&self))
+                    .str("GameTable2c", &GameTableLook2c::to_string(&self))
+            ));
         };
         self.board[self.hand_cur(drop) as usize] = None;
         num
