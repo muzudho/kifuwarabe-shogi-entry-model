@@ -212,11 +212,7 @@ impl Chiyuri {
             },
         );
         Log::print_notice("----指し手生成(合法手とは限らない) ここから----");
-        Kitchen::print_ways(
-            universe.position.history.get_turn(),
-            &universe.position.table,
-            &ways,
-        );
+        Kitchen::print_ways(&universe.position.table, &ways);
         Log::print_notice("----指し手生成(合法手とは限らない) ここまで----");
     }
     pub fn hash(universe: &Universe) {

@@ -51,8 +51,6 @@ pub fn read_sasite(pos: &mut Position, p: &mut CommandLineSeek) -> bool {
 
     let mut buffer = Movement::default();
 
-    let turn = pos.history.get_turn();
-
     // 1文字目と2文字目。盤上の移動元か、ドロップする駒種類。
     buffer.source = match &p.line()[p.current()..=p.current()] {
         // 1文字目が駒だったら打。2文字目は必ず「*」なはずなので読み飛ばす。

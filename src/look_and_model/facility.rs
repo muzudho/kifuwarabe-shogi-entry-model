@@ -1,4 +1,4 @@
-use crate::cosmic::recording::{Movement, Phase};
+use crate::cosmic::recording::Movement;
 use crate::log::LogExt;
 use crate::look_and_model::game_table::GameTable;
 use casual_logger::Log;
@@ -46,7 +46,7 @@ impl CommandRoom {
 pub struct Kitchen {}
 impl Kitchen {
     /// 現在の局面での、指し手の一覧を表示するぜ☆（＾～＾）
-    pub fn print_ways(turn: Phase, table: &GameTable, ways: &Vec<Movement>) {
+    pub fn print_ways(table: &GameTable, ways: &Vec<Movement>) {
         Log::print_notice(&format!("Moves count={}", ways.len()));
         // 辞書順ソート
         let mut move_names = Vec::new();
