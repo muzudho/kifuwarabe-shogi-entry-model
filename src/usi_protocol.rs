@@ -21,7 +21,7 @@ impl Position {
 
         // Next stone at the start.
         // 開始局面で、次に置く石。 先手は b、後手は w と決められています。
-        match self.starting_turn {
+        match self.history.starting_turn {
             Phase::First => sfen.push_str(" b"),
             Phase::Second => sfen.push_str(" w"),
         }

@@ -27,6 +27,8 @@ pub struct History {
     pub position_hashs: [u64; PLY_SIZE],
     /// 初期局面ハッシュ
     pub starting_position_hash: u64,
+    /// TODO 開始局面で次に指す方。棋譜の方も要対応。
+    pub starting_turn: Phase,
 }
 impl Default for History {
     fn default() -> History {
@@ -35,16 +37,28 @@ impl Default for History {
             movements: [Movement::default(); PLY_SIZE],
             position_hashs: [0; PLY_SIZE],
             starting_position_hash: 0,
+            starting_turn: Phase::First,
         }
     }
 }
 impl History {
     /// 手番
     pub fn get_turn(&self) -> Phase {
-        if self.ply % 2 == 0 {
-            Phase::First
-        } else {
-            Phase::Second
+        match self.starting_turn {
+            Phase::First => {
+                if self.ply % 2 == 0 {
+                    Phase::First
+                } else {
+                    Phase::Second
+                }
+            }
+            Phase::Second => {
+                if self.ply % 2 == 0 {
+                    Phase::Second
+                } else {
+                    Phase::First
+                }
+            }
         }
     }
     /// 現在の指し手
