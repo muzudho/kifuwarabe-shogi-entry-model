@@ -97,10 +97,8 @@ fn main_loop(universe: &mut Universe) {
             break;
         } else if p.starts_with("setoption name ") {
             Kifuwarabe::setoption_name(universe, &mut CommandLineSeek::new(&line));
-        /* TODO
         } else if p.starts_with("sfen") {
             Log::print_notice(&format!("{}", universe.position.to_sfen()));
-            */
         } else if p.starts_with("usi") {
             Kifuwarabe::usi();
         } else if p.starts_with("go") {

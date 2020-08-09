@@ -593,6 +593,9 @@ impl GameTable {
         self.double_faced_piece_type_index = table.double_faced_piece_type_index.clone();
     }
 
+    pub fn get_piece_string(&self, num: PieceNum) -> String {
+        format!("{}", self.piece_list[num as usize])
+    }
     pub fn get_phase(&self, num: PieceNum) -> Phase {
         self.piece_list[num as usize].phase()
     }
@@ -793,7 +796,7 @@ impl GameTable {
     pub fn exists_pawn_on_file(&self, turn: Phase, file: u8) -> bool {
         for rank in RANK1U8..RANK10U8 {
             if let Some(piece_num) =
-                self.piece_num_board_at(&FireAddress::Board(AbsoluteAddress2D::new(file, rank)))
+                self.piece_num_at(&FireAddress::Board(AbsoluteAddress2D::new(file, rank)))
             {
                 if self.get_phase(piece_num) == turn && self.get_type(piece_num) == PieceType::Pawn
                 {
@@ -830,13 +833,8 @@ impl GameTable {
             }
         }
     }
-    pub fn piece_num_board_at(&self, addr: &FireAddress) -> Option<PieceNum> {
-        match addr {
-            FireAddress::Board(sq) => self.board[sq.serial_number() as usize],
-            _ => panic!(Log::print_fatal(&format!(
-                "(Err.254) まだ駒台は実装してないぜ☆（＾～＾）！",
-            ))),
-        }
+    pub fn piece_num_on_board_at(&self, sq: &AbsoluteAddress2D) -> Option<PieceNum> {
+        self.board[sq.serial_number() as usize]
     }
     /// 通常盤表示用。
     pub fn piece_info_at1(&self, addr: &FireAddress) -> Option<PieceInfo> {
@@ -845,7 +843,7 @@ impl GameTable {
                 let piece_num = self.board[sq.serial_number() as usize];
                 if let Some(piece_num_val) = piece_num {
                     Some(PieceInfo::new(
-                        &format!("{}", self.piece_list[piece_num_val as usize]),
+                        &format!("{:?}", self.piece_list[piece_num_val as usize]),
                         piece_num_val,
                     ))
                 } else {
@@ -883,7 +881,7 @@ impl GameTable {
     /// 盤2表示用。
     pub fn piece_info_piece_at(&self, piece_num: PieceNum) -> Option<PieceInfo> {
         Some(PieceInfo::new(
-            &format!("{}", self.piece_list[piece_num as usize]),
+            &format!("{:?}", self.piece_list[piece_num as usize]),
             piece_num,
         ))
     }

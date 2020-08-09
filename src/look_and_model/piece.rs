@@ -70,8 +70,51 @@ pub enum Piece {
     PromotedPawn2,
 }
 pub static PIECE_WHITE_SPACE: &str = "    ";
-/// きふわらべ「USIでは使わないから、独自の表記をして構わないぜ☆」
+/// きふわらべ「 USIプロトコルで使う文字だぜ☆（＾～＾）ｖ」
 impl fmt::Display for Piece {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        // 文字列リテラルでないとダメみたいなんで、他に似たようなコードがあるのに、また書くことに☆（＾～＾）
+        // ▲ が半角サイズ、▽ が見た目が全角の半角サイズなのは、Windows Terminal の担当者 いい加減だぜ☆（＾～＾）
+        use crate::look_and_model::piece::Piece::*;
+        write!(
+            f,
+            "{}",
+            match *self {
+                King1 => "K",
+                Rook1 => "R",
+                Bishop1 => "B",
+                Gold1 => "G",
+                Silver1 => "S",
+                Knight1 => "N",
+                Lance1 => "L",
+                Pawn1 => "P",
+                Dragon1 => "+R",
+                Horse1 => "+B",
+                PromotedSilver1 => "+S",
+                PromotedKnight1 => "+N",
+                PromotedLance1 => "+L",
+                PromotedPawn1 => "+P",
+                King2 => "k",
+                Rook2 => "r",
+                Bishop2 => "b",
+                Gold2 => "g",
+                Silver2 => "s",
+                Knight2 => "n",
+                Lance2 => "l",
+                Pawn2 => "p",
+                Dragon2 => "+r",
+                Horse2 => "+b",
+                PromotedSilver2 => "+s",
+                PromotedKnight2 => "+n",
+                PromotedLance2 => "+l",
+                PromotedPawn2 => "+p",
+            }
+        )
+    }
+}
+
+/// きふわらべ「USIでは使わないから、独自の表記をして構わないぜ☆」
+impl fmt::Debug for Piece {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         // 文字列リテラルでないとダメみたいなんで、他に似たようなコードがあるのに、また書くことに☆（＾～＾）
         // ▲ が半角サイズ、▽ が見た目が全角の半角サイズなのは、Windows Terminal の担当者 いい加減だぜ☆（＾～＾）

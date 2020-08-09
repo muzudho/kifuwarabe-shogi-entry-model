@@ -1,15 +1,13 @@
 //! 局面ハッシュ。
 //!
 
-use crate::cosmic::recording::Phase;
-use crate::cosmic::recording::{FireAddress, History, Movement, PHASE_LEN, PHASE_SECOND};
-use crate::cosmic::smart::features::DoubleFacedPiece;
-use crate::cosmic::smart::features::{HAND_MAX, PHYSICAL_PIECES_LEN};
-use crate::cosmic::smart::square::FILE10U8;
-use crate::cosmic::smart::square::FILE1U8;
-use crate::cosmic::smart::square::RANK10U8;
-use crate::cosmic::smart::square::RANK1U8;
-use crate::cosmic::smart::square::{AbsoluteAddress2D, BOARD_MEMORY_AREA, SQUARE_NONE};
+use crate::cosmic::recording::{FireAddress, History, Movement, Phase, PHASE_LEN, PHASE_SECOND};
+use crate::cosmic::smart::{
+    features::{DoubleFacedPiece, HAND_MAX, PHYSICAL_PIECES_LEN},
+    square::{
+        AbsoluteAddress2D, BOARD_MEMORY_AREA, FILE10U8, FILE1U8, RANK10U8, RANK1U8, SQUARE_NONE,
+    },
+};
 use crate::law::speed_of_light::HandAddresses;
 use crate::log::LogExt;
 use crate::look_and_model::{game_table::GameTable, piece::PIECE_LEN};
