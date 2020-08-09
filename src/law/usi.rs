@@ -339,7 +339,7 @@ pub fn read_board(pos: &mut Position, p: &mut CommandLineSeek) {
                 // 駒に背番号を付けるぜ☆（＾～＾）
                 let piece_num = table.numbering_piece(turn, piece_type);
                 // 盤に置くぜ☆（＾～＾）
-                table.push_piece(turn, &fire, Some(piece_num));
+                table.push_piece(&fire, Some(piece_num));
 
                 file -= 1;
             }

@@ -634,7 +634,6 @@ impl GameTable {
             // 先後ひっくり返す。
             self.turn_phase(cap);
             self.push_piece(
-                turn,
                 &FireAddress::Hand(HandAddress::new(
                     self.get_double_faced_piece(cap),
                     AbsoluteAddress2D::default(),
@@ -695,18 +694,17 @@ impl GameTable {
                 self.demote(piece_num);
             }
             // 取られた方に、駒を返すぜ☆（＾～＾）置くのは指し手の移動先☆（＾～＾）
-            self.push_piece(turn.turn(), &move_.destination, Some(piece_num));
+            // self.turn_phase(piece_num); // これかくとバグる
+            self.push_piece(&move_.destination, Some(piece_num));
         }
     }
     /// 駒を置く。
-    pub fn push_piece(&mut self, turn: Phase, fire: &FireAddress, piece_num: Option<PieceNum>) {
+    pub fn push_piece(&mut self, fire: &FireAddress, piece_num: Option<PieceNum>) {
         match fire {
             FireAddress::Board(sq) => {
                 if let Some(piece_num_val) = piece_num {
                     // マスに駒を置きます。
                     self.board[sq.serial_number() as usize] = piece_num;
-                    // データベース
-                    self.push_hand(turn, &FireAddress::Board(*sq), piece_num_val);
                     // 背番号に番地を紐づけます。
                     self.address_list[piece_num_val as usize] = FireAddress::Board(*sq);
                 } else {
@@ -714,10 +712,10 @@ impl GameTable {
                     self.board[sq.serial_number() as usize] = None;
                 }
             }
-            FireAddress::Hand(drop_type) => {
+            FireAddress::Hand(_drop_type) => {
                 if let Some(piece_num_val) = piece_num {
                     // 持ち駒を１つ増やします。
-                    self.push_hand(turn, &FireAddress::Hand(*drop_type), piece_num_val);
+                    self.push_hand(self.get_double_faced_piece(piece_num_val), piece_num_val);
                     // 背番号に番地を紐づけます。
                     self.address_list[piece_num_val as usize] = *fire;
                 }
@@ -759,7 +757,7 @@ impl GameTable {
             self.get_double_faced_piece(piece_num),
             AbsoluteAddress2D::default(),
         ));
-        self.push_piece(turn, &drop, Some(piece_num));
+        self.push_piece(&drop, Some(piece_num));
     }
 
     /// 駒の新しい背番号を生成します。
@@ -1031,19 +1029,11 @@ impl GameTable {
     }
 
     /// 駒の先後を ひっくり返してから入れてください。
-    pub fn push_hand(&mut self, turn: Phase, fire: &FireAddress, num: PieceNum) {
-        match fire {
-            FireAddress::Board(_sq) => {
-                // TODO 現在未実装だが、あとで使う☆（＾～＾）
-            }
-            FireAddress::Hand(drop) => {
-                let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.piece.type_());
-                // 駒台に駒を置くぜ☆（＾～＾）
-                self.board[self.hand_cur(drop) as usize] = Some(num);
-                // 位置を増減するぜ☆（＾～＾）
-                self.add_hand_cur(drop, GameTable::hand_direction(drop));
-            }
-        }
+    pub fn push_hand(&mut self, drop: DoubleFacedPiece, num: PieceNum) {
+        // 駒台に駒を置くぜ☆（＾～＾）
+        self.board[self.hand_cur(drop) as usize] = Some(num);
+        // 位置を増減するぜ☆（＾～＾）
+        self.add_hand_cur(drop, GameTable::hand_direction(drop));
     }
     pub fn pop_hand(&mut self, turn: Phase, fire: &FireAddress) -> PieceNum {
         match fire {

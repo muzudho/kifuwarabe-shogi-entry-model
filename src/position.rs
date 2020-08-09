@@ -172,8 +172,7 @@ impl Position {
         self.table.rotate_piece_board_to_hand_on_do(turn, &move_);
 
         // 移動先升に駒を置く
-        self.table
-            .push_piece(turn, &move_.destination, src_piece_num);
+        self.table.push_piece(&move_.destination, src_piece_num);
 
         // // 局面ハッシュを作り直す
         // let ky_hash = self.hash_seed.current_position(&self);
@@ -222,11 +221,7 @@ impl Position {
                     }
 
                     // 打でなければ、移動元升に、動かした駒を置く☆（＾～＾）打なら何もしないぜ☆（＾～＾）
-                    self.table.push_piece(
-                        self.history.get_turn(),
-                        &move_.source,
-                        moveing_piece_num,
-                    );
+                    self.table.push_piece(&move_.source, moveing_piece_num);
                 }
                 FireAddress::Hand(src_drop) => {
                     // 打なら
@@ -236,11 +231,9 @@ impl Position {
                     } else {
                         panic!(Log::print_fatal("(Err.250) Invalid moveing_piece_num"));
                     };
-                    // 自分の持ち駒を増やそうぜ☆（＾～＾）！
-                    let turn = self.table.get_phase(piece_num);
+                    // 置いた駒を、駒台に戻すだけだぜ☆（＾～＾）
                     // TODO この駒を置くことになる場所は☆（＾～＾）？
                     self.table.push_piece(
-                        turn,
                         &FireAddress::Hand(HandAddress::new(
                             self.table.get_double_faced_piece(piece_num),
                             src_drop.sq,
