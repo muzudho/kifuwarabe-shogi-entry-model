@@ -11,14 +11,14 @@ impl PositionLook {
     /// 表示
     pub fn to_string(pos: &Position, pos_nums: PosNums) -> String {
         let table = pos.get_table(pos_nums);
-        let ply = pos.history.ply;
+        let moves = pos.history.length_from_the_middle() + 1;
         let phase = pos.history.get_turn();
         let same_pos_count = pos.count_same_position();
 
         // 局面表示
         format!(
             "\
-[{95} ply. {96} phase. {97} repeats.]
+[{95} move(s). {96} phase. {97} repeat(s).]
 
          9    8    7    6    5    4    3    2    1
         +----+----+----+----+----+----+----+----+----+
@@ -136,7 +136,7 @@ P x{87:2}   |{63}|{64}|{65}|{66}|{67}|{68}|{69}|{70}|{71}| h8   p x{94:2}
             table.count_hand(DoubleFacedPiece::Knight2),
             table.count_hand(DoubleFacedPiece::Lance2),
             table.count_hand(DoubleFacedPiece::Pawn2),
-            ply,
+            moves,
             phase,
             same_pos_count
         )
@@ -158,7 +158,7 @@ impl PositionLook2a {
     /// 表示
     pub fn to_string(pos: &Position, pos_nums: PosNums) -> String {
         let table = pos.get_table(pos_nums);
-        let ply = pos.history.ply;
+        let moves = pos.history.length_from_the_middle() + 1;
         let phase = pos.history.get_turn();
         let same_pos_count = pos.count_same_position();
 
@@ -167,10 +167,10 @@ impl PositionLook2a {
         format!(
             "{}{}{}",
             format!(
-                "[{0} ply. {1} phase. {2} repeats.]
+                "[{0} move(s). {1} phase. {2} repeat(s).]
 
 ",
-                ply, phase, same_pos_count
+                moves, phase, same_pos_count
             ),
             format!(
                 "  12   11   10    9    8    7    6    5    4    3    2    1    0

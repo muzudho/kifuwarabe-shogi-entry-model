@@ -250,7 +250,7 @@ pub fn read_sasite(pos: &mut Position, p: &mut CommandLineSeek) -> bool {
     // 確定。
     pos.set_move(&buffer);
 
-    pos.history.ply += 1;
+    pos.history.add_moves(1);
     true
 }
 
@@ -510,9 +510,9 @@ pub fn set_position(pos: &mut Position, p: &mut CommandLineSeek) {
     // 指し手を全部読んでいくぜ☆（＾～＾）手目のカウントも増えていくぜ☆（＾～＾）
     while read_sasite(pos, p) {
         // 手目を戻す
-        pos.history.ply -= 1;
+        pos.history.add_moves(-1);
         // 入っている指し手の通り指すぜ☆（＾～＾）
-        let ply = pos.history.ply;
+        let ply = pos.history.length_from_the_middle();
 
         let move_ = pos.history.movements[ply as usize];
         pos.redo_move(pos.history.get_turn(), &move_);

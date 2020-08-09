@@ -26,8 +26,14 @@ impl Position {
         // Next stone at the start.
         // 途中盤面で、次に置く石。 先手は b、後手は w と決められています。
         match self.history.starting_turn {
-            Phase::First => sfen.push_str(" b"),
-            Phase::Second => sfen.push_str(" w"),
+            Phase::First => match self.history.get_turn() {
+                Phase::First => sfen.push_str(" b"),
+                Phase::Second => sfen.push_str(" w"),
+            },
+            Phase::Second => match self.history.get_turn() {
+                Phase::First => sfen.push_str(" w"),
+                Phase::Second => sfen.push_str(" b"),
+            },
         }
 
         // 途中盤面の次は何手目か
@@ -37,7 +43,8 @@ impl Position {
         } else {
             sfen.push_str(&format!(
                 " {}",
-                self.history.ply - self.history.starting_ply
+                // 手数なんで 1 を足す。
+                self.history.total_length_from_the_beginning() + 1
             ));
         }
         /* TODO

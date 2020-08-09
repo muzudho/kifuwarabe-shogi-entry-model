@@ -68,10 +68,10 @@ impl GameHashSeed {
     /// TODO 持ち駒の枚数がトグルになってないぜ☆（＾～＾）？
     pub fn update_by_do_move(&self, history: &mut History, table: &GameTable, move_: &Movement) {
         // TODO １つ前の局面のハッシュ。
-        let mut prev_hash = if history.ply == 0 {
+        let mut prev_hash = if history.length_from_the_middle() == 0 {
             history.starting_position_hash
         } else {
-            history.position_hashs[history.ply as usize - 1]
+            history.position_hashs[history.length_from_the_middle() as usize - 1]
         };
         // TODO 指し手 で差分を適用
         // 移動する駒。
@@ -143,7 +143,7 @@ impl GameHashSeed {
         }
 
         // TODO ハッシュ更新
-        history.position_hashs[history.ply as usize] = prev_hash;
+        history.position_hashs[history.length_from_the_middle() as usize] = prev_hash;
     }
 
     /*

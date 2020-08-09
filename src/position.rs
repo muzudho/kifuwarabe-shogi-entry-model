@@ -44,7 +44,7 @@ impl Position {
     pub fn clear(&mut self) {
         self.starting_table.clear();
         self.table.clear();
-        self.history.ply = 0;
+        self.history.clear_moves();
         self.history.starting_turn = Phase::First;
         self.pv_text = String::with_capacity(PV_BUFFER);
         self.pv_len = 0;
@@ -63,12 +63,13 @@ impl Position {
 
     /// 棋譜の作成
     pub fn set_move(&mut self, move_: &Movement) {
-        self.history.movements[self.history.ply as usize] = *move_; // クローンが入る☆（＾～＾）？
+        self.history.movements[self.history.length_from_the_middle() as usize] = *move_;
+        // クローンが入る☆（＾～＾）？
     }
     /// テスト用に棋譜表示☆（＾～＾）
     pub fn get_moves_history_text(&self) -> String {
         let mut s = String::new();
-        for ply in 0..self.history.ply {
+        for ply in 0..self.history.length_from_the_middle() {
             let movement = &self.history.movements[ply as usize];
             s.push_str(&format!("[{}] {}", ply, movement));
         }
@@ -93,7 +94,7 @@ impl Position {
             &self.history.starting_position_hash
         ));
 
-        for ply in 0..self.history.ply {
+        for ply in 0..self.history.length_from_the_middle() {
             let hash = &self.history.position_hashs[ply as usize];
             // 64bitは10進数20桁。改行する
             s.push_str(&format!("[{:3}] {:20}\n", ply, hash));
@@ -105,13 +106,13 @@ impl Position {
     /// 現局面は、同一局面が何回目かを調べるぜ☆（＾～＾）
     /// TODO 初期局面を何に使ってるのか☆（＾～＾）？
     pub fn count_same_position(&self) -> isize {
-        if self.history.ply < 1 {
+        if self.history.length_from_the_middle() < 1 {
             return 0;
         }
 
         let mut count = 0;
-        let last_ply = self.history.ply - 1;
-        let new_ply = self.history.ply;
+        let last_ply = self.history.length_from_the_middle() - 1;
+        let new_ply = self.history.length_from_the_middle();
         for i_ply in 0..new_ply {
             let t = last_ply - i_ply;
             if self.history.position_hashs[t as usize]
@@ -178,7 +179,7 @@ impl Position {
         // let ky_hash = self.hash_seed.current_position(&self);
         // self.history.set_position_hash(ky_hash);
 
-        self.history.ply += 1;
+        self.history.add_moves(1);
     }
 
     /// 逆順に指します。
@@ -198,9 +199,9 @@ impl Position {
         if 0 < self.pv_len {
             self.pv_len -= 1;
         }
-        if 0 < self.history.ply {
+        if 0 < self.history.length_from_the_middle() {
             // 棋譜から読取、手目も減る
-            self.history.ply -= 1;
+            self.history.add_moves(-1);
             let move_ = &self.history.get_move();
             // 移動先にある駒をポップするのは確定。
             let moveing_piece_num = self

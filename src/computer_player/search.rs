@@ -21,7 +21,7 @@ impl Search {
 
         let max_ply = std::cmp::max(
             universe.option_max_depth,
-            universe.option_max_ply - universe.position.history.ply as usize,
+            universe.option_max_ply - universe.position.history.length_from_the_middle() as usize,
         );
         // とりあえず 1手読み を叩き台にするぜ☆（＾～＾）
         // 初手の３０手が葉になるぜ☆（＾～＾）

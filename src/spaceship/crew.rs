@@ -188,9 +188,9 @@ impl Chiyuri {
         // コマンド読取。棋譜に追加され、手目も増える
         if read_sasite(&mut universe.position, p) {
             // 手目を戻す
-            universe.position.history.ply -= 1;
+            universe.position.history.add_moves(-1);
             // 入っている指し手の通り指すぜ☆（＾～＾）
-            let ply = universe.position.history.ply;
+            let ply = universe.position.history.length_from_the_middle();
             let move_ = universe.position.history.movements[ply as usize];
             universe
                 .position
@@ -327,7 +327,7 @@ impl Chiyuri {
         if !universe.position.undo_move() {
             Log::print_notice(&format!(
                 "info string ply={} を、これより戻せません",
-                universe.position.history.ply
+                universe.position.history.length_from_the_middle()
             ));
         }
     }
