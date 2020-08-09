@@ -206,7 +206,7 @@ impl Search {
                 None
             };
 
-            pos.do_move(pos.history.get_turn(), &move_);
+            pos.do_move(&move_);
 
             let captured_piece_centi_pawn = self.evaluation.after_do_move(captured_piece_type);
 

@@ -537,6 +537,6 @@ pub fn set_position(pos: &mut Position, p: &mut CommandLineSeek) {
         let ply = pos.history.length_from_the_middle();
 
         let move_ = pos.history.movements[ply as usize];
-        pos.redo_move(pos.history.get_turn(), &move_);
+        pos.redo_move(&move_);
     }
 }

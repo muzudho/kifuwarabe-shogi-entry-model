@@ -132,7 +132,7 @@ impl Position {
 
     /// Place the stone.  
     /// １手指します。  
-    pub fn do_move(&mut self, turn: Phase, move_: &Movement) {
+    pub fn do_move(&mut self, move_: &Movement) {
         // Principal variation.
         if self.pv_text.is_empty() {
             self.pv_text.push_str(&move_.to_string());
@@ -142,20 +142,20 @@ impl Position {
         self.pv_len += 1;
 
         self.set_move(&move_);
-        self.redo_move(turn, move_);
+        self.redo_move(move_);
     }
 
     /// Place the stone.  
     /// Do not write to the pv.  
     /// １手指します。  
     /// 読み筋への書き込みを行いません。  
-    pub fn redo_move(&mut self, turn: Phase, move_: &Movement) {
+    pub fn redo_move(&mut self, move_: &Movement) {
         // 局面ハッシュを作り直す
         self.hash_seed
             .update_by_do_move(&mut self.history, &self.table, move_);
 
         // 移動元のマスにある駒をポップすることは確定。
-        let src_piece_num = self.table.pop_piece(turn, &move_.source);
+        let src_piece_num = self.table.pop_piece(&move_.source);
 
         // 持ち駒は成ることは無いので、成るなら盤上の駒であることが確定。
         if move_.promote {
@@ -170,7 +170,7 @@ impl Position {
         }
         // 移動先升に駒があるかどうか
         // あれば　盤の相手の駒を先後反転して、自分の駒台に置きます。
-        self.table.rotate_piece_board_to_hand_on_do(turn, &move_);
+        self.table.rotate_piece_board_to_hand_on_do(&move_);
 
         // 移動先升に駒を置く
         self.table.push_piece(&move_.destination, src_piece_num);
@@ -204,9 +204,7 @@ impl Position {
             self.history.add_moves(-1);
             let move_ = &self.history.get_move();
             // 移動先にある駒をポップするのは確定。
-            let moveing_piece_num = self
-                .table
-                .pop_piece(self.history.get_turn(), &move_.destination);
+            let moveing_piece_num = self.table.pop_piece(&move_.destination);
             match move_.source {
                 FireAddress::Board(_src_sq) => {
                     // 盤上の移動なら

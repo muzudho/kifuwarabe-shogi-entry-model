@@ -192,9 +192,7 @@ impl Chiyuri {
             // 入っている指し手の通り指すぜ☆（＾～＾）
             let ply = universe.position.history.length_from_the_middle();
             let move_ = universe.position.history.movements[ply as usize];
-            universe
-                .position
-                .redo_move(universe.position.history.get_turn(), &move_);
+            universe.position.redo_move(&move_);
         }
     }
     pub fn genmove(universe: &Universe) {

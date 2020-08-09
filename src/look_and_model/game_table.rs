@@ -639,10 +639,10 @@ impl GameTable {
     /// ドゥ時の動き。
     /// 駒の先後を反転させるぜ☆（＾～＾）
     // あれば　盤の相手の駒を先後反転して、自分の駒台に置きます。
-    pub fn rotate_piece_board_to_hand_on_do(&mut self, turn: Phase, move_: &Movement) {
+    pub fn rotate_piece_board_to_hand_on_do(&mut self, move_: &Movement) {
         // Captured piece number.
         // 衝突された駒の背番号。
-        if let Some(cap) = self.pop_piece(turn, &move_.destination) {
+        if let Some(cap) = self.pop_piece(&move_.destination) {
             // 移動先升の駒を盤上から消し、自分の持ち駒に増やす
             // 先後ひっくり返す。
             self.turn_phase(cap);
@@ -696,7 +696,7 @@ impl GameTable {
                             double_faced_piece,
                             AbsoluteAddress2D::default(),
                         ));
-                        if let Some(piece_num) = self.pop_piece(turn, &fire1) {
+                        if let Some(piece_num) = self.pop_piece(&fire1) {
                             piece_num
                         } else {
                             panic!(Log::print_fatal("(Err.461) Invalid piece_num."));
@@ -743,7 +743,7 @@ impl GameTable {
         }
     }
     /// 駒を取りのぞく。
-    pub fn pop_piece(&mut self, turn: Phase, fire: &FireAddress) -> Option<PieceNum> {
+    pub fn pop_piece(&mut self, fire: &FireAddress) -> Option<PieceNum> {
         match fire {
             FireAddress::Board(sq) => {
                 let piece_num = self.board[sq.serial_number() as usize];
@@ -758,8 +758,8 @@ impl GameTable {
             FireAddress::Hand(drop) => {
                 // 場所で指定します。
                 // 台から取りのぞきます。
-                let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.piece.type_());
-                let piece_num = self.pop_hand(drop);
+                // let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.piece.type_());
+                let piece_num = self.pop_hand(drop.piece);
                 // TODO 背番号の番地に、ゴミ値を入れて消去するが、できれば pop ではなく swap にしろだぜ☆（＾～＾）
                 // TODO 持ってない駒でも、マイナス１オーバーフローしたところに別の駒があれば、打てるのはよくないぜ☆（＾～＾）
                 self.address_list[piece_num as usize] = FireAddress::default();
@@ -984,10 +984,29 @@ impl GameTable {
 
     /// 駒の先後を ひっくり返してから入れてください。
     pub fn push_hand(&mut self, drop: DoubleFacedPiece, num: PieceNum) {
+        let next = self.hand_next(drop);
+        if next != drop.hand_start() {
+            let last = next - drop.hand_direction();
+            if let Some(_num) = self.board[last as usize] {
+            } else {
+                panic!(Log::print_fatal_t(
+                    "(Err.993) 駒台に連続せずに駒を置こうとしました。",
+                    Table::default()
+                        .str("GameTable1", &self.pretty1())
+                        .str("GameTable2a", &self.pretty2a())
+                        .str("GameTable2b", &self.pretty2b())
+                        .str("GameTable2c", &self.pretty2c())
+                        .str("GameTable2d", &self.pretty2d())
+                        .str("Drop", &format!("{:?}", drop))
+                        .isize("Next", next)
+                        .isize("Last", last)
+                ));
+            }
+        }
         // 盤上の駒も、持ち駒も区別なく、ゲーム卓に駒を置くぜ☆（＾～＾）
-        self.board[self.hand_next(drop) as usize] = Some(num);
+        self.board[next as usize] = Some(num);
         // 位置を増減するぜ☆（＾～＾）
-        self.add_hand_next(drop, drop.hand_direction());
+        self.increase_hand_next(drop);
     }
     pub fn pop_hand(&mut self, drop: DoubleFacedPiece) -> PieceNum {
         if self.count_hand(drop) < 1 {
@@ -1003,13 +1022,14 @@ impl GameTable {
             ));
         }
         // 位置を増減するぜ☆（＾～＾）
-        self.add_hand_next(drop, -drop.hand_direction());
+        self.decrease_hand_next(drop);
+        let next = self.hand_next(drop);
         // 駒台の駒をはがすぜ☆（＾～＾）
-        let num = if let Some(num) = self.board[self.hand_next(drop) as usize] {
+        let num = if let Some(num) = self.board[next as usize] {
             num
         } else {
             panic!(Log::print_fatal_t(
-                "(Err.1151) Invalid num.",
+                "(Err.1151) Not founc piece.",
                 Table::default()
                     .str("GameTable1", &self.pretty1())
                     .str("GameTable2a", &self.pretty2a())
@@ -1017,9 +1037,10 @@ impl GameTable {
                     .str("GameTable2c", &self.pretty2c())
                     .str("GameTable2d", &self.pretty2d())
                     .str("Drop", &format!("{:?}", drop))
+                    .isize("Next", next)
             ));
         };
-        self.board[self.hand_next(drop) as usize] = None;
+        self.board[next as usize] = None;
         num
     }
     pub fn count_hand(&self, drop: DoubleFacedPiece) -> usize {
@@ -1131,7 +1152,10 @@ impl GameTable {
     fn hand_next(&self, double_faced_piece: DoubleFacedPiece) -> isize {
         self.hand_next[double_faced_piece as usize]
     }
-    fn add_hand_next(&mut self, double_faced_piece: DoubleFacedPiece, direction: isize) {
-        self.hand_next[double_faced_piece as usize] += direction
+    fn increase_hand_next(&mut self, drop: DoubleFacedPiece) {
+        self.hand_next[drop as usize] += drop.hand_direction();
+    }
+    fn decrease_hand_next(&mut self, drop: DoubleFacedPiece) {
+        self.hand_next[drop as usize] -= drop.hand_direction();
     }
 }
