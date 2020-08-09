@@ -6,7 +6,7 @@ use crate::cosmic::{
     smart::square::{AbsoluteAddress2D, FILE1U8},
     universe::Universe,
 };
-use crate::law::{cryptographic::*, generate_move::MoveGen, usi::*};
+use crate::law::{cryptographic::*, generate_move::MoveGen};
 use crate::log::LogExt;
 use crate::look_and_model::{
     facility::{CommandRoom, Kitchen},
@@ -15,6 +15,7 @@ use crate::look_and_model::{
     search::Search,
 };
 use crate::spaceship::{engine, equipment::PvString};
+use crate::usi_protocol::input_usi::*;
 use casual_logger::{Log, Table};
 use rand::Rng;
 

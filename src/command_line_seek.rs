@@ -2,6 +2,7 @@
 //! コマンドを解析して、使いやすくします。  
 use crate::log::LogExt;
 use casual_logger::Log;
+use regex::Regex;
 use std::fmt;
 
 /// Parses the command to make it easier to use.  
@@ -115,6 +116,32 @@ impl CommandLineSeek {
     pub fn rest(&self) -> Option<&str> {
         if self.current < self.line.len() {
             Some(&self.line[self.current..])
+        } else {
+            None
+        }
+    }
+
+    /// 0を含む自然数で始まっているか？
+    pub fn read_natural_number(&mut self) -> Option<isize> {
+        let re = match Regex::new(r"^(\d+)") {
+            Result::Ok(val) => val,
+            Result::Err(e) => panic!(Log::print_fatal(&format!(
+                "(Err.101) Invalid regex=|{}|",
+                e
+            ))),
+        };
+        if let Some(cap) = re.captures(&self.line[self.current..]) {
+            let num = match cap[1].parse() {
+                Result::Ok(val) => val,
+                Result::Err(e) => {
+                    panic!(Log::print_fatal(&format!("(Err.110) Invalid cap1=|{}|", e)))
+                }
+            };
+
+            let num_str = &format!("{}", num);
+            self.go_next_to(num_str);
+
+            Some(num)
         } else {
             None
         }

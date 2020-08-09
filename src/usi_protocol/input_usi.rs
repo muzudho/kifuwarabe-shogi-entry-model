@@ -1,5 +1,5 @@
-//!
 //! USIプロトコル
+//!
 //!
 use crate::command_line_seek::CommandLineSeek;
 use crate::cosmic::recording::{CapturedMove, FireAddress, HandAddress, Movement, Phase};
@@ -377,7 +377,8 @@ pub fn set_position(pos: &mut Position, p: &mut CommandLineSeek) {
             // ' ' を読み飛ばした。
             p.go_next_to(" ");
         }
-    } else if p.starts_with("position sfen ") {
+    } else if p.starts_with("position sfen ") || p.starts_with("position xfen ") {
+        let sfen_enable = p.starts_with("position sfen ");
         // 'position sfen ' を読み飛ばし
         p.go_next_to("position sfen ");
         read_board(pos, p);
@@ -486,8 +487,28 @@ pub fn set_position(pos: &mut Position, p: &mut CommandLineSeek) {
             } //loop
         } //else
 
-        if p.starts_with(" 1 ") {
-            p.go_next_to(" 1 ");
+        if sfen_enable {
+            if p.starts_with(" 1 ") {
+                p.go_next_to(" 1 ");
+            }
+        } else {
+            if p.starts_with(" ") {
+                p.go_next_to(" ");
+            }
+
+            // TODO 数字読取
+            let num = p.read_natural_number();
+            if let Some(num) = num {
+                pos.history.length_from_the_beginning = num - 1;
+            } else {
+                panic!(Log::print_fatal(
+                    "(Err.510) 途中図の次の局面が何手目か読めなかった。",
+                ));
+            }
+
+            if p.starts_with(" ") {
+                p.go_next_to(" ");
+            }
         }
     } else {
         Log::print_debug(

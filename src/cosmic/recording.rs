@@ -21,7 +21,7 @@ pub struct History {
     /// 手目。増減するので符号付きにしておくぜ☆（＾～＾）i8 は -128～127 なんで手数が収まらん☆（＾～＾）
     length_from_the_middle: isize,
     /// 途中局面の次の一手は何手目か。
-    length_from_the_beginning: isize,
+    pub length_from_the_beginning: isize,
     /// 棋譜
     /// TODO 0手目を初期局面にしたいので、最初にパスを入れてほしい☆（＾～＾）
     pub movements: [Movement; PLY_SIZE],
