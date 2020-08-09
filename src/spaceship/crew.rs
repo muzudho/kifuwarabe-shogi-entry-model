@@ -10,7 +10,6 @@ use crate::law::{cryptographic::*, generate_move::MoveGen};
 use crate::log::LogExt;
 use crate::look_and_model::{
     facility::{CommandRoom, Kitchen},
-    game_table::GameTableLook2c,
     position::{PositionLook, PositionLook2a, PositionLook2b},
     search::Search,
 };
@@ -281,7 +280,7 @@ impl Chiyuri {
             "{}{}{}",
             PositionLook2a::to_string(&universe.position, PosNums::Current),
             PositionLook2b::to_string(&universe.position, PosNums::Current),
-            GameTableLook2c::to_string(&universe.position.table)
+            universe.position.table.pretty2c()
         );
         Log::print_notice(&s);
     }
