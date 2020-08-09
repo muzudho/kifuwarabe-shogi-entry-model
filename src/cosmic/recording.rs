@@ -4,10 +4,10 @@
 //! * Phase (先後。手番,相手番)
 //! * Person (先手,後手)
 //!
-use crate::cosmic::smart::features::DoubleFacedPiece;
 use crate::cosmic::smart::square::AbsoluteAddress2D;
 use crate::cosmic::toy_box::PieceNum;
 use crate::law::cryptographic::num_to_lower_case;
+use crate::look_and_model::DoubleFacedPiece;
 use std::fmt;
 
 /// 手数☆（＾～＾） 大会ルールとは別で、このプログラムが対応できる上限値☆（＾～＾）

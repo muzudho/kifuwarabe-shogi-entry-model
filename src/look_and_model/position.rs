@@ -1,8 +1,8 @@
 use crate::cosmic::playing::PosNums;
 use crate::cosmic::recording::FireAddress;
-use crate::cosmic::smart::{features::DoubleFacedPiece, square::AbsoluteAddress2D};
+use crate::cosmic::smart::square::AbsoluteAddress2D;
 use crate::cosmic::toy_box::PieceNum;
-use crate::look_and_model::{game_table::GameTable, piece::PIECE_WHITE_SPACE};
+use crate::look_and_model::{game_table::GameTable, piece::PIECE_WHITE_SPACE, DoubleFacedPiece};
 use crate::position::Position;
 
 /// 局面

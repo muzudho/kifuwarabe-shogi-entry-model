@@ -1,5 +1,6 @@
 use crate::cosmic::recording::Phase;
-use crate::cosmic::smart::features::{DoubleFacedPiece, PieceType};
+use crate::cosmic::smart::features::PieceType;
+use crate::look_and_model::DoubleFacedPiece;
 use num_derive::FromPrimitive;
 use std::fmt;
 

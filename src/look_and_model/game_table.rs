@@ -1,13 +1,15 @@
 use crate::cosmic::recording::{FireAddress, HandAddress, Movement, Phase};
-use crate::cosmic::smart::features::{DoubleFacedPiece, PieceType};
+use crate::cosmic::smart::features::PieceType;
 use crate::cosmic::smart::square::{AbsoluteAddress2D, BOARD_MEMORY_AREA, RANK10U8, RANK1U8};
 use crate::cosmic::toy_box::PieceNum;
 use crate::cosmic::toy_box::*;
 use crate::law::generate_move::Area;
 use crate::law::speed_of_light::Nine299792458;
 use crate::log::LogExt;
-use crate::look_and_model::piece::{Piece, PIECE_WHITE_SPACE};
-use crate::look_and_model::PHYSICAL_PIECE_TYPE_LEN;
+use crate::look_and_model::{
+    piece::{Piece, PIECE_WHITE_SPACE},
+    DoubleFacedPiece, PHYSICAL_PIECE_TYPE_LEN,
+};
 use casual_logger::{Log, Table};
 use num_traits::FromPrimitive;
 

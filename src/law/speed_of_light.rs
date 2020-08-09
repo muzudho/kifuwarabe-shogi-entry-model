@@ -8,13 +8,13 @@
 //! 駒種類早見表 (PieceTypeChart).
 //!
 use crate::cosmic::recording::{FireAddress, HandAddress, Phase, PHASE_LEN};
-use crate::cosmic::smart::features::PHYSICAL_PIECES_LEN;
-use crate::cosmic::smart::features::PIECE_TYPE_LEN;
-use crate::cosmic::smart::features::{DoubleFacedPiece, PieceType};
+use crate::cosmic::smart::features::{PieceType, PIECE_TYPE_LEN};
 use crate::cosmic::smart::square::{AbsoluteAddress2D, Angle, RelAdr2D, ANGLE_LEN};
 use crate::cosmic::toy_box::PieceNum;
 use crate::law::generate_move::{Agility, Mobility};
-use crate::look_and_model::{DoubleFacedPieceType, PHYSICAL_PIECE_TYPE_LEN};
+use crate::look_and_model::{
+    DoubleFacedPiece, DoubleFacedPieceType, PHYSICAL_PIECES_LEN, PHYSICAL_PIECE_TYPE_LEN,
+};
 
 // グローバル定数
 //

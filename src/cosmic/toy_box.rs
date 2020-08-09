@@ -1,8 +1,7 @@
 //!
 //! 駒 と 盤
 //!
-use crate::cosmic::smart::features::DoubleFacedPiece;
-use crate::look_and_model::piece::Piece;
+use crate::look_and_model::{piece::Piece, DoubleFacedPiece};
 use num_derive::FromPrimitive;
 use std::*;
 
