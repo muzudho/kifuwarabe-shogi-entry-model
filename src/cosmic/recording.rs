@@ -62,14 +62,16 @@ impl History {
 /// 持ち駒の番地。
 #[derive(Copy, Clone, Debug)]
 pub struct HandAddress {
-    pub old: DoubleFacedPieceType,
-    pub new_: AbsoluteAddress2D,
+    // USI出力に必要。 'R*' とか。
+    pub type_: DoubleFacedPieceType,
+    // TODO 未使用☆（＾～＾）？
+    pub sq: AbsoluteAddress2D,
 }
 impl HandAddress {
-    pub fn new(old: DoubleFacedPieceType, new_: AbsoluteAddress2D) -> Self {
+    pub fn new(type_: DoubleFacedPieceType, sq: AbsoluteAddress2D) -> Self {
         HandAddress {
-            old: old,
-            new_: new_,
+            type_: type_,
+            sq: sq,
         }
     }
 }
@@ -91,8 +93,8 @@ impl fmt::Display for FireAddress {
                     let (file, rank) = sq.to_file_rank();
                     format!("{}{}", file, num_to_lower_case(rank as usize))
                 }
-                FireAddress::Hand(drop_type) => {
-                    format!("{}", drop_type.old)
+                FireAddress::Hand(drop) => {
+                    format!("{}", drop.type_)
                 }
             },
         )

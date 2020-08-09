@@ -436,7 +436,7 @@ impl MoveGen {
                     };
                 MoveGen::piece_of(game, phase_operation, piece_type, source, moving);
             }
-            FireAddress::Hand(src_drop_type) => {
+            FireAddress::Hand(src_drop) => {
                 if let Some((piece_type, fire_hand)) =
                     game.table.last_hand(game.history.get_turn(), &source)
                 {
@@ -487,7 +487,7 @@ impl MoveGen {
                     // 歩、香: 先手から見た歩、香車の打てる面積だぜ☆（＾～＾）
                     // 桂: 先手から見た桂馬の打てる面積だぜ☆（＾～＾）
                     // それ以外の駒が打てる範囲は盤面全体。駒を打つときに使うぜ☆（＾～＾）
-                    for sq in match src_drop_type.old {
+                    for sq in match src_drop.type_ {
                         Pawn | Lance => game.table.area.drop_pawn_lance.iter(),
                         Knight => game.table.area.drop_knight.iter(),
                         _ => game.table.area.all_squares.iter(),

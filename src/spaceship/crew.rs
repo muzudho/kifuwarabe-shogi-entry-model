@@ -172,16 +172,6 @@ impl Kifuwarabe {
         // 思考時間関連☆（＾～＾）
         Log::print_notice("option name MinThinkMsec type spin default 5000 min 0 max 599000");
         Log::print_notice("option name MaxThinkMsec type spin default 17000 min 1000 max 600000");
-        // 評価値関連☆（＾～＾）
-        Log::print_notice(
-            "option name KomawariWeightPer1000 type spin default 1000 min -100000 max 100000",
-        );
-        Log::print_notice(
-            "option name ManyWaysPer1000 type spin default 1000 min -100000 max 100000",
-        );
-        Log::print_notice(
-            "option name PromotionWeightPer1000 type spin default 1000 min -100000 max 100000",
-        );
         Log::print_notice("usiok");
     }
     pub fn usinewgame(universe: &mut Universe) {

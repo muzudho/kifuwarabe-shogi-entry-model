@@ -984,10 +984,16 @@ impl GameTable {
     }
     pub fn count_hand(&self, turn: Phase, fire: &FireAddress) -> usize {
         match fire {
-            FireAddress::Board(_sq) => panic!(Log::print_fatal(&format!(
-                "(Err.3266) 未対応☆（＾～＾）！",
-            ))),
-            FireAddress::Hand(drop_type) => self.len_hand(turn, &FireAddress::Hand(*drop_type)),
+            FireAddress::Board(_sq) => panic!(Log::print_fatal("(Err.3431) 未対応☆（＾～＾）")),
+            FireAddress::Hand(drop) => {
+                let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.type_);
+                if GameTable::hand_direction(drop) < 0 {
+                    // 先手
+                    (GameTable::hand_start(drop) - self.hand_cur(drop)) as usize
+                } else {
+                    (self.hand_cur(drop) - GameTable::hand_start(drop)) as usize
+                }
+            }
         }
     }
 
@@ -1121,8 +1127,8 @@ impl GameTable {
             FireAddress::Board(_sq) => {
                 // TODO 現在未実装だが、あとで使う☆（＾～＾）
             }
-            FireAddress::Hand(drop_type) => {
-                let drop = DoubleFacedPiece::from_phase_and_type(turn, drop_type.old);
+            FireAddress::Hand(drop) => {
+                let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.type_);
                 // 駒台に駒を置くぜ☆（＾～＾）
                 self.board[self.hand_cur(drop) as usize] = Some(num);
                 // 位置を増減するぜ☆（＾～＾）
@@ -1140,8 +1146,8 @@ impl GameTable {
                 // TODO さっき抜いた先端の要素を、中段の要素のところへスワップ。
                 PieceNum::King1 // ゴミ値を返しとくぜ☆（＾～＾）
             }
-            FireAddress::Hand(drop_type) => {
-                let drop = DoubleFacedPiece::from_phase_and_type(turn, drop_type.old);
+            FireAddress::Hand(drop) => {
+                let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.type_);
                 // 位置を増減するぜ☆（＾～＾）
                 self.add_hand_cur(drop, -GameTable::hand_direction(drop));
                 // 駒台の駒をはがすぜ☆（＾～＾）
@@ -1166,7 +1172,7 @@ impl GameTable {
                 if let Some(piece_num) = self.last_hand_num(
                     turn,
                     &FireAddress::Hand(HandAddress::new(
-                        drop_type.old,
+                        drop_type.type_,
                         AbsoluteAddress2D::default(),
                     )),
                 ) {
@@ -1187,8 +1193,8 @@ impl GameTable {
     pub fn last_hand_num(&self, turn: Phase, fire: &FireAddress) -> Option<PieceNum> {
         match fire {
             FireAddress::Board(_sq) => panic!(Log::print_fatal("(Err.3431) 未対応☆（＾～＾）")),
-            FireAddress::Hand(drop_type) => {
-                let drop = DoubleFacedPiece::from_phase_and_type(turn, drop_type.old);
+            FireAddress::Hand(drop) => {
+                let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.type_);
                 let direction = GameTable::hand_direction(drop);
                 if direction < 0 {
                     // 先手
@@ -1212,8 +1218,8 @@ impl GameTable {
     pub fn is_empty_hand(&self, turn: Phase, fire: &FireAddress) -> bool {
         match fire {
             FireAddress::Board(_sq) => panic!(Log::print_fatal("(Err.3431) 未対応☆（＾～＾）")),
-            FireAddress::Hand(drop_type) => {
-                let drop = DoubleFacedPiece::from_phase_and_type(turn, drop_type.old);
+            FireAddress::Hand(drop) => {
+                let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.type_);
                 if GameTable::hand_direction(drop) < 0 {
                     // 先手
                     if self.hand_cur(drop) < GameTable::hand_start(drop) {
@@ -1227,21 +1233,6 @@ impl GameTable {
                     } else {
                         true
                     }
-                }
-            }
-        }
-    }
-
-    fn len_hand(&self, turn: Phase, fire: &FireAddress) -> usize {
-        match fire {
-            FireAddress::Board(_sq) => panic!(Log::print_fatal("(Err.3431) 未対応☆（＾～＾）")),
-            FireAddress::Hand(drop_type) => {
-                let drop = DoubleFacedPiece::from_phase_and_type(turn, drop_type.old);
-                if GameTable::hand_direction(drop) < 0 {
-                    // 先手
-                    (GameTable::hand_start(drop) - self.hand_cur(drop)) as usize
-                } else {
-                    (self.hand_cur(drop) - GameTable::hand_start(drop)) as usize
                 }
             }
         }

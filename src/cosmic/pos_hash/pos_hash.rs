@@ -100,9 +100,9 @@ impl GameHashSeed {
                     }
                 }
             }
-            FireAddress::Hand(src_drop_type) => {
+            FireAddress::Hand(src_drop) => {
                 let src_drop =
-                    DoubleFacedPiece::from_phase_and_type(history.get_turn(), src_drop_type.old);
+                    DoubleFacedPiece::from_phase_and_type(history.get_turn(), src_drop.type_);
                 let count = table.count_hand(history.get_turn(), &move_.source);
                 // 打つ前の駒の枚数のハッシュ。
                 prev_hash ^= self.hands[src_drop as usize][count as usize];
@@ -196,8 +196,8 @@ impl GameHashSeed {
         HandAddresses::for_all(
             &mut |turn: &Phase, fire_hand: &FireAddress| match fire_hand {
                 FireAddress::Board(_sq) => panic!(Log::print_fatal("(Err.175) 未対応☆（＾～＾）")),
-                FireAddress::Hand(drop_type) => {
-                    let drop = DoubleFacedPiece::from_phase_and_type(*turn, drop_type.old);
+                FireAddress::Hand(drop) => {
+                    let drop = DoubleFacedPiece::from_phase_and_type(*turn, drop.type_);
                     let count = table.count_hand(*turn, fire_hand);
                     /*
                     debug_assert!(
