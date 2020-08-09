@@ -62,9 +62,9 @@ impl History {
 /// 持ち駒の番地。
 #[derive(Copy, Clone, Debug)]
 pub struct HandAddress {
-    // USI出力に必要。 'R*' とか。
+    /// USI出力に必要。 'R*' とか。 指し手生成で 歩、香、桂、その他の区別にも利用。
     pub type_: DoubleFacedPieceType,
-    // TODO 未使用☆（＾～＾）？
+    /// TODO 未使用☆（＾～＾）？
     pub sq: AbsoluteAddress2D,
 }
 impl HandAddress {
