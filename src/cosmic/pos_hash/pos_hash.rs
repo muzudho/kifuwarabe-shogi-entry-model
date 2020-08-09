@@ -93,14 +93,16 @@ impl GameHashSeed {
                         prev_hash ^=
                             self.piece[dst_sq.serial_number() as usize][src_piece_hash_index];
                     }
-                    FireAddress::Hand(_dst_drop_type) => {
+                    FireAddress::Hand(_dst_drop) => {
                         panic!(Log::print_fatal("(Err.90) 未対応☆（＾～＾）"))
                     }
                 }
             }
             FireAddress::Hand(src_drop) => {
-                let src_drop =
-                    DoubleFacedPiece::from_phase_and_type(history.get_turn(), src_drop.type_);
+                let src_drop = DoubleFacedPiece::from_phase_and_type(
+                    history.get_turn(),
+                    src_drop.piece.type_(),
+                );
                 let count = table.count_hand(src_drop);
                 // 打つ前の駒の枚数のハッシュ。
                 prev_hash ^= self.hands[src_drop as usize][count as usize];
@@ -110,7 +112,7 @@ impl GameHashSeed {
                         prev_hash ^= self.piece[dst_sq.serial_number() as usize]
                             [src_drop.nonpromoted_piece_hash_index()];
                     }
-                    FireAddress::Hand(_dst_drop_type) => {
+                    FireAddress::Hand(_dst_drop) => {
                         panic!(Log::print_fatal("(Err.90) 未対応☆（＾～＾）"))
                     }
                 }
@@ -135,7 +137,7 @@ impl GameHashSeed {
                         // 打つ前の駒の枚数のハッシュ。
                         prev_hash ^= self.hands[double_faced_piece as usize][count as usize + 1];
                     }
-                    FireAddress::Hand(_dst_drop_type) => {
+                    FireAddress::Hand(_dst_drop) => {
                         panic!(Log::print_fatal("(Err.90) 未対応☆（＾～＾）"))
                     }
                 }
@@ -193,7 +195,7 @@ impl GameHashSeed {
             &mut |turn: &Phase, fire_hand: &FireAddress| match fire_hand {
                 FireAddress::Board(_sq) => panic!(Log::print_fatal("(Err.175) 未対応☆（＾～＾）")),
                 FireAddress::Hand(drop) => {
-                    let drop = DoubleFacedPiece::from_phase_and_type(*turn, drop.type_);
+                    let drop = DoubleFacedPiece::from_phase_and_type(*turn, drop.piece.type_());
                     let count = table.count_hand(drop);
                     /*
                     debug_assert!(

@@ -112,7 +112,7 @@ impl PhaseOperation for FirstOperation {
                     }
                     true
                 }
-                FireAddress::Hand(_drop_type) => panic!(Log::print_fatal(&format!(
+                FireAddress::Hand(_drop) => panic!(Log::print_fatal(&format!(
                     "(Err.546) 盤上ではなかったぜ☆（＾～＾）！",
                 ))),
             },
@@ -124,7 +124,7 @@ impl PhaseOperation for FirstOperation {
                     }
                     true
                 }
-                FireAddress::Hand(_drop_type) => panic!(Log::print_fatal(&format!(
+                FireAddress::Hand(_drop) => panic!(Log::print_fatal(&format!(
                     "(Err.546) 盤上ではなかったぜ☆（＾～＾）！",
                 ))),
             },
@@ -190,7 +190,7 @@ impl PhaseOperation for SecondOperation {
                     }
                     true
                 }
-                FireAddress::Hand(_drop_type) => panic!(Log::print_fatal(&format!(
+                FireAddress::Hand(_drop) => panic!(Log::print_fatal(&format!(
                     "(Err.546) 盤上ではなかったぜ☆（＾～＾）！",
                 ))),
             },
@@ -202,7 +202,7 @@ impl PhaseOperation for SecondOperation {
                     }
                     true
                 }
-                FireAddress::Hand(_drop_type) => panic!(Log::print_fatal(&format!(
+                FireAddress::Hand(_drop) => panic!(Log::print_fatal(&format!(
                     "(Err.546) 盤上ではなかったぜ☆（＾～＾）！",
                 ))),
             },
@@ -364,7 +364,7 @@ impl MoveGen {
                                                 *destination,
                                                 FireAddress::Hand(HandAddress::new(
                                                     game.table
-                                                        .get_double_faced_piece_type(piece_num_val),
+                                                        .get_double_faced_piece(piece_num_val),
                                                     AbsoluteAddress2D::default(),
                                                 )),
                                             ))
@@ -388,8 +388,7 @@ impl MoveGen {
                                         Some(CapturedMove::new(
                                             *destination,
                                             FireAddress::Hand(HandAddress::new(
-                                                game.table
-                                                    .get_double_faced_piece_type(piece_num_val),
+                                                game.table.get_double_faced_piece(piece_num_val),
                                                 AbsoluteAddress2D::default(),
                                             )),
                                         ))
@@ -420,7 +419,7 @@ impl MoveGen {
                                                 *destination,
                                                 FireAddress::Hand(HandAddress::new(
                                                     game.table
-                                                        .get_double_faced_piece_type(piece_num_val),
+                                                        .get_double_faced_piece(piece_num_val),
                                                     AbsoluteAddress2D::default(),
                                                 )),
                                             ))
@@ -487,7 +486,7 @@ impl MoveGen {
                     // 歩、香: 先手から見た歩、香車の打てる面積だぜ☆（＾～＾）
                     // 桂: 先手から見た桂馬の打てる面積だぜ☆（＾～＾）
                     // それ以外の駒が打てる範囲は盤面全体。駒を打つときに使うぜ☆（＾～＾）
-                    for sq in match src_drop.type_ {
+                    for sq in match src_drop.piece.type_() {
                         Pawn | Lance => game.table.area.drop_pawn_lance.iter(),
                         Knight => game.table.area.drop_knight.iter(),
                         _ => game.table.area.all_squares.iter(),

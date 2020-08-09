@@ -3,7 +3,7 @@
 //!
 use crate::command_line_seek::CommandLineSeek;
 use crate::cosmic::recording::{CapturedMove, FireAddress, HandAddress, Movement, Phase};
-use crate::cosmic::smart::features::{DoubleFacedPieceType, PieceType};
+use crate::cosmic::smart::features::{DoubleFacedPiece, PieceType};
 use crate::cosmic::smart::square::AbsoluteAddress2D;
 use crate::cosmic::smart::square::FILE9U8;
 use crate::cosmic::smart::square::RANK1U8;
@@ -59,49 +59,70 @@ pub fn read_sasite(pos: &mut Position, p: &mut CommandLineSeek) -> bool {
         "R" => {
             p.go_next_to("R*");
             FireAddress::Hand(HandAddress::new(
-                DoubleFacedPieceType::Rook,
+                match pos.history.get_turn() {
+                    Phase::First => DoubleFacedPiece::Rook1,
+                    Phase::Second => DoubleFacedPiece::Rook2,
+                },
                 AbsoluteAddress2D::default(),
             ))
         }
         "B" => {
             p.go_next_to("B*");
             FireAddress::Hand(HandAddress::new(
-                DoubleFacedPieceType::Bishop,
+                match pos.history.get_turn() {
+                    Phase::First => DoubleFacedPiece::Bishop1,
+                    Phase::Second => DoubleFacedPiece::Bishop2,
+                },
                 AbsoluteAddress2D::default(),
             ))
         }
         "G" => {
             p.go_next_to("G*");
             FireAddress::Hand(HandAddress::new(
-                DoubleFacedPieceType::Gold,
+                match pos.history.get_turn() {
+                    Phase::First => DoubleFacedPiece::Gold1,
+                    Phase::Second => DoubleFacedPiece::Gold2,
+                },
                 AbsoluteAddress2D::default(),
             ))
         }
         "S" => {
             p.go_next_to("S*");
             FireAddress::Hand(HandAddress::new(
-                DoubleFacedPieceType::Silver,
+                match pos.history.get_turn() {
+                    Phase::First => DoubleFacedPiece::Silver1,
+                    Phase::Second => DoubleFacedPiece::Silver2,
+                },
                 AbsoluteAddress2D::default(),
             ))
         }
         "N" => {
             p.go_next_to("N*");
             FireAddress::Hand(HandAddress::new(
-                DoubleFacedPieceType::Knight,
+                match pos.history.get_turn() {
+                    Phase::First => DoubleFacedPiece::Knight1,
+                    Phase::Second => DoubleFacedPiece::Knight2,
+                },
                 AbsoluteAddress2D::default(),
             ))
         }
         "L" => {
             p.go_next_to("L*");
             FireAddress::Hand(HandAddress::new(
-                DoubleFacedPieceType::Lance,
+                match pos.history.get_turn() {
+                    Phase::First => DoubleFacedPiece::Lance1,
+                    Phase::Second => DoubleFacedPiece::Lance2,
+                },
                 AbsoluteAddress2D::default(),
             ))
         }
         "P" => {
             p.go_next_to("P*");
             FireAddress::Hand(HandAddress::new(
-                DoubleFacedPieceType::Pawn,
+                match pos.history.get_turn() {
+                    Phase::First => DoubleFacedPiece::Pawn1,
+                    Phase::Second => DoubleFacedPiece::Pawn2,
+                },
                 AbsoluteAddress2D::default(),
             ))
         }
@@ -220,8 +241,7 @@ pub fn read_sasite(pos: &mut Position, p: &mut CommandLineSeek) -> bool {
         Some(CapturedMove::new(
             buffer.destination,
             FireAddress::Hand(HandAddress::new(
-                pos.table
-                    .get_double_faced_piece_type(captured_piece_num_val),
+                pos.table.get_double_faced_piece(captured_piece_num_val),
                 AbsoluteAddress2D::default(),
             )),
         ))

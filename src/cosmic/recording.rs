@@ -4,7 +4,7 @@
 //! * Phase (先後。手番,相手番)
 //! * Person (先手,後手)
 //!
-use crate::cosmic::smart::features::DoubleFacedPieceType;
+use crate::cosmic::smart::features::DoubleFacedPiece;
 use crate::cosmic::smart::square::AbsoluteAddress2D;
 use crate::cosmic::toy_box::PieceNum;
 use crate::law::cryptographic::num_to_lower_case;
@@ -63,14 +63,15 @@ impl History {
 #[derive(Copy, Clone, Debug)]
 pub struct HandAddress {
     /// USI出力に必要。 'R*' とか。 指し手生成で 歩、香、桂、その他の区別にも利用。
-    pub type_: DoubleFacedPieceType,
+    /// 利用するとき 先手／後手 情報はよく使うんで、めんとくさいんで 先手／後手 情報も持たせておきます。
+    pub piece: DoubleFacedPiece,
     /// TODO 未使用☆（＾～＾）？
     pub sq: AbsoluteAddress2D,
 }
 impl HandAddress {
-    pub fn new(type_: DoubleFacedPieceType, sq: AbsoluteAddress2D) -> Self {
+    pub fn new(piece: DoubleFacedPiece, sq: AbsoluteAddress2D) -> Self {
         HandAddress {
-            type_: type_,
+            piece: piece,
             sq: sq,
         }
     }
@@ -94,7 +95,7 @@ impl fmt::Display for FireAddress {
                     format!("{}{}", file, num_to_lower_case(rank as usize))
                 }
                 FireAddress::Hand(drop) => {
-                    format!("{}", drop.type_)
+                    format!("{}", drop.piece.type_())
                 }
             },
         )
@@ -187,10 +188,10 @@ impl fmt::Display for Movement {
                     if self.promote { "+" } else { "" }
                 )
             }
-            FireAddress::Hand(_src_drop_type) => write!(
+            FireAddress::Hand(_src_drop) => write!(
                 f,
                 "{}{}{}",
-                self.source, //src_drop_type,
+                self.source, // src_drop,
                 self.destination,
                 if self.promote { "+" } else { "" }
             ),

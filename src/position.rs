@@ -4,7 +4,6 @@ use crate::config::PV_BUFFER;
 use crate::cosmic::playing::{MovegenPhase, PosNums};
 use crate::cosmic::pos_hash::pos_hash::*;
 use crate::cosmic::recording::{FireAddress, HandAddress, History, Movement, Phase};
-use crate::cosmic::smart::square::AbsoluteAddress2D;
 use crate::log::LogExt;
 use crate::look_and_model::game_table::GameTable;
 use casual_logger::Log;
@@ -229,7 +228,7 @@ impl Position {
                         moveing_piece_num,
                     );
                 }
-                FireAddress::Hand(_src_drop_type) => {
+                FireAddress::Hand(src_drop) => {
                     // 打なら
                     // 打った場所に駒があるはずだぜ☆（＾～＾）
                     let piece_num = if let Some(piece_num) = moveing_piece_num {
@@ -243,8 +242,8 @@ impl Position {
                     self.table.push_piece(
                         turn,
                         &FireAddress::Hand(HandAddress::new(
-                            self.table.get_double_faced_piece_type(piece_num),
-                            AbsoluteAddress2D::default(),
+                            self.table.get_double_faced_piece(piece_num),
+                            src_drop.sq,
                         )),
                         moveing_piece_num,
                     );

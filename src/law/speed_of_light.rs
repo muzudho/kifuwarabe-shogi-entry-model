@@ -374,98 +374,98 @@ impl Default for SpeedOfLight {
                 (
                     Phase::First,
                     FireAddress::Hand(HandAddress::new(
-                        DoubleFacedPieceType::Rook,
+                        DoubleFacedPiece::Rook1,
                         AbsoluteAddress2D::default(),
                     )),
                 ),
                 (
                     Phase::First,
                     FireAddress::Hand(HandAddress::new(
-                        DoubleFacedPieceType::Bishop,
+                        DoubleFacedPiece::Bishop1,
                         AbsoluteAddress2D::default(),
                     )),
                 ),
                 (
                     Phase::First,
                     FireAddress::Hand(HandAddress::new(
-                        DoubleFacedPieceType::Gold,
+                        DoubleFacedPiece::Gold1,
                         AbsoluteAddress2D::default(),
                     )),
                 ),
                 (
                     Phase::First,
                     FireAddress::Hand(HandAddress::new(
-                        DoubleFacedPieceType::Silver,
+                        DoubleFacedPiece::Silver1,
                         AbsoluteAddress2D::default(),
                     )),
                 ),
                 (
                     Phase::First,
                     FireAddress::Hand(HandAddress::new(
-                        DoubleFacedPieceType::Knight,
+                        DoubleFacedPiece::Knight1,
                         AbsoluteAddress2D::default(),
                     )),
                 ),
                 (
                     Phase::First,
                     FireAddress::Hand(HandAddress::new(
-                        DoubleFacedPieceType::Lance,
+                        DoubleFacedPiece::Lance1,
                         AbsoluteAddress2D::default(),
                     )),
                 ),
                 (
                     Phase::First,
                     FireAddress::Hand(HandAddress::new(
-                        DoubleFacedPieceType::Pawn,
+                        DoubleFacedPiece::Pawn1,
                         AbsoluteAddress2D::default(),
                     )),
                 ),
                 (
                     Phase::Second,
                     FireAddress::Hand(HandAddress::new(
-                        DoubleFacedPieceType::Rook,
+                        DoubleFacedPiece::Rook2,
                         AbsoluteAddress2D::default(),
                     )),
                 ),
                 (
                     Phase::Second,
                     FireAddress::Hand(HandAddress::new(
-                        DoubleFacedPieceType::Bishop,
+                        DoubleFacedPiece::Bishop2,
                         AbsoluteAddress2D::default(),
                     )),
                 ),
                 (
                     Phase::Second,
                     FireAddress::Hand(HandAddress::new(
-                        DoubleFacedPieceType::Gold,
+                        DoubleFacedPiece::Gold2,
                         AbsoluteAddress2D::default(),
                     )),
                 ),
                 (
                     Phase::Second,
                     FireAddress::Hand(HandAddress::new(
-                        DoubleFacedPieceType::Silver,
+                        DoubleFacedPiece::Silver2,
                         AbsoluteAddress2D::default(),
                     )),
                 ),
                 (
                     Phase::Second,
                     FireAddress::Hand(HandAddress::new(
-                        DoubleFacedPieceType::Knight,
+                        DoubleFacedPiece::Knight2,
                         AbsoluteAddress2D::default(),
                     )),
                 ),
                 (
                     Phase::Second,
                     FireAddress::Hand(HandAddress::new(
-                        DoubleFacedPieceType::Lance,
+                        DoubleFacedPiece::Lance2,
                         AbsoluteAddress2D::default(),
                     )),
                 ),
                 (
                     Phase::Second,
                     FireAddress::Hand(HandAddress::new(
-                        DoubleFacedPieceType::Pawn,
+                        DoubleFacedPiece::Pawn2,
                         AbsoluteAddress2D::default(),
                     )),
                 ),
