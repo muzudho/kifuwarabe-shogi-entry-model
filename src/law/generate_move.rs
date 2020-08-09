@@ -464,7 +464,7 @@ impl MoveGen {
                         }
                     };
                     // 駒を持っていれば
-                    use crate::cosmic::smart::features::DoubleFacedPieceType::*;
+                    use crate::look_and_model::DoubleFacedPieceType::*;
                     // 歩、香: 先手から見た歩、香車の打てる面積だぜ☆（＾～＾）
                     // 桂: 先手から見た桂馬の打てる面積だぜ☆（＾～＾）
                     // それ以外の駒が打てる範囲は盤面全体。駒を打つときに使うぜ☆（＾～＾）

@@ -4,7 +4,6 @@
 //! 先後なしの駒と空白
 //!
 
-use num_derive::FromPrimitive;
 use std::fmt;
 
 // 持ち駒の駒のうち、最大の枚数は歩の 18。
@@ -63,37 +62,6 @@ impl fmt::Display for PieceType {
             PromotedKnight => write!(f, "PU"),
             PromotedLance => write!(f, "PS"),
             PromotedPawn => write!(f, "PH"),
-        }
-    }
-}
-
-pub const PHYSICAL_PIECE_TYPE_LEN: usize = 8;
-#[derive(Clone, Copy, Debug, FromPrimitive)]
-/// 物理的な駒の種類。玉を除けば、持ち駒の種類。
-pub enum DoubleFacedPieceType {
-    King,
-    Rook,
-    Bishop,
-    Gold,
-    Silver,
-    Knight,
-    Lance,
-    Pawn,
-}
-/// USIの Drop に合わせるぜ☆（＾～＾） 先後を区別しないぜ☆（＾～＾）
-impl fmt::Display for DoubleFacedPieceType {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        // 文字列リテラルでないとダメみたいなんで、他に似たようなコードがあるのに、また書くことに☆（＾～＾）
-        use self::DoubleFacedPieceType::*;
-        match *self {
-            King => write!(f, "?*"),
-            Rook => write!(f, "R*"),
-            Bishop => write!(f, "B*"),
-            Gold => write!(f, "G*"),
-            Silver => write!(f, "S*"),
-            Knight => write!(f, "N*"),
-            Lance => write!(f, "L*"),
-            Pawn => write!(f, "P*"),
         }
     }
 }

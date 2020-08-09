@@ -55,7 +55,23 @@ pos2
 
 駒を取るときに不具合。
 
-### Case.1 中断
+### Case.1 最初から
+
+```plain
+usi
+isready
+setoption name USI_Ponder value true
+setoption name USI_Hash value 256
+setoption name MaxPly value 320
+setoption name DepthNotToGiveUp value 4
+setoption name MaxDepth value 7
+setoption name MinThinkMsec value 5000
+setoption name MaxThinkMsec value 17000
+position startpos
+go btime 165000 wtime 408000 binc 5000 winc 5000
+```
+
+### Case.2 中断
 
 ↓ 途中図からやっても、不具合が出ない。
 
