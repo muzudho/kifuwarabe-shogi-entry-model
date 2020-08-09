@@ -42,8 +42,8 @@ impl Position {
     /// 初期局面、現局面ともにクリアーします。
     /// 手目も 0 に戻します。
     pub fn clear(&mut self) {
-        self.starting_table.clear();
-        self.table.clear();
+        self.starting_table = GameTable::default();
+        self.table = GameTable::default();
         self.history.clear_moves();
         self.history.starting_turn = Phase::First;
         self.pv_text = String::with_capacity(PV_BUFFER);

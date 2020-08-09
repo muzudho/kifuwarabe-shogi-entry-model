@@ -577,30 +577,14 @@ impl Default for GameTable {
     }
 }
 impl GameTable {
-    pub fn clear(&mut self) {
-        self.board = [None; BOARD_MEMORY_AREA];
-        // 初期値はゴミ値だぜ☆（＾～＾）上書きして消せだぜ☆（＾～＾）
-        self.address_list = [FireAddress::default(); NAMED_PIECES_LEN];
-        // 初期値はゴミ値だぜ☆（＾～＾）上書きして消せだぜ☆（＾～＾）
-        self.piece_list = [Piece::King1; NAMED_PIECES_LEN];
-        self.double_faced_piece_type_index = [
-            PieceNum::King1 as usize,
-            PieceNum::Rook21 as usize,
-            PieceNum::Bishop19 as usize,
-            PieceNum::Gold3 as usize,
-            PieceNum::Silver7 as usize,
-            PieceNum::Knight11 as usize,
-            PieceNum::Lance15 as usize,
-            PieceNum::Pawn23 as usize,
-        ];
-    }
-
     /// 開始盤面を、現盤面にコピーしたいときに使うぜ☆（＾～＾）
     pub fn copy_from(&mut self, table: &GameTable) {
         self.board = table.board.clone();
         self.address_list = table.address_list.clone();
         self.piece_list = table.piece_list.clone();
         self.double_faced_piece_type_index = table.double_faced_piece_type_index.clone();
+        self.area = table.area.clone();
+        self.hand_next = table.hand_next;
     }
 
     pub fn get_piece_string(&self, num: PieceNum) -> String {
@@ -985,8 +969,10 @@ impl GameTable {
     /// 駒の先後を ひっくり返してから入れてください。
     pub fn push_hand(&mut self, drop: DoubleFacedPiece, num: PieceNum) {
         let next = self.hand_next(drop);
-        if next != drop.hand_start() {
-            let last = next - drop.hand_direction();
+        let start = drop.hand_start();
+        if next != start {
+            let direction = drop.hand_direction();
+            let last = next - direction;
             if let Some(_num) = self.board[last as usize] {
             } else {
                 panic!(Log::print_fatal_t(
@@ -1000,6 +986,8 @@ impl GameTable {
                         .str("Drop", &format!("{:?}", drop))
                         .isize("Next", next)
                         .isize("Last", last)
+                        .isize("Start", start)
+                        .isize("Direction", direction)
                 ));
             }
         }
@@ -1009,7 +997,8 @@ impl GameTable {
         self.increase_hand_next(drop);
     }
     pub fn pop_hand(&mut self, drop: DoubleFacedPiece) -> PieceNum {
-        if self.count_hand(drop) < 1 {
+        let count = self.count_hand(drop);
+        if count < 1 {
             panic!(Log::print_fatal_t(
                 "(Err.1045) 駒台にない駒を、駒台から取ろうとしました。",
                 Table::default()
@@ -1019,6 +1008,7 @@ impl GameTable {
                     .str("GameTable2c", &self.pretty2c())
                     .str("GameTable2d", &self.pretty2d())
                     .str("Drop", &format!("{:?}", drop))
+                    .usize("Count", count)
             ));
         }
         // 位置を増減するぜ☆（＾～＾）
@@ -1156,6 +1146,36 @@ impl GameTable {
         self.hand_next[drop as usize] += drop.hand_direction();
     }
     fn decrease_hand_next(&mut self, drop: DoubleFacedPiece) {
+        if drop.hand_direction() < 0 {
+            // 先手
+            if drop.hand_start() <= self.hand_next[drop as usize] {
+                panic!(Log::print_fatal_t(
+                    "(Err.1169) 先手の無い持ち駒をさらに減らそうとしました。",
+                    Table::default()
+                        .usize("HandMaxElements", drop.type_().hand_max_elements())
+                        .isize("HandDirection", drop.hand_direction())
+                        .isize("HandStart", drop.hand_start())
+                        .isize("HandNext", self.hand_next(drop))
+                        .str("Drop", &format!("{:?}", drop)) // pretty1() は循環参照。
+                        .str("GameTable2a", &self.pretty2a()) //.str("GameTable2b", &GameTableLook2b::to_string(&self))
+                                                              //.str("GameTable2c", &GameTableLook2c::to_string(&self))
+                ));
+            }
+        } else {
+            if self.hand_next[drop as usize] <= drop.hand_start() {
+                panic!(Log::print_fatal_t(
+                    "(Err.1183) 後手の無い持ち駒をさらに減らそうとしました。",
+                    Table::default()
+                        .usize("HandMaxElements", drop.type_().hand_max_elements())
+                        .isize("HandDirection", drop.hand_direction())
+                        .isize("HandStart", drop.hand_start())
+                        .isize("HandNext", self.hand_next(drop))
+                        .str("Drop", &format!("{:?}", drop)) // pretty1() は循環参照。
+                        .str("GameTable2a", &self.pretty2a()) //.str("GameTable2b", &GameTableLook2b::to_string(&self))
+                                                              //.str("GameTable2c", &GameTableLook2c::to_string(&self))
+                ));
+            }
+        }
         self.hand_next[drop as usize] -= drop.hand_direction();
     }
 }

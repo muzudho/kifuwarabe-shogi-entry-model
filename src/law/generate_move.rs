@@ -924,6 +924,7 @@ impl MoveGen {
 }
 
 /// 次の升☆（＾～＾）
+#[derive(Clone)]
 pub struct Area {
     /// 変わっているが、すべてのマスは先後に分かれているぜ☆（＾～＾）
     all_squares: [FireAddress; 81],
