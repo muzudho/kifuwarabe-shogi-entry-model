@@ -1049,26 +1049,19 @@ impl GameTable {
     }
 
     /// 指し手生成で使うぜ☆（＾～＾）
-    pub fn last_hand(&self, turn: Phase, fire: &FireAddress) -> Option<(PieceType, FireAddress)> {
-        match fire {
-            FireAddress::Board(_sq) => panic!(Log::print_fatal(&format!(
-                "(Err.1163) 未対応☆（＾～＾）！",
-            ))),
-            FireAddress::Hand(drop) => {
-                let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.piece.type_());
-                if let Some(piece_num) = self.last_hand_num(drop) {
-                    let piece = self.piece_list[piece_num as usize];
-                    Some((
-                        piece.type_(),
-                        FireAddress::Hand(HandAddress::new(
-                            piece.double_faced_piece(),
-                            AbsoluteAddress2D::default(),
-                        )),
-                    ))
-                } else {
-                    None
-                }
-            }
+    pub fn last_hand(&self, drop: DoubleFacedPiece) -> Option<(PieceType, FireAddress)> {
+        // let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.piece.type_());
+        if let Some(piece_num) = self.last_hand_num(drop) {
+            let piece = self.piece_list[piece_num as usize];
+            Some((
+                piece.type_(),
+                FireAddress::Hand(HandAddress::new(
+                    piece.double_faced_piece(),
+                    AbsoluteAddress2D::default(),
+                )),
+            ))
+        } else {
+            None
         }
     }
     pub fn last_hand_num(&self, drop: DoubleFacedPiece) -> Option<PieceNum> {

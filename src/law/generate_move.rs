@@ -436,9 +436,7 @@ impl MoveGen {
                 MoveGen::piece_of(game, phase_operation, piece_type, source, moving);
             }
             FireAddress::Hand(src_drop) => {
-                if let Some((piece_type, fire_hand)) =
-                    game.table.last_hand(game.history.get_turn(), &source)
-                {
+                if let Some((piece_type, fire_hand)) = game.table.last_hand(src_drop.piece) {
                     // 打つぜ☆（＾～＾）
                     let drop_fn = &mut |destination: &FireAddress| {
                         if let None = game
