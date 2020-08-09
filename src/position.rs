@@ -15,6 +15,8 @@ pub struct Position {
     pub history: History,
     /// 初期の卓
     pub starting_table: GameTable,
+    /// TODO 開始局面で次に指す方。棋譜の方も要対応。
+    pub starting_turn: Phase,
     /// 現対局ハッシュ種☆（＾～＾）
     pub hash_seed: GameHashSeed,
     /// 現在の卓
@@ -30,6 +32,7 @@ impl Default for Position {
         Position {
             history: History::default(),
             starting_table: GameTable::default(),
+            starting_turn: Phase::First,
             hash_seed: GameHashSeed::default(),
             table: GameTable::default(),
             movegen_phase: MovegenPhase::default(),
@@ -39,6 +42,16 @@ impl Default for Position {
     }
 }
 impl Position {
+    /// 初期局面、現局面ともにクリアーします。
+    /// 手目も 0 に戻します。
+    pub fn clear(&mut self) {
+        self.starting_table.clear();
+        self.starting_turn = Phase::First;
+        self.table.clear();
+        self.history.ply = 0;
+        self.pv_text = String::with_capacity(PV_BUFFER);
+        self.pv_len = 0;
+    }
     pub fn pv_text(&self) -> &str {
         &self.pv_text
     }
@@ -73,16 +86,6 @@ impl Position {
     }
     pub fn mut_starting(&mut self) -> &mut GameTable {
         &mut self.starting_table
-    }
-
-    /// 初期局面、現局面ともにクリアーします。
-    /// 手目も 0 に戻します。
-    pub fn clear(&mut self) {
-        self.starting_table.clear();
-        self.table.clear();
-        self.history.ply = 0;
-        self.pv_text = String::with_capacity(PV_BUFFER);
-        self.pv_len = 0;
     }
 
     /// テスト用に局面ハッシュ☆（＾～＾）

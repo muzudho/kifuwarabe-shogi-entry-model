@@ -2,6 +2,7 @@
 //! 局面を文字列に変換したり、文字列を局面に復元します。  
 // use crate::look_and_model::{GameResult, Piece};
 
+use crate::cosmic::recording::Phase;
 use crate::cosmic::smart::square::{AbsoluteAddress2D, FILE10U8, FILE1U8, RANK10U8, RANK1U8};
 use crate::look_and_model::game_table::GameTable;
 use crate::position::Position;
@@ -18,17 +19,13 @@ impl Position {
         // 開始盤面。
         sfen.push_str(&self.starting_table.to_sfen());
 
+        // Next stone at the start.
+        // 開始局面で、次に置く石。 先手は b、後手は w と決められています。
+        match self.starting_turn {
+            Phase::First => sfen.push_str(" b"),
+            Phase::Second => sfen.push_str(" w"),
+        }
         /* TODO
-                // Next stone at the start.
-                // 開始局面で、次に置く石。
-                match self.starting_turn {
-                    Piece::Nought => {
-                        sfen.push_str(" o");
-                    }
-                    Piece::Cross => {
-                        sfen.push_str(" x");
-                    }
-                }
 
                 // A game record.
                 // 棋譜。
