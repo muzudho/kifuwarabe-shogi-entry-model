@@ -482,7 +482,7 @@ P x{87:2}   |{63}|{64}|{65}|{66}|{67}|{68}|{69}|{70}|{71}| h8   p x{94:2}
         )
     }
     fn to_string2c(&self, piece: DoubleFacedPiece) -> String {
-        format!("{: >4}", self.hand_cur(piece)).to_string()
+        format!("{: >4}", self.hand_next(piece)).to_string()
     }
 
     /// Address display type 2d of hand piece count.
@@ -524,7 +524,8 @@ P x{87:2}   |{63}|{64}|{65}|{66}|{67}|{68}|{69}|{70}|{71}| h8   p x{94:2}
 pub struct GameTable {
     /// 盤に、駒が紐づくぜ☆（＾～＾）
     board: [Option<PieceNum>; BOARD_MEMORY_AREA as usize],
-    hand_cur: [isize; DOUBLE_FACED_PIECES_LEN],
+    /// 持ち駒を次に置く番地。
+    hand_next: [isize; DOUBLE_FACED_PIECES_LEN],
     /// 背番号付きの駒に、番地が紐づいているぜ☆（＾～＾）
     address_list: [FireAddress; NAMED_PIECES_LEN],
     /// 駒の背番号に、駒が紐づくぜ☆（＾～＾）
@@ -554,7 +555,7 @@ impl Default for GameTable {
                 PieceNum::Pawn23 as usize,
             ],
             area: Area::default(),
-            hand_cur: [
+            hand_next: [
                 DoubleFacedPiece::King1.hand_start(),
                 DoubleFacedPiece::Rook1.hand_start(),
                 DoubleFacedPiece::Bishop1.hand_start(),
@@ -838,10 +839,7 @@ impl GameTable {
     pub fn piece_num_at(&self, fire: &FireAddress) -> Option<PieceNum> {
         match fire {
             FireAddress::Board(sq) => self.board[sq.serial_number() as usize],
-            FireAddress::Hand(drop) => {
-                // let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.piece.type_());
-                self.last_hand_num(drop.piece)
-            }
+            FireAddress::Hand(drop) => self.last_hand_num(drop.piece),
         }
     }
     pub fn piece_num_on_board_at(&self, sq: &AbsoluteAddress2D) -> Option<PieceNum> {
@@ -987,9 +985,9 @@ impl GameTable {
     /// 駒の先後を ひっくり返してから入れてください。
     pub fn push_hand(&mut self, drop: DoubleFacedPiece, num: PieceNum) {
         // 盤上の駒も、持ち駒も区別なく、ゲーム卓に駒を置くぜ☆（＾～＾）
-        self.board[self.hand_cur(drop) as usize] = Some(num);
+        self.board[self.hand_next(drop) as usize] = Some(num);
         // 位置を増減するぜ☆（＾～＾）
-        self.add_hand_cur(drop, drop.hand_direction());
+        self.add_hand_next(drop, drop.hand_direction());
     }
     pub fn pop_hand(&mut self, drop: DoubleFacedPiece) -> PieceNum {
         /* TODO
@@ -1007,9 +1005,9 @@ impl GameTable {
         }
         */
         // 位置を増減するぜ☆（＾～＾）
-        self.add_hand_cur(drop, -drop.hand_direction());
+        self.add_hand_next(drop, -drop.hand_direction());
         // 駒台の駒をはがすぜ☆（＾～＾）
-        let num = if let Some(num) = self.board[self.hand_cur(drop) as usize] {
+        let num = if let Some(num) = self.board[self.hand_next(drop) as usize] {
             num
         } else {
             panic!(Log::print_fatal_t(
@@ -1022,13 +1020,13 @@ impl GameTable {
                     .str("Drop", &format!("{:?}", drop))
             ));
         };
-        self.board[self.hand_cur(drop) as usize] = None;
+        self.board[self.hand_next(drop) as usize] = None;
         num
     }
     pub fn count_hand(&self, drop: DoubleFacedPiece) -> usize {
         if drop.hand_direction() < 0 {
             // 先手
-            let count = (drop.hand_start() - self.hand_cur(drop)) / drop.hand_direction().abs();
+            let count = (drop.hand_start() - self.hand_next(drop)) / drop.hand_direction().abs();
             if drop.type_().hand_max_elements() < count as usize {
                 panic!(Log::print_fatal_t(
                     "(Err.1068) 先手の持ち駒が上限枚数を超えています。",
@@ -1036,7 +1034,7 @@ impl GameTable {
                         .usize("HandMaxElements", drop.type_().hand_max_elements())
                         .isize("HandDirection", drop.hand_direction())
                         .isize("HandStart", drop.hand_start())
-                        .isize("HandCur", self.hand_cur(drop))
+                        .isize("HandNext", self.hand_next(drop))
                         .isize("Count", count)
                         .str("Drop", &format!("{:?}", drop)) // pretty1() は循環参照。
                         .str("GameTable2a", &self.pretty2a()) //.str("GameTable2b", &GameTableLook2b::to_string(&self)) //.str("GameTable2c", &GameTableLook2c::to_string(&self))
@@ -1048,7 +1046,7 @@ impl GameTable {
                         .usize("HandMaxElements", drop.type_().hand_max_elements())
                         .isize("HandDirection", drop.hand_direction())
                         .isize("HandStart", drop.hand_start())
-                        .isize("HandCur", self.hand_cur(drop))
+                        .isize("HandNext", self.hand_next(drop))
                         .isize("Count", count)
                         .str("Drop", &format!("{:?}", drop)) // pretty1() は循環参照。
                         .str("GameTable2a", &self.pretty2a()) //.str("GameTable2b", &GameTableLook2b::to_string(&self))
@@ -1057,7 +1055,7 @@ impl GameTable {
             }
             count as usize
         } else {
-            let count = (self.hand_cur(drop) - drop.hand_start()) / drop.hand_direction().abs();
+            let count = (self.hand_next(drop) - drop.hand_start()) / drop.hand_direction().abs();
             if drop.type_().hand_max_elements() < count as usize {
                 panic!(Log::print_fatal_t(
                     "(Err.1094) 後手の持ち駒が上限枚数を超えています。",
@@ -1065,7 +1063,7 @@ impl GameTable {
                         .usize("HandMaxElements", drop.type_().hand_max_elements())
                         .isize("HandDirection", drop.hand_direction())
                         .isize("HandStart", drop.hand_start())
-                        .isize("HandCur", self.hand_cur(drop))
+                        .isize("HandNext", self.hand_next(drop))
                         .isize("Count", count)
                         .str("Drop", &format!("{:?}", drop)) // pretty1() は循環参照。
                         .str("GameTable2a", &self.pretty2a()) //.str("GameTable2b", &GameTableLook2b::to_string(&self)) //.str("GameTable2c", &GameTableLook2c::to_string(&self))
@@ -1077,7 +1075,7 @@ impl GameTable {
                         .usize("HandMaxElements", drop.type_().hand_max_elements())
                         .isize("HandDirection", drop.hand_direction())
                         .isize("HandStart", drop.hand_start())
-                        .isize("HandCur", self.hand_cur(drop))
+                        .isize("HandNext", self.hand_next(drop))
                         .isize("Count", count)
                         .str("Drop", &format!("{:?}", drop)) // pretty1() は循環参照。
                         .str("GameTable2a", &self.pretty2a()) //.str("GameTable2b", &GameTableLook2b::to_string(&self))
@@ -1107,43 +1105,34 @@ impl GameTable {
         let direction = drop.hand_direction();
         if direction < 0 {
             // 先手
-            if self.hand_cur(drop) < drop.hand_start() {
-                self.board[(self.hand_cur(drop) - direction) as usize]
-            } else {
+            if drop.hand_start() <= self.hand_next(drop) {
                 None
+            } else {
+                self.board[(self.hand_next(drop) - direction) as usize]
             }
         } else {
-            if drop.hand_start() < self.hand_cur(drop) {
-                self.board[(self.hand_cur(drop) - direction) as usize]
-            } else {
+            if self.hand_next(drop) <= drop.hand_start() {
                 None
+            } else {
+                self.board[(self.hand_next(drop) - direction) as usize]
             }
         }
     }
 
     /// 指し手生成で使うぜ☆（＾～＾）有無を調べるぜ☆（＾～＾）
     pub fn is_empty_hand(&self, drop: DoubleFacedPiece) -> bool {
-        //let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.piece.type_());
         if drop.hand_direction() < 0 {
             // 先手
-            if self.hand_cur(drop) < drop.hand_start() {
-                false
-            } else {
-                true
-            }
+            drop.hand_start() <= self.hand_next(drop)
         } else {
-            if drop.hand_start() < self.hand_cur(drop) {
-                false
-            } else {
-                true
-            }
+            self.hand_next(drop) <= drop.hand_start()
         }
     }
 
-    fn hand_cur(&self, double_faced_piece: DoubleFacedPiece) -> isize {
-        self.hand_cur[double_faced_piece as usize]
+    fn hand_next(&self, double_faced_piece: DoubleFacedPiece) -> isize {
+        self.hand_next[double_faced_piece as usize]
     }
-    fn add_hand_cur(&mut self, double_faced_piece: DoubleFacedPiece, direction: isize) {
-        self.hand_cur[double_faced_piece as usize] += direction
+    fn add_hand_next(&mut self, double_faced_piece: DoubleFacedPiece, direction: isize) {
+        self.hand_next[double_faced_piece as usize] += direction
     }
 }
