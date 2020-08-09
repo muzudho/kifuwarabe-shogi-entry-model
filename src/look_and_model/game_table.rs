@@ -736,17 +736,16 @@ impl GameTable {
                 if let Some(piece_num_val) = piece_num {
                     // マスを空にします。
                     self.board[sq.serial_number() as usize] = None;
-                    // データベース
-                    self.pop_hand(turn, &fire);
                     // TODO 背番号の番地を、ゴミ値で塗りつぶすが、できれば pop ではなく swap にしろだぜ☆（＾～＾）
                     self.address_list[piece_num_val as usize] = FireAddress::default();
                 }
                 piece_num
             }
-            FireAddress::Hand(_drop_type) => {
+            FireAddress::Hand(drop) => {
                 // 場所で指定します。
                 // 台から取りのぞきます。
-                let piece_num = self.pop_hand(turn, &fire);
+                let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.piece.type_());
+                let piece_num = self.pop_hand(drop);
                 // TODO 背番号の番地に、ゴミ値を入れて消去するが、できれば pop ではなく swap にしろだぜ☆（＾～＾）
                 self.address_list[piece_num as usize] = FireAddress::default();
                 Some(piece_num)
@@ -1035,30 +1034,18 @@ impl GameTable {
         // 位置を増減するぜ☆（＾～＾）
         self.add_hand_cur(drop, GameTable::hand_direction(drop));
     }
-    pub fn pop_hand(&mut self, turn: Phase, fire: &FireAddress) -> PieceNum {
-        match fire {
-            FireAddress::Board(_sq) => {
-                // TODO 先端の要素をポップ。
-                // let peak = self.items[self.board_cur(turn) as usize];
-                // TODO 中段の要素をポップ。
-                // let middle =
-                // TODO さっき抜いた先端の要素を、中段の要素のところへスワップ。
-                PieceNum::King1 // ゴミ値を返しとくぜ☆（＾～＾）
-            }
-            FireAddress::Hand(drop) => {
-                let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.piece.type_());
-                // 位置を増減するぜ☆（＾～＾）
-                self.add_hand_cur(drop, -GameTable::hand_direction(drop));
-                // 駒台の駒をはがすぜ☆（＾～＾）
-                let num = if let Some(num) = self.board[self.hand_cur(drop) as usize] {
-                    num
-                } else {
-                    panic!(Log::print_fatal("(Err.1151) Invalid num."));
-                };
-                self.board[self.hand_cur(drop) as usize] = None;
-                num
-            }
-        }
+    pub fn pop_hand(&mut self, drop: DoubleFacedPiece) -> PieceNum {
+        // let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.piece.type_());
+        // 位置を増減するぜ☆（＾～＾）
+        self.add_hand_cur(drop, -GameTable::hand_direction(drop));
+        // 駒台の駒をはがすぜ☆（＾～＾）
+        let num = if let Some(num) = self.board[self.hand_cur(drop) as usize] {
+            num
+        } else {
+            panic!(Log::print_fatal("(Err.1151) Invalid num."));
+        };
+        self.board[self.hand_cur(drop) as usize] = None;
+        num
     }
 
     /// 指し手生成で使うぜ☆（＾～＾）
