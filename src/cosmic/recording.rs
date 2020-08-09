@@ -20,6 +20,8 @@ pub const SENNTITE_NUM: isize = 4;
 pub struct History {
     /// 手目。増減するので符号付きにしておくぜ☆（＾～＾）i8 は -128～127 なんで手数が収まらん☆（＾～＾）
     pub ply: isize,
+    /// 途中局面の次の一手は何手目か。
+    pub starting_ply: isize,
     /// 棋譜
     /// TODO 0手目を初期局面にしたいので、最初にパスを入れてほしい☆（＾～＾）
     pub movements: [Movement; PLY_SIZE],
@@ -27,13 +29,14 @@ pub struct History {
     pub position_hashs: [u64; PLY_SIZE],
     /// 初期局面ハッシュ
     pub starting_position_hash: u64,
-    /// TODO 開始局面で次に指す方。棋譜の方も要対応。
+    /// 開始局面で次に指す方。
     pub starting_turn: Phase,
 }
 impl Default for History {
     fn default() -> History {
         History {
             ply: 0,
+            starting_ply: 0,
             movements: [Movement::default(); PLY_SIZE],
             position_hashs: [0; PLY_SIZE],
             starting_position_hash: 0,

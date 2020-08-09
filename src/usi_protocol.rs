@@ -12,18 +12,33 @@ use crate::position::Position;
 impl Position {
     /// Converts the current position to sfen.
     /// 現局面を sfen に変換します。
-    pub fn to_sfen(&self) -> String {
+    ///
+    /// # Arguments
+    ///
+    /// * `sfen_enable` - 真にすると、将棋所の仕様に合わせます。
+    pub fn to_xfen(&self, sfen_enable: bool) -> String {
         let mut sfen = String::default();
 
         // Starting board.
-        // 開始盤面。
+        // 途中盤面。
         sfen.push_str(&self.starting_table.to_sfen());
 
         // Next stone at the start.
-        // 開始局面で、次に置く石。 先手は b、後手は w と決められています。
+        // 途中盤面で、次に置く石。 先手は b、後手は w と決められています。
         match self.history.starting_turn {
             Phase::First => sfen.push_str(" b"),
             Phase::Second => sfen.push_str(" w"),
+        }
+
+        // 途中盤面の次は何手目か
+        if sfen_enable {
+            // sfen では 1固定。
+            sfen.push_str(" 1");
+        } else {
+            sfen.push_str(&format!(
+                " {}",
+                self.history.ply - self.history.starting_ply
+            ));
         }
         /* TODO
 

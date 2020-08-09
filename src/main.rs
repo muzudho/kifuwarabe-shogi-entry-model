@@ -85,24 +85,25 @@ fn main_loop(universe: &mut Universe) {
         if p.len() == 0 {
             // 任せろだぜ☆（＾～＾）
             Chiyuri::len0(universe);
-        // 文字数の長いものからチェック
+        } else if p.starts_with("go") {
+            Kifuwarabe::go(universe, &mut p);
         } else if p.starts_with("usinewgame") {
             Kifuwarabe::usinewgame(universe);
-        } else if p.starts_with("position") {
-            Kifuwarabe::position(universe, &line);
         } else if p.starts_with("isready") {
             Kifuwarabe::isready();
+        } else if p.starts_with("position") {
+            Kifuwarabe::position(universe, &line);
         } else if p.starts_with("quit") {
             // ループを抜けて終了
             break;
         } else if p.starts_with("setoption name ") {
             Kifuwarabe::setoption_name(universe, &mut CommandLineSeek::new(&line));
         } else if p.starts_with("sfen") {
-            Log::print_notice(&format!("{}", universe.position.to_sfen()));
+            Log::print_notice(&format!("{}", universe.position.to_xfen(true)));
         } else if p.starts_with("usi") {
             Kifuwarabe::usi();
-        } else if p.starts_with("go") {
-            Kifuwarabe::go(universe, &mut p);
+        } else if p.starts_with("xfen") {
+            Log::print_notice(&format!("{}", universe.position.to_xfen(false)));
         } else {
             help_chiyuri(universe, &mut p);
         }
