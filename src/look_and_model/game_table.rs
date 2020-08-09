@@ -648,54 +648,60 @@ impl GameTable {
     pub fn rotate_piece_hand_to_board_on_undo(&mut self, turn: Phase, move_: &Movement) {
         if let Some(move2_val) = move_.captured {
             // 行き先の駒は、まだ自分の駒台にある。
-            let dst_piece_t =
-                if let Some(dst_piece_t) = self.last_hand_type(turn, &move2_val.destination) {
-                    dst_piece_t
-                } else {
-                    // 行き先に駒が無かった。
-                    panic!(Log::print_fatal_t(
-                        "(Err.441) Invalid piece_type.",
-                        Table::default()
-                            .str("Turn", &format!("{:?}", turn))
-                            .str("Move", &format!("{:?}", move_))
-                            .str("Move2Dst", &format!("{}", &move2_val.destination))
-                            .str("GameTable1", &GameTableLook1::to_string(self))
-                            .str("GameTable2a", &GameTableLook2a::to_string(&self))
-                            .str("GameTable2b", &GameTableLook2b::to_string(&self))
-                            .str("GameTable2c", &GameTableLook2c::to_string(&self))
-                    ));
-                };
-
-            // 取った方の駒台の先後に合わせるぜ☆（＾～＾）
-            // 取った方の持ち駒を減らす
-            let piece_num = {
-                // TODO テスト中☆（＾～＾）
-                let double_faced_piece = DoubleFacedPiece::from_phase_and_type(
-                    turn,
-                    dst_piece_t.double_faced_piece_type(),
-                );
-                let fire1 = FireAddress::Hand(HandAddress::new(
-                    double_faced_piece,
-                    AbsoluteAddress2D::default(),
-                ));
-                if let Some(piece_num) = self.pop_piece(turn, &fire1) {
-                    piece_num
-                } else {
-                    panic!(Log::print_fatal("(Err.461) Invalid piece_num."));
+            match move2_val.destination {
+                FireAddress::Board(_) => {
+                    panic!(Log::print_fatal("(Err.653) DropなのにBoard?"));
                 }
-            };
-            // 駒の先後をひっくり返す。
-            self.turn_phase(piece_num);
-            if dst_piece_t.promoted() {
-                // 成り駒にします。
-                self.promote(piece_num);
-            } else {
-                // 成っていない駒にします。
-                self.demote(piece_num);
+                FireAddress::Hand(drop) => {
+                    let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.piece.type_());
+                    let dst_piece_t = if let Some(dst_piece_t) = self.last_hand_type(drop) {
+                        dst_piece_t
+                    } else {
+                        // 行き先に駒が無かった。
+                        panic!(Log::print_fatal_t(
+                            "(Err.441) Invalid piece_type on undo.",
+                            Table::default()
+                                .str("Turn", &format!("{:?}", turn))
+                                .str("Move", &format!("{:?}", move_))
+                                .str("Move2Dst", &format!("{}", &move2_val.destination))
+                                .str("GameTable1", &GameTableLook1::to_string(self))
+                                .str("GameTable2a", &GameTableLook2a::to_string(&self))
+                                .str("GameTable2b", &GameTableLook2b::to_string(&self))
+                                .str("GameTable2c", &GameTableLook2c::to_string(&self))
+                        ));
+                    };
+                    // 取った方の駒台の先後に合わせるぜ☆（＾～＾）
+                    // 取った方の持ち駒を減らす
+                    let piece_num = {
+                        // TODO テスト中☆（＾～＾）
+                        let double_faced_piece = DoubleFacedPiece::from_phase_and_type(
+                            turn,
+                            dst_piece_t.double_faced_piece_type(),
+                        );
+                        let fire1 = FireAddress::Hand(HandAddress::new(
+                            double_faced_piece,
+                            AbsoluteAddress2D::default(),
+                        ));
+                        if let Some(piece_num) = self.pop_piece(turn, &fire1) {
+                            piece_num
+                        } else {
+                            panic!(Log::print_fatal("(Err.461) Invalid piece_num."));
+                        }
+                    };
+                    // 駒の先後をひっくり返す。
+                    self.turn_phase(piece_num);
+                    if dst_piece_t.promoted() {
+                        // 成り駒にします。
+                        self.promote(piece_num);
+                    } else {
+                        // 成っていない駒にします。
+                        self.demote(piece_num);
+                    }
+                    // 取られた方に、駒を返すぜ☆（＾～＾）置くのは指し手の移動先☆（＾～＾）
+                    // self.turn_phase(piece_num); // これかくとバグる
+                    self.push_piece(&move_.destination, Some(piece_num));
+                }
             }
-            // 取られた方に、駒を返すぜ☆（＾～＾）置くのは指し手の移動先☆（＾～＾）
-            // self.turn_phase(piece_num); // これかくとバグる
-            self.push_piece(&move_.destination, Some(piece_num));
         }
     }
     /// 駒を置く。
@@ -883,17 +889,11 @@ impl GameTable {
         ))
     }
     /// 指し手生成で使うぜ☆（＾～＾）有無を調べるぜ☆（＾～＾）
-    pub fn last_hand_type(&self, turn: Phase, fire: &FireAddress) -> Option<PieceType> {
-        match fire {
-            FireAddress::Board(_) => None,
-            FireAddress::Hand(drop) => {
-                let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.piece.type_());
-                if let Some(piece_num) = self.last_hand_num(drop) {
-                    Some(self.get_type(piece_num))
-                } else {
-                    None
-                }
-            }
+    pub fn last_hand_type(&self, drop: DoubleFacedPiece) -> Option<PieceType> {
+        if let Some(piece_num) = self.last_hand_num(drop) {
+            Some(self.get_type(piece_num))
+        } else {
+            None
         }
     }
     pub fn count_hand(&self, drop: DoubleFacedPiece) -> usize {
@@ -1030,7 +1030,7 @@ impl GameTable {
 
     /// 駒の先後を ひっくり返してから入れてください。
     pub fn push_hand(&mut self, drop: DoubleFacedPiece, num: PieceNum) {
-        // 駒台に駒を置くぜ☆（＾～＾）
+        // 盤上の駒も、持ち駒も区別なく、ゲーム卓に駒を置くぜ☆（＾～＾）
         self.board[self.hand_cur(drop) as usize] = Some(num);
         // 位置を増減するぜ☆（＾～＾）
         self.add_hand_cur(drop, GameTable::hand_direction(drop));
