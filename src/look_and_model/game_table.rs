@@ -1017,7 +1017,7 @@ impl GameTable {
     pub fn count_hand(&self, drop: DoubleFacedPiece) -> usize {
         if drop.hand_direction() < 0 {
             // 先手
-            let count = drop.hand_start() - self.hand_cur(drop);
+            let count = (drop.hand_start() - self.hand_cur(drop)) / drop.hand_direction().abs();
             if drop.type_().hand_max_elements() < count as usize {
                 panic!(Log::print_fatal_t(
                     "(Err.1068) 先手の持ち駒が上限枚数を超えています。",
@@ -1025,33 +1025,28 @@ impl GameTable {
                         .usize("HandMaxElements", drop.type_().hand_max_elements())
                         .isize("HandDirection", drop.hand_direction())
                         .isize("HandStart", drop.hand_start())
-                        //.isize("HandCur", self.hand_cur(drop))
+                        .isize("HandCur", self.hand_cur(drop))
                         .isize("Count", count)
                         .str("Drop", &format!("{:?}", drop)) //.str("GameTable1", &GameTableLook1::to_string(self))
-                                                             //.str("GameTable2a", &GameTableLook2a::to_string(&self))
-                                                             //.str("GameTable2b", &GameTableLook2b::to_string(&self)) //.str("GameTable2c", &GameTableLook2c::to_string(&self))
+                        .str("GameTable2a", &self.pretty2a()) //.str("GameTable2b", &GameTableLook2b::to_string(&self)) //.str("GameTable2c", &GameTableLook2c::to_string(&self))
                 ));
             } else if count < 0 {
-                /* TODO
-                    panic!(Log::print_fatal_t(
-                        "(Err.1079) 先手の持ち駒が０枚を下回っています。",
-                        Table::default()
-                            .usize("HandMaxElements", drop.type_().hand_max_elements())
-                            .isize("HandDirection", GameTable::hand_direction(drop))
-                            .isize("HandStart", GameTable::hand_start(drop))
-                            .isize("HandCur", self.hand_cur(drop))
-                            .isize("Count", count)
-                            .str("Drop", &format!("{:?}", drop))
-                            .str("GameTable1", &GameTableLook1::to_string(self))
-                            .str("GameTable2a", &GameTableLook2a::to_string(&self))
-                            .str("GameTable2b", &GameTableLook2b::to_string(&self))
-                            .str("GameTable2c", &GameTableLook2c::to_string(&self))
-                    ));
-                */
+                panic!(Log::print_fatal_t(
+                    "(Err.1079) 先手の持ち駒が０枚を下回っています。",
+                    Table::default()
+                        .usize("HandMaxElements", drop.type_().hand_max_elements())
+                        .isize("HandDirection", drop.hand_direction())
+                        .isize("HandStart", drop.hand_start())
+                        .isize("HandCur", self.hand_cur(drop))
+                        .isize("Count", count)
+                        .str("Drop", &format!("{:?}", drop)) //.str("GameTable1", &GameTableLook1::to_string(self))
+                        .str("GameTable2a", &self.pretty2a()) //.str("GameTable2b", &GameTableLook2b::to_string(&self))
+                                                              //.str("GameTable2c", &GameTableLook2c::to_string(&self))
+                ));
             }
             count as usize
         } else {
-            let count = self.hand_cur(drop) - drop.hand_start();
+            let count = (self.hand_cur(drop) - drop.hand_start()) / drop.hand_direction().abs();
             if drop.type_().hand_max_elements() < count as usize {
                 panic!(Log::print_fatal_t(
                     "(Err.1094) 後手の持ち駒が上限枚数を超えています。",
@@ -1059,29 +1054,24 @@ impl GameTable {
                         .usize("HandMaxElements", drop.type_().hand_max_elements())
                         .isize("HandDirection", drop.hand_direction())
                         .isize("HandStart", drop.hand_start())
-                        //.isize("HandCur", self.hand_cur(drop))
+                        .isize("HandCur", self.hand_cur(drop))
                         .isize("Count", count)
-                        .str("Drop", &format!("{:?}", drop)) //.str("GameTable1", &GameTableLook1::to_string(self))
-                                                             //.str("GameTable2a", &GameTableLook2a::to_string(&self))
-                                                             //.str("GameTable2b", &GameTableLook2b::to_string(&self)) //.str("GameTable2c", &GameTableLook2c::to_string(&self))
+                        .str("Drop", &format!("{:?}", drop)) // .str("GameTable1", &self.pretty1())
+                        .str("GameTable2a", &self.pretty2a()) //.str("GameTable2b", &GameTableLook2b::to_string(&self)) //.str("GameTable2c", &GameTableLook2c::to_string(&self))
                 ));
             } else if count < 0 {
-                /* TODO
-                    panic!(Log::print_fatal_t(
-                        "(Err.1105) 先手の持ち駒が０枚を下回っています。",
-                        Table::default()
-                            .usize("HandMaxElements", drop.type_().hand_max_elements())
-                            .isize("HandDirection", GameTable::hand_direction(drop))
-                            .isize("HandStart", GameTable::hand_start(drop))
-                            .isize("HandCur", self.hand_cur(drop))
-                            .isize("Count", count)
-                            .str("Drop", &format!("{:?}", drop))
-                            .str("GameTable1", &GameTableLook1::to_string(self))
-                            .str("GameTable2a", &GameTableLook2a::to_string(&self))
-                            .str("GameTable2b", &GameTableLook2b::to_string(&self))
-                            .str("GameTable2c", &GameTableLook2c::to_string(&self))
-                    ));
-                */
+                panic!(Log::print_fatal_t(
+                    "(Err.1105) 先手の持ち駒が０枚を下回っています。",
+                    Table::default()
+                        .usize("HandMaxElements", drop.type_().hand_max_elements())
+                        .isize("HandDirection", drop.hand_direction())
+                        .isize("HandStart", drop.hand_start())
+                        .isize("HandCur", self.hand_cur(drop))
+                        .isize("Count", count)
+                        .str("Drop", &format!("{:?}", drop)) //.str("GameTable1", &GameTableLook1::to_string(self))
+                        .str("GameTable2a", &self.pretty2a()) //.str("GameTable2b", &GameTableLook2b::to_string(&self))
+                                                              //.str("GameTable2c", &GameTableLook2c::to_string(&self))
+                ));
             }
             count as usize
         }
