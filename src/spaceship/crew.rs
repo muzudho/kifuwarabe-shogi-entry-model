@@ -10,6 +10,7 @@ use crate::law::{cryptographic::*, generate_move::MoveGen, usi::*};
 use crate::log::LogExt;
 use crate::look_and_model::{
     facility::{CommandRoom, Kitchen},
+    game_table::GameTableLook2c,
     position::{PositionLook, PositionLook2a, PositionLook2b},
     search::Search,
 };
@@ -103,41 +104,46 @@ impl Kifuwarabe {
                 "MaxPly" => {
                     universe.option_max_ply = match value.parse() {
                         Result::Ok(val) => val,
-                        Result::Err(e) => {
-                            panic!(Log::print_fatal(&format!("Invalid value=|{}|", e)))
-                        }
+                        Result::Err(e) => panic!(Log::print_fatal(&format!(
+                            "(Err.108) Invalid value=|{}|",
+                            e
+                        ))),
                     };
                 }
                 "DepthNotToGiveUp" => {
                     universe.option_depth_not_to_give_up = match value.parse() {
                         Result::Ok(val) => val,
-                        Result::Err(e) => {
-                            panic!(Log::print_fatal(&format!("Invalid value=|{}|", e)))
-                        }
+                        Result::Err(e) => panic!(Log::print_fatal(&format!(
+                            "(Err.117) Invalid value=|{}|",
+                            e
+                        ))),
                     };
                 }
                 "MaxDepth" => {
                     universe.option_max_depth = match value.parse() {
                         Result::Ok(val) => val,
-                        Result::Err(e) => {
-                            panic!(Log::print_fatal(&format!("Invalid value=|{}|", e)))
-                        }
+                        Result::Err(e) => panic!(Log::print_fatal(&format!(
+                            "(Err.126) Invalid value=|{}|",
+                            e
+                        ))),
                     };
                 }
                 "MinThinkMsec" => {
                     universe.option_min_think_msec = match value.parse() {
                         Result::Ok(val) => val,
-                        Result::Err(e) => {
-                            panic!(Log::print_fatal(&format!("Invalid value=|{}|", e)))
-                        }
+                        Result::Err(e) => panic!(Log::print_fatal(&format!(
+                            "(Err.135) Invalid value=|{}|",
+                            e
+                        ))),
                     };
                 }
                 "MaxThinkMsec" => {
                     universe.option_max_think_msec = match value.parse() {
                         Result::Ok(val) => val,
-                        Result::Err(e) => {
-                            panic!(Log::print_fatal(&format!("Invalid value=|{}|", e)))
-                        }
+                        Result::Err(e) => panic!(Log::print_fatal(&format!(
+                            "(Err.144) Invalid value=|{}|",
+                            e
+                        ))),
                     };
                 }
                 _ => {}
@@ -285,9 +291,10 @@ impl Chiyuri {
     pub fn pos2(universe: &Universe) {
         // 現局面表示
         let s = format!(
-            "{}{}",
+            "{}{}{}",
             PositionLook2a::to_string(&universe.game, PosNums::Current),
-            PositionLook2b::to_string(&universe.game, PosNums::Current)
+            PositionLook2b::to_string(&universe.game, PosNums::Current),
+            GameTableLook2c::to_string(&universe.game.table)
         );
         Log::print_notice(&s);
     }

@@ -2,6 +2,7 @@
 //! 現局面を使った指し手生成☆（＾～＾）
 //!
 
+use crate::cosmic::playing::PosNums;
 use crate::cosmic::recording::{CapturedMove, FireAddress, HandAddress, Movement, Phase};
 use crate::cosmic::smart::features::PieceType;
 use crate::cosmic::smart::square::FILE10U8;
@@ -16,8 +17,12 @@ use crate::cosmic::smart::square::RANK7U8;
 use crate::cosmic::smart::square::RANK9U8;
 use crate::cosmic::smart::square::{AbsoluteAddress2D, Angle, RelAdr2D};
 use crate::log::LogExt;
+use crate::look_and_model::{
+    game_table::{GameTableLook1, GameTableLook2a, GameTableLook2b, GameTableLook2c},
+    position::PositionLook,
+};
 use crate::position::Position;
-use casual_logger::Log;
+use casual_logger::{Log, Table};
 
 /// 先手、後手で処理が変わるやつを吸収するぜ☆（＾～＾）
 pub trait PhaseOperation {
@@ -284,7 +289,17 @@ impl MoveGen {
                     {
                         piece_num
                     } else {
-                        panic!(Log::print_fatal("(Err.287) Invalid piece_num."));
+                        panic!(Log::print_fatal_t(
+                            "(Err.287) Invalid piece_num.",
+                            Table::default()
+                                .str(
+                                    "Position",
+                                    &PositionLook::to_string(&game, PosNums::Current)
+                                )
+                                .str("GameTable2a", &GameTableLook2a::to_string(&game.table))
+                                .str("GameTable2b", &GameTableLook2b::to_string(&game.table))
+                                .str("GameTable2c", &GameTableLook2c::to_string(&game.table))
+                        ));
                     },
                 );
 

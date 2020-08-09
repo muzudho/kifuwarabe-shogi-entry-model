@@ -59,6 +59,7 @@ impl History {
     */
 }
 
+/// 持ち駒の番地。
 #[derive(Copy, Clone, Debug)]
 pub struct HandAddress {
     pub old: DoubleFacedPieceType,

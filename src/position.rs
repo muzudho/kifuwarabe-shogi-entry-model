@@ -170,7 +170,7 @@ impl Position {
         }
         // 移動先升に駒があるかどうか
         // あれば　盤の相手の駒を先後反転して、自分の駒台に置きます。
-        self.table.rotate_piece_board_to_hand(turn, &move_);
+        self.table.rotate_piece_board_to_hand_on_do(turn, &move_);
 
         // 移動先升に駒を置く
         self.table

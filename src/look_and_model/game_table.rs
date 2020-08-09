@@ -237,7 +237,8 @@ P x{87:2}   |{63}|{64}|{65}|{66}|{67}|{68}|{69}|{70}|{71}| h8   p x{94:2}
     }
 }
 
-/// シアター・ルーム１はこちらだぜ☆（＾～＾）！
+/// Board display type 2.
+/// 盤表示２。
 pub struct GameTableLook2a {}
 impl GameTableLook2a {
     /// 表示
@@ -414,7 +415,8 @@ impl GameTableLook2a {
         }
     }
 }
-/// シアター・ルーム２はこちらだぜ☆（＾～＾）！
+/// Address display type 2 of all pieces.
+/// 全ての駒の番地。
 pub struct GameTableLook2b {}
 impl GameTableLook2b {
     /// 表示
@@ -542,6 +544,42 @@ impl GameTableLook2b {
         } else {
             "    ".to_string()
         }
+    }
+}
+/// Address display type 2 of hand piece peak.
+/// 全ての持ち駒の次の番地。
+pub struct GameTableLook2c {}
+impl GameTableLook2c {
+    /// 表示
+    pub fn to_string(table: &GameTable) -> String {
+        // 局面表示
+        // フォーマットの引数は 98個まで。
+        format!(
+            " K2   K1   G2   G1   S2   S1   N2   N1   L2   L1   B2   B1   R2   R1   P2   P1
++----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+|{0 }|{1 }|{2 }|{3 }|{4 }|{5 }|{6 }|{7 }|{8 }|{9 }|{10}|{11}|{12}|{13}|{14}|{15}|
++----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+",
+            Self::to_string2(table, DoubleFacedPiece::King2),
+            Self::to_string2(table, DoubleFacedPiece::King1),
+            Self::to_string2(table, DoubleFacedPiece::Gold2),
+            Self::to_string2(table, DoubleFacedPiece::Gold1),
+            Self::to_string2(table, DoubleFacedPiece::Silver2),
+            Self::to_string2(table, DoubleFacedPiece::Silver1),
+            Self::to_string2(table, DoubleFacedPiece::Knight2),
+            Self::to_string2(table, DoubleFacedPiece::Knight1),
+            Self::to_string2(table, DoubleFacedPiece::Lance2),
+            Self::to_string2(table, DoubleFacedPiece::Lance1),
+            Self::to_string2(table, DoubleFacedPiece::Bishop2),
+            Self::to_string2(table, DoubleFacedPiece::Bishop1),
+            Self::to_string2(table, DoubleFacedPiece::Rook2),
+            Self::to_string2(table, DoubleFacedPiece::Rook1),
+            Self::to_string2(table, DoubleFacedPiece::Pawn2),
+            Self::to_string2(table, DoubleFacedPiece::Pawn1),
+        )
+    }
+    fn to_string2(table: &GameTable, piece: DoubleFacedPiece) -> String {
+        format!("{: >4}", table.hand_cur(piece)).to_string()
     }
 }
 
@@ -674,18 +712,20 @@ impl GameTable {
     /// ドゥ時の動き。
     /// 駒の先後を反転させるぜ☆（＾～＾）
     // あれば　盤の相手の駒を先後反転して、自分の駒台に置きます。
-    pub fn rotate_piece_board_to_hand(&mut self, turn: Phase, move_: &Movement) {
-        if let Some(collision_piece_num_val) = self.pop_piece(turn, &move_.destination) {
+    pub fn rotate_piece_board_to_hand_on_do(&mut self, turn: Phase, move_: &Movement) {
+        // Captured piece number.
+        // 衝突された駒の背番号。
+        if let Some(cap) = self.pop_piece(turn, &move_.destination) {
             // 移動先升の駒を盤上から消し、自分の持ち駒に増やす
             // 先後ひっくり返す。
-            self.turn_phase(collision_piece_num_val);
+            self.turn_phase(cap);
             self.push_piece(
                 turn,
                 &FireAddress::Hand(HandAddress::new(
-                    self.get_double_faced_piece_type(collision_piece_num_val),
+                    self.get_double_faced_piece_type(cap),
                     AbsoluteAddress2D::default(),
                 )),
-                Some(collision_piece_num_val),
+                Some(cap),
             );
         }
     }
@@ -709,6 +749,7 @@ impl GameTable {
                             .str("GameTable1", &GameTableLook1::to_string(self))
                             .str("GameTable2a", &GameTableLook2a::to_string(&self))
                             .str("GameTable2b", &GameTableLook2b::to_string(&self))
+                            .str("GameTable2c", &GameTableLook2c::to_string(&self))
                     ));
                 };
 
@@ -963,7 +1004,7 @@ impl GameTable {
                     let piece_info = if let Some(piece_info) = self.piece_info_at1(&fire) {
                         piece_info
                     } else {
-                        panic!(Log::print_fatal("Invalid piece_info."));
+                        panic!(Log::print_fatal("(Err.1007) Invalid piece_info."));
                     };
                     piece_get(i, Some(&sq), Some(piece_info));
                 }
@@ -1107,7 +1148,7 @@ impl GameTable {
                 let num = if let Some(num) = self.board[self.hand_cur(drop) as usize] {
                     num
                 } else {
-                    panic!(Log::print_fatal("Invalid num."));
+                    panic!(Log::print_fatal("(Err.1151) Invalid num."));
                 };
                 self.board[self.hand_cur(drop) as usize] = None;
                 num
@@ -1119,7 +1160,7 @@ impl GameTable {
     pub fn last_hand(&self, turn: Phase, fire: &FireAddress) -> Option<(PieceType, FireAddress)> {
         match fire {
             FireAddress::Board(_sq) => panic!(Log::print_fatal(&format!(
-                "(Err.3251) 未対応☆（＾～＾）！",
+                "(Err.1163) 未対応☆（＾～＾）！",
             ))),
             FireAddress::Hand(drop_type) => {
                 if let Some(piece_num) = self.last_hand_num(

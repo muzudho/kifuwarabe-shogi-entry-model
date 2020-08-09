@@ -144,14 +144,14 @@ impl Search {
                 let fire = if let Some(captured_move) = ways.get(i).captured {
                     captured_move.source
                 } else {
-                    panic!(Log::print_fatal("Invalid captured_move."));
+                    panic!(Log::print_fatal("(Err.147) Invalid captured_move."));
                 };
                 let piece_type = pos.table.get_type(
                     if let Some(piece_type) = pos.table.piece_num_at(pos.history.get_turn(), &fire)
                     {
                         piece_type
                     } else {
-                        panic!(Log::print_fatal("Invalid piece_type."));
+                        panic!(Log::print_fatal("(Err.154) Invalid piece_type."));
                     },
                 );
                 match piece_type {

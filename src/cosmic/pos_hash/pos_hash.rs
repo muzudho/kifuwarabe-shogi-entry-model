@@ -85,7 +85,7 @@ impl GameHashSeed {
                     if let Some(hash_index) = table.get_piece_board_hash_index(&move_.source) {
                         hash_index
                     } else {
-                        panic!(Log::print_fatal("Invalid captured_move."));
+                        panic!(Log::print_fatal("(Err.88) Invalid captured_move."));
                     };
                 // 移動前マスに、動かしたい駒があるときのハッシュ。
                 prev_hash ^= self.piece[src_sq.serial_number() as usize][src_piece_hash_index];
