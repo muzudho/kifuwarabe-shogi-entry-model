@@ -550,22 +550,22 @@ impl Default for GameTable {
                 PieceNum::Pawn23 as usize,
             ],
             area: Area::default(),
-            hand_king1_cur: GameTable::hand_start(DoubleFacedPiece::King1),
-            hand_rook1_cur: GameTable::hand_start(DoubleFacedPiece::Rook1),
-            hand_bishop1_cur: GameTable::hand_start(DoubleFacedPiece::Bishop1),
-            hand_gold1_cur: GameTable::hand_start(DoubleFacedPiece::Gold1),
-            hand_silver1_cur: GameTable::hand_start(DoubleFacedPiece::Silver1),
-            hand_knight1_cur: GameTable::hand_start(DoubleFacedPiece::Knight1),
-            hand_lance1_cur: GameTable::hand_start(DoubleFacedPiece::Lance1),
-            hand_pawn1_cur: GameTable::hand_start(DoubleFacedPiece::Pawn1),
-            hand_king2_cur: GameTable::hand_start(DoubleFacedPiece::King2),
-            hand_rook2_cur: GameTable::hand_start(DoubleFacedPiece::Rook2),
-            hand_bishop2_cur: GameTable::hand_start(DoubleFacedPiece::Bishop2),
-            hand_gold2_cur: GameTable::hand_start(DoubleFacedPiece::Gold2),
-            hand_silver2_cur: GameTable::hand_start(DoubleFacedPiece::Silver2),
-            hand_knight2_cur: GameTable::hand_start(DoubleFacedPiece::Knight2),
-            hand_lance2_cur: GameTable::hand_start(DoubleFacedPiece::Lance2),
-            hand_pawn2_cur: GameTable::hand_start(DoubleFacedPiece::Pawn2),
+            hand_king1_cur: DoubleFacedPiece::King1.hand_start(),
+            hand_rook1_cur: DoubleFacedPiece::Rook1.hand_start(),
+            hand_bishop1_cur: DoubleFacedPiece::Bishop1.hand_start(),
+            hand_gold1_cur: DoubleFacedPiece::Gold1.hand_start(),
+            hand_silver1_cur: DoubleFacedPiece::Silver1.hand_start(),
+            hand_knight1_cur: DoubleFacedPiece::Knight1.hand_start(),
+            hand_lance1_cur: DoubleFacedPiece::Lance1.hand_start(),
+            hand_pawn1_cur: DoubleFacedPiece::Pawn1.hand_start(),
+            hand_king2_cur: DoubleFacedPiece::King2.hand_start(),
+            hand_rook2_cur: DoubleFacedPiece::Rook2.hand_start(),
+            hand_bishop2_cur: DoubleFacedPiece::Bishop2.hand_start(),
+            hand_gold2_cur: DoubleFacedPiece::Gold2.hand_start(),
+            hand_silver2_cur: DoubleFacedPiece::Silver2.hand_start(),
+            hand_knight2_cur: DoubleFacedPiece::Knight2.hand_start(),
+            hand_lance2_cur: DoubleFacedPiece::Lance2.hand_start(),
+            hand_pawn2_cur: DoubleFacedPiece::Pawn2.hand_start(),
         }
     }
 }
@@ -977,55 +977,12 @@ impl GameTable {
         }
     }
 
-    /// 開始地点。
-    fn hand_start(double_faced_piece: DoubleFacedPiece) -> isize {
-        match double_faced_piece {
-            DoubleFacedPiece::King1 => 2,
-            DoubleFacedPiece::Rook1 => 103,
-            DoubleFacedPiece::Bishop1 => 101,
-            DoubleFacedPiece::Gold1 => 6,
-            DoubleFacedPiece::Silver1 => 10,
-            DoubleFacedPiece::Knight1 => 50,
-            DoubleFacedPiece::Lance1 => 90,
-            DoubleFacedPiece::Pawn1 => 121,
-            DoubleFacedPiece::King2 => 1,
-            DoubleFacedPiece::Rook2 => 102,
-            DoubleFacedPiece::Bishop2 => 100,
-            DoubleFacedPiece::Gold2 => 3,
-            DoubleFacedPiece::Silver2 => 7,
-            DoubleFacedPiece::Knight2 => 20,
-            DoubleFacedPiece::Lance2 => 60,
-            DoubleFacedPiece::Pawn2 => 104,
-        }
-    }
-    /// 向き。
-    fn hand_direction(double_faced_piece: DoubleFacedPiece) -> isize {
-        match double_faced_piece {
-            DoubleFacedPiece::King1 => -1,
-            DoubleFacedPiece::Rook1 => -1,
-            DoubleFacedPiece::Bishop1 => -1,
-            DoubleFacedPiece::Gold1 => -1,
-            DoubleFacedPiece::Silver1 => -1,
-            DoubleFacedPiece::Knight1 => -10,
-            DoubleFacedPiece::Lance1 => -10,
-            DoubleFacedPiece::Pawn1 => -1,
-            DoubleFacedPiece::King2 => 1,
-            DoubleFacedPiece::Rook2 => 1,
-            DoubleFacedPiece::Bishop2 => 1,
-            DoubleFacedPiece::Gold2 => 1,
-            DoubleFacedPiece::Silver2 => 1,
-            DoubleFacedPiece::Knight2 => 10,
-            DoubleFacedPiece::Lance2 => 10,
-            DoubleFacedPiece::Pawn2 => 1,
-        }
-    }
-
     /// 駒の先後を ひっくり返してから入れてください。
     pub fn push_hand(&mut self, drop: DoubleFacedPiece, num: PieceNum) {
         // 盤上の駒も、持ち駒も区別なく、ゲーム卓に駒を置くぜ☆（＾～＾）
         self.board[self.hand_cur(drop) as usize] = Some(num);
         // 位置を増減するぜ☆（＾～＾）
-        self.add_hand_cur(drop, GameTable::hand_direction(drop));
+        self.add_hand_cur(drop, drop.hand_direction());
     }
     pub fn pop_hand(&mut self, drop: DoubleFacedPiece) -> PieceNum {
         /* TODO
@@ -1043,7 +1000,7 @@ impl GameTable {
         }
         */
         // 位置を増減するぜ☆（＾～＾）
-        self.add_hand_cur(drop, -GameTable::hand_direction(drop));
+        self.add_hand_cur(drop, -drop.hand_direction());
         // 駒台の駒をはがすぜ☆（＾～＾）
         let num = if let Some(num) = self.board[self.hand_cur(drop) as usize] {
             num
@@ -1051,11 +1008,10 @@ impl GameTable {
             panic!(Log::print_fatal_t(
                 "(Err.1151) Invalid num.",
                 Table::default()
-                    .str("DoubleFacedPiece", &format!("{:?}", drop))
-                    .str("GameTable1", &GameTableLook1::to_string(self))
-                    .str("GameTable2a", &GameTableLook2a::to_string(&self))
-                    .str("GameTable2b", &GameTableLook2b::to_string(&self))
-                    .str("GameTable2c", &GameTableLook2c::to_string(&self))
+                    //.str("GameTable1", &GameTableLook1::to_string(self))
+                    //.str("GameTable2a", &GameTableLook2a::to_string(&self))
+                    //.str("GameTable2b", &GameTableLook2b::to_string(&self))
+                    //.str("GameTable2c", &GameTableLook2c::to_string(&self))
                     .str("Drop", &format!("{:?}", drop))
             ));
         };
@@ -1063,78 +1019,74 @@ impl GameTable {
         num
     }
     pub fn count_hand(&self, drop: DoubleFacedPiece) -> usize {
-        if GameTable::hand_direction(drop) < 0 {
+        if drop.hand_direction() < 0 {
             // 先手
-            let count = GameTable::hand_start(drop) - self.hand_cur(drop);
-            /* TODO
+            let count = drop.hand_start() - self.hand_cur(drop);
             if drop.type_().hand_max_elements() < count as usize {
                 panic!(Log::print_fatal_t(
                     "(Err.1068) 先手の持ち駒が上限枚数を超えています。",
                     Table::default()
                         .usize("HandMaxElements", drop.type_().hand_max_elements())
-                        .isize("HandDirection", GameTable::hand_direction(drop))
-                        .isize("HandStart", GameTable::hand_start(drop))
-                        .isize("HandCur", self.hand_cur(drop))
+                        .isize("HandDirection", drop.hand_direction())
+                        .isize("HandStart", drop.hand_start())
+                        //.isize("HandCur", self.hand_cur(drop))
                         .isize("Count", count)
-                        .str("Drop", &format!("{:?}", drop))
-                        .str("GameTable1", &GameTableLook1::to_string(self))
-                        .str("GameTable2a", &GameTableLook2a::to_string(&self))
-                        .str("GameTable2b", &GameTableLook2b::to_string(&self))
-                        .str("GameTable2c", &GameTableLook2c::to_string(&self))
+                        .str("Drop", &format!("{:?}", drop)) //.str("GameTable1", &GameTableLook1::to_string(self))
+                                                             //.str("GameTable2a", &GameTableLook2a::to_string(&self))
+                                                             //.str("GameTable2b", &GameTableLook2b::to_string(&self)) //.str("GameTable2c", &GameTableLook2c::to_string(&self))
                 ));
             } else if count < 0 {
-                panic!(Log::print_fatal_t(
-                    "(Err.1079) 先手の持ち駒が０枚を下回っています。",
-                    Table::default()
-                        .usize("HandMaxElements", drop.type_().hand_max_elements())
-                        .isize("HandDirection", GameTable::hand_direction(drop))
-                        .isize("HandStart", GameTable::hand_start(drop))
-                        .isize("HandCur", self.hand_cur(drop))
-                        .isize("Count", count)
-                        .str("Drop", &format!("{:?}", drop))
-                        .str("GameTable1", &GameTableLook1::to_string(self))
-                        .str("GameTable2a", &GameTableLook2a::to_string(&self))
-                        .str("GameTable2b", &GameTableLook2b::to_string(&self))
-                        .str("GameTable2c", &GameTableLook2c::to_string(&self))
-                ));
+                /* TODO
+                    panic!(Log::print_fatal_t(
+                        "(Err.1079) 先手の持ち駒が０枚を下回っています。",
+                        Table::default()
+                            .usize("HandMaxElements", drop.type_().hand_max_elements())
+                            .isize("HandDirection", GameTable::hand_direction(drop))
+                            .isize("HandStart", GameTable::hand_start(drop))
+                            .isize("HandCur", self.hand_cur(drop))
+                            .isize("Count", count)
+                            .str("Drop", &format!("{:?}", drop))
+                            .str("GameTable1", &GameTableLook1::to_string(self))
+                            .str("GameTable2a", &GameTableLook2a::to_string(&self))
+                            .str("GameTable2b", &GameTableLook2b::to_string(&self))
+                            .str("GameTable2c", &GameTableLook2c::to_string(&self))
+                    ));
+                */
             }
-            */
             count as usize
         } else {
-            let count = self.hand_cur(drop) - GameTable::hand_start(drop);
-            /* TODO
+            let count = self.hand_cur(drop) - drop.hand_start();
             if drop.type_().hand_max_elements() < count as usize {
                 panic!(Log::print_fatal_t(
                     "(Err.1094) 後手の持ち駒が上限枚数を超えています。",
                     Table::default()
                         .usize("HandMaxElements", drop.type_().hand_max_elements())
-                        .isize("HandDirection", GameTable::hand_direction(drop))
-                        .isize("HandStart", GameTable::hand_start(drop))
-                        .isize("HandCur", self.hand_cur(drop))
+                        .isize("HandDirection", drop.hand_direction())
+                        .isize("HandStart", drop.hand_start())
+                        //.isize("HandCur", self.hand_cur(drop))
                         .isize("Count", count)
-                        .str("Drop", &format!("{:?}", drop))
-                        .str("GameTable1", &GameTableLook1::to_string(self))
-                        .str("GameTable2a", &GameTableLook2a::to_string(&self))
-                        .str("GameTable2b", &GameTableLook2b::to_string(&self))
-                        .str("GameTable2c", &GameTableLook2c::to_string(&self))
+                        .str("Drop", &format!("{:?}", drop)) //.str("GameTable1", &GameTableLook1::to_string(self))
+                                                             //.str("GameTable2a", &GameTableLook2a::to_string(&self))
+                                                             //.str("GameTable2b", &GameTableLook2b::to_string(&self)) //.str("GameTable2c", &GameTableLook2c::to_string(&self))
                 ));
             } else if count < 0 {
-                panic!(Log::print_fatal_t(
-                    "(Err.1105) 先手の持ち駒が０枚を下回っています。",
-                    Table::default()
-                        .usize("HandMaxElements", drop.type_().hand_max_elements())
-                        .isize("HandDirection", GameTable::hand_direction(drop))
-                        .isize("HandStart", GameTable::hand_start(drop))
-                        .isize("HandCur", self.hand_cur(drop))
-                        .isize("Count", count)
-                        .str("Drop", &format!("{:?}", drop))
-                        .str("GameTable1", &GameTableLook1::to_string(self))
-                        .str("GameTable2a", &GameTableLook2a::to_string(&self))
-                        .str("GameTable2b", &GameTableLook2b::to_string(&self))
-                        .str("GameTable2c", &GameTableLook2c::to_string(&self))
-                ));
+                /* TODO
+                    panic!(Log::print_fatal_t(
+                        "(Err.1105) 先手の持ち駒が０枚を下回っています。",
+                        Table::default()
+                            .usize("HandMaxElements", drop.type_().hand_max_elements())
+                            .isize("HandDirection", GameTable::hand_direction(drop))
+                            .isize("HandStart", GameTable::hand_start(drop))
+                            .isize("HandCur", self.hand_cur(drop))
+                            .isize("Count", count)
+                            .str("Drop", &format!("{:?}", drop))
+                            .str("GameTable1", &GameTableLook1::to_string(self))
+                            .str("GameTable2a", &GameTableLook2a::to_string(&self))
+                            .str("GameTable2b", &GameTableLook2b::to_string(&self))
+                            .str("GameTable2c", &GameTableLook2c::to_string(&self))
+                    ));
+                */
             }
-            */
             count as usize
         }
     }
@@ -1155,16 +1107,16 @@ impl GameTable {
         }
     }
     pub fn last_hand_num(&self, drop: DoubleFacedPiece) -> Option<PieceNum> {
-        let direction = GameTable::hand_direction(drop);
+        let direction = drop.hand_direction();
         if direction < 0 {
             // 先手
-            if self.hand_cur(drop) < GameTable::hand_start(drop) {
+            if self.hand_cur(drop) < drop.hand_start() {
                 self.board[(self.hand_cur(drop) - direction) as usize]
             } else {
                 None
             }
         } else {
-            if GameTable::hand_start(drop) < self.hand_cur(drop) {
+            if drop.hand_start() < self.hand_cur(drop) {
                 self.board[(self.hand_cur(drop) - direction) as usize]
             } else {
                 None
@@ -1175,15 +1127,15 @@ impl GameTable {
     /// 指し手生成で使うぜ☆（＾～＾）有無を調べるぜ☆（＾～＾）
     pub fn is_empty_hand(&self, drop: DoubleFacedPiece) -> bool {
         //let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.piece.type_());
-        if GameTable::hand_direction(drop) < 0 {
+        if drop.hand_direction() < 0 {
             // 先手
-            if self.hand_cur(drop) < GameTable::hand_start(drop) {
+            if self.hand_cur(drop) < drop.hand_start() {
                 false
             } else {
                 true
             }
         } else {
-            if GameTable::hand_start(drop) < self.hand_cur(drop) {
+            if drop.hand_start() < self.hand_cur(drop) {
                 false
             } else {
                 true
