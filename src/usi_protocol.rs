@@ -52,17 +52,15 @@ impl Position {
                 self.history.total_length_from_the_beginning() + 1
             ));
         }
-        /* TODO
 
-                // A game record.
-                // 棋譜。
-                if 0 < self.pieces_num - self.starting_pieces_num {
-                    sfen.push_str(" moves");
-                    for i in self.starting_pieces_num..self.pieces_num {
-                        sfen.push_str(&format!(" {}", self.history[i].to_string()));
-                    }
-                }
-        */
+        // A game record.
+        // 棋譜。
+        if 0 < self.history.length_from_the_middle() {
+            xfen.push_str(" moves");
+            for i in 0..self.history.length_from_the_middle() {
+                xfen.push_str(&format!(" {}", self.history.movements[i as usize]));
+            }
+        }
 
         xfen.to_string()
     }
