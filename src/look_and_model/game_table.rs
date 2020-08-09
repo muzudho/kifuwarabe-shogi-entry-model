@@ -974,8 +974,7 @@ impl GameTable {
             ],
         ];
         for drop in &FIRST_SECOND[turn as usize] {
-            let fire = &FireAddress::Hand(HandAddress::new(*drop, AbsoluteAddress2D::default()));
-            if !self.is_empty_hand(turn, fire) {
+            if !self.is_empty_hand(*drop) {
                 piece_get(&FireAddress::Hand(HandAddress::new(
                     *drop,
                     AbsoluteAddress2D::default(),
@@ -1083,25 +1082,20 @@ impl GameTable {
     }
 
     /// 指し手生成で使うぜ☆（＾～＾）有無を調べるぜ☆（＾～＾）
-    pub fn is_empty_hand(&self, turn: Phase, fire: &FireAddress) -> bool {
-        match fire {
-            FireAddress::Board(_sq) => panic!(Log::print_fatal("(Err.3431) 未対応☆（＾～＾）")),
-            FireAddress::Hand(drop) => {
-                let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.piece.type_());
-                if GameTable::hand_direction(drop) < 0 {
-                    // 先手
-                    if self.hand_cur(drop) < GameTable::hand_start(drop) {
-                        false
-                    } else {
-                        true
-                    }
-                } else {
-                    if GameTable::hand_start(drop) < self.hand_cur(drop) {
-                        false
-                    } else {
-                        true
-                    }
-                }
+    pub fn is_empty_hand(&self, drop: DoubleFacedPiece) -> bool {
+        //let drop = DoubleFacedPiece::from_phase_and_type(turn, drop.piece.type_());
+        if GameTable::hand_direction(drop) < 0 {
+            // 先手
+            if self.hand_cur(drop) < GameTable::hand_start(drop) {
+                false
+            } else {
+                true
+            }
+        } else {
+            if GameTable::hand_start(drop) < self.hand_cur(drop) {
+                false
+            } else {
+                true
             }
         }
     }

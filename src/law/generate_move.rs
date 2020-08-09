@@ -18,7 +18,7 @@ use crate::cosmic::smart::square::RANK9U8;
 use crate::cosmic::smart::square::{AbsoluteAddress2D, Angle, RelAdr2D};
 use crate::log::LogExt;
 use crate::look_and_model::{
-    game_table::{GameTableLook2a, GameTableLook2b, GameTableLook2c},
+    game_table::{GameTableLook1, GameTableLook2a, GameTableLook2b, GameTableLook2c},
     position::PositionLook,
 };
 use crate::position::Position;
@@ -296,6 +296,7 @@ impl MoveGen {
                                     "Position",
                                     &PositionLook::to_string(&game, PosNums::Current)
                                 )
+                                .str("GameTable1", &GameTableLook1::to_string(&game.table))
                                 .str("GameTable2a", &GameTableLook2a::to_string(&game.table))
                                 .str("GameTable2b", &GameTableLook2b::to_string(&game.table))
                                 .str("GameTable2c", &GameTableLook2c::to_string(&game.table))
