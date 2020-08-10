@@ -1,9 +1,8 @@
 use crate::{
     command_line_seek::CommandLineSeek,
-    cosmic::recording::Phase,
     engine::Engine,
     log::LogExt,
-    look_and_model::{PvString, Search},
+    look_and_model::{recording::Phase, PvString, Search},
     protocol::usi::Go,
 };
 use casual_logger::Log;

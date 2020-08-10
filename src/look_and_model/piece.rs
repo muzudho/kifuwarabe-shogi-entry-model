@@ -1,7 +1,4 @@
-use crate::{
-    cosmic::recording::Phase,
-    look_and_model::{DoubleFacedPiece, Piece, PieceType},
-};
+use crate::look_and_model::{recording::Phase, DoubleFacedPiece, Piece, PieceType};
 use std::fmt;
 
 /// きふわらべ「 USIプロトコルで使う文字だぜ☆（＾～＾）ｖ」

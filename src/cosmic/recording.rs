@@ -5,7 +5,7 @@
 //! * Person (先手,後手)
 //!
 use crate::law::cryptographic::num_to_lower_case;
-use crate::look_and_model::{AbsoluteAddress2D, DoubleFacedPiece, PieceNum};
+use crate::look_and_model::{recording::Phase, AbsoluteAddress2D, DoubleFacedPiece, PieceNum};
 use std::fmt;
 
 /// 手数☆（＾～＾） 大会ルールとは別で、このプログラムが対応できる上限値☆（＾～＾）
@@ -232,41 +232,5 @@ impl fmt::Debug for Movement {
             "Movement({:?}{:?}{})",
             self.source, self.destination, self.promote,
         )
-    }
-}
-
-/// 局面ハッシュを作るときに、フェーズ用に配列があって、それのサイズに使ってるぜ☆（＾～＾）
-// pub const PHASE_FIRST: usize = 0;
-pub const PHASE_SECOND: usize = 1;
-pub const PHASE_LEN: usize = 2;
-
-/// 先後。単純にプレイヤー１を先手、プレイヤー２を後手とする。
-/// 駒落ち戦での通称　上手／下手　の場合、上手は先手、下手は後手とする。
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum Phase {
-    First,
-    Second,
-}
-/*
-impl Phase {
-    pub fn turn(self) -> Phase {
-        use self::Phase::*;
-        match self {
-            First => Second,
-            Second => First,
-        }
-    }
-}
-*/
-/// 後手（上手）を盤の下側に持ってきて表示するのを基本とするぜ☆（＾～＾）
-impl fmt::Display for Phase {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        // 文字列リテラルでないとダメみたいなんで、他に似たようなコードがあるのに、また書くことに☆（＾～＾）
-        // Windows Terminal では ▲、▽が半角サイズで表示されるので、それに合わせている☆（＾～＾） Microsoft 製品に最適化していいのか知らないが……☆（＾～＾）
-        use self::Phase::*;
-        match *self {
-            First => write!(f, " ▲"),
-            Second => write!(f, " ▽"),
-        }
     }
 }

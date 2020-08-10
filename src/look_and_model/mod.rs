@@ -9,6 +9,7 @@ pub mod piece_info;
 pub mod piece_num;
 pub mod piece_type;
 pub mod position;
+pub mod recording;
 pub mod search;
 pub mod title;
 
