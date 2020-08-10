@@ -4,12 +4,11 @@
 
 use crate::{
     computer_player::evaluator::REPITITION_VALUE,
-    cosmic::recording::SENNTITE_NUM,
     engine::Engine,
     law::generate_move::{MoveGen, Ways},
     log::LogExt,
     look_and_model::{
-        recording::{Movement, Phase},
+        recording::{Movement, Phase, SENNTITE_NUM},
         PieceType, PvString, Search,
     },
     Config, Position,

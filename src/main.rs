@@ -34,16 +34,16 @@ mod test;
 
 use crate::{
     config::GameHashSeed,
-    cosmic::{playing::MovegenPhase, recording::History},
+    cosmic::playing::MovegenPhase,
     engine::{Engine, Response},
     log::LogExt,
-    look_and_model::GameTable,
+    look_and_model::{recording::History, GameTable},
 };
 use casual_logger::{Log, Opt};
 use test::test;
 
 /// USI対応コンピューター将棋ソフトの名前☆（＾～＾）
-pub const ENGINE_NAME: &str = "KifuwarabeEM bld61";
+pub const ENGINE_NAME: &str = "KifuwarabeEM bld62";
 
 /// 作者の名前。姓・名の順にしたいぜ☆（＾～＾）異文化に通じる表記方法はないものか☆（＾～＾）
 pub const ENGINE_AUTHOR: &str = "TAKAHASHI, Satoshi";

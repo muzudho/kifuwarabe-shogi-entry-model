@@ -1,6 +1,7 @@
 pub mod captured_move;
 pub mod fire_address;
 pub mod hand_address;
+pub mod history;
 pub mod movement;
 pub mod phase;
 
@@ -30,6 +31,29 @@ pub struct HandAddress {
     pub piece: DoubleFacedPiece,
     /// TODO 未使用☆（＾～＾）？
     pub sq: AbsoluteAddress2D,
+}
+
+/// 手数☆（＾～＾） 大会ルールとは別で、このプログラムが対応できる上限値☆（＾～＾）
+/// 主要大会では、一番大きくても　電竜戦の 512 だろ☆（＾～＾）
+pub const PLY_SIZE: usize = 1024;
+
+/// 同一局面何回で千日手
+pub const SENNTITE_NUM: isize = 4;
+
+pub struct History {
+    /// 手目。増減するので符号付きにしておくぜ☆（＾～＾）i8 は -128～127 なんで手数が収まらん☆（＾～＾）
+    length_from_the_middle: isize,
+    /// 途中局面の次の一手は何手目か。
+    pub length_from_the_beginning: isize,
+    /// 棋譜
+    /// TODO 0手目を初期局面にしたいので、最初にパスを入れてほしい☆（＾～＾）
+    pub movements: [Movement; PLY_SIZE],
+    /// 棋譜に対応した各局面の局面ハッシュ
+    pub position_hashs: [u64; PLY_SIZE],
+    /// 初期局面ハッシュ
+    pub starting_position_hash: u64,
+    /// 開始局面で次に指す方。
+    pub starting_turn: Phase,
 }
 
 /// 駒の背番号も欲しいか☆（＾～＾）？
