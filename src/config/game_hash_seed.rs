@@ -12,7 +12,7 @@ use crate::cosmic::smart::{
 use crate::law::speed_of_light::HandAddresses;
 use crate::log::LogExt;
 use crate::look_and_model::{
-    game_table::GameTable, piece::PIECE_LEN, DoubleFacedPiece, DOUBLE_FACED_PIECES_LEN,
+    piece::PIECE_LEN, DoubleFacedPiece, GameTable, DOUBLE_FACED_PIECES_LEN,
 };
 use crate::position::Position;
 use casual_logger::Log;

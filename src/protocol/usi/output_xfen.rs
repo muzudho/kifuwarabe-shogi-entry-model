@@ -4,7 +4,7 @@
 
 use crate::cosmic::recording::Phase;
 use crate::cosmic::smart::square::{AbsoluteAddress2D, FILE10U8, FILE1U8, RANK10U8, RANK1U8};
-use crate::look_and_model::game_table::GameTable;
+use crate::look_and_model::GameTable;
 use crate::position::Position;
 
 /// A record of the game used to suspend or resume it.

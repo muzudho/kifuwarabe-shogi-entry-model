@@ -8,6 +8,13 @@ pub mod search;
 pub mod title;
 
 use crate::computer_player::evaluator::Evaluation;
+use crate::cosmic::{
+    recording::FireAddress,
+    smart::square::BOARD_MEMORY_AREA,
+    toy_box::{PieceNum, NAMED_PIECES_LEN},
+};
+use crate::law::generate_move::Area;
+use crate::look_and_model::piece::Piece;
 use num_derive::FromPrimitive;
 use std::time::{Duration, Instant};
 
@@ -64,6 +71,25 @@ pub enum DoubleFacedPieceType {
     Knight,
     Lance,
     Pawn,
+}
+
+/// 卓☆（＾～＾）
+/// でかいのでコピーもクローンも不可☆（＾～＾）！
+/// 10の位を筋、1の位を段とする。
+/// 0筋、0段は未使用
+pub struct GameTable {
+    /// 盤に、駒が紐づくぜ☆（＾～＾）
+    board: [Option<PieceNum>; BOARD_MEMORY_AREA as usize],
+    /// 持ち駒を次に置く番地。
+    hand_next: [isize; DOUBLE_FACED_PIECES_LEN],
+    /// 背番号付きの駒に、番地が紐づいているぜ☆（＾～＾）
+    address_list: [FireAddress; NAMED_PIECES_LEN],
+    /// 駒の背番号に、駒が紐づくぜ☆（＾～＾）
+    piece_list: [Piece; NAMED_PIECES_LEN],
+    /// 駒の背番号を付けるのに使うぜ☆（＾～＾）
+    double_faced_piece_type_index: [usize; DOUBLE_FACED_PIECE_TYPE_LEN],
+    /// 指し手生成に利用☆（＾～＾）
+    pub area: Area,
 }
 
 /// 行き先表示案内板だぜ☆（＾～＾）

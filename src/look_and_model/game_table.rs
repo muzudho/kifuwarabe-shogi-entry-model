@@ -10,7 +10,7 @@ use crate::law::{generate_move::Area, speed_of_light::Nine299792458};
 use crate::log::LogExt;
 use crate::look_and_model::{
     piece::{Piece, PIECE_WHITE_SPACE},
-    DoubleFacedPiece, DOUBLE_FACED_PIECES_LEN, DOUBLE_FACED_PIECE_TYPE_LEN,
+    DoubleFacedPiece, GameTable, DOUBLE_FACED_PIECE_TYPE_LEN,
 };
 use casual_logger::{Log, Table};
 use num_traits::FromPrimitive;
@@ -518,24 +518,6 @@ P x{87:2}   |{63}|{64}|{65}|{66}|{67}|{68}|{69}|{70}|{71}| h8   p x{94:2}
     }
 }
 
-/// 卓☆（＾～＾）
-/// でかいのでコピーもクローンも不可☆（＾～＾）！
-/// 10の位を筋、1の位を段とする。
-/// 0筋、0段は未使用
-pub struct GameTable {
-    /// 盤に、駒が紐づくぜ☆（＾～＾）
-    board: [Option<PieceNum>; BOARD_MEMORY_AREA as usize],
-    /// 持ち駒を次に置く番地。
-    hand_next: [isize; DOUBLE_FACED_PIECES_LEN],
-    /// 背番号付きの駒に、番地が紐づいているぜ☆（＾～＾）
-    address_list: [FireAddress; NAMED_PIECES_LEN],
-    /// 駒の背番号に、駒が紐づくぜ☆（＾～＾）
-    piece_list: [Piece; NAMED_PIECES_LEN],
-    /// 駒の背番号を付けるのに使うぜ☆（＾～＾）
-    double_faced_piece_type_index: [usize; DOUBLE_FACED_PIECE_TYPE_LEN],
-    /// 指し手生成に利用☆（＾～＾）
-    pub area: Area,
-}
 impl Default for GameTable {
     fn default() -> Self {
         GameTable {

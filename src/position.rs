@@ -3,7 +3,7 @@
 use crate::cosmic::playing::{MovegenPhase, PosNums};
 use crate::cosmic::recording::{FireAddress, HandAddress, History, Movement};
 use crate::log::LogExt;
-use crate::look_and_model::game_table::GameTable;
+use crate::look_and_model::GameTable;
 use crate::Config;
 use crate::PV_BUFFER;
 use casual_logger::Log;
