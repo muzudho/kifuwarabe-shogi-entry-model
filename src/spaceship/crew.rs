@@ -11,7 +11,7 @@ use crate::look_and_model::{
     facility::Kitchen,
     position::{PositionLook, PositionLook2a, PositionLook2b},
 };
-use crate::usi_protocol::input_usi::*;
+use crate::protocol::usi::input_usi::*;
 use casual_logger::Log;
 use rand::Rng;
 
@@ -20,17 +20,6 @@ use rand::Rng;
 /// 対局でやっちゃいかん命令なら任せろだぜ☆（＾～＾）
 pub struct Chiyuri {}
 impl Chiyuri {
-    pub fn do_(engine: &mut Engine, p: &mut CommandLineSeek) {
-        // コマンド読取。棋譜に追加され、手目も増える
-        if read_sasite(&mut engine.position, p) {
-            // 手目を戻す
-            engine.position.history.add_moves(-1);
-            // 入っている指し手の通り指すぜ☆（＾～＾）
-            let ply = engine.position.history.length_from_the_middle();
-            let move_ = engine.position.history.movements[ply as usize];
-            engine.position.redo_move(&engine.config, &move_);
-        }
-    }
     pub fn genmove(engine: &Engine) {
         // Generation move.
         // FIXME 合法手とは限らない

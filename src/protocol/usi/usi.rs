@@ -1,5 +1,5 @@
 use crate::log::LogExt;
-use crate::usi_protocol::Usi;
+use crate::protocol::usi::Usi;
 use crate::{ENGINE_AUTHOR, ENGINE_NAME};
 use casual_logger::Log;
 

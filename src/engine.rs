@@ -2,8 +2,11 @@ use crate::command_line_seek::CommandLineSeek;
 use crate::log::LogExt;
 use crate::look_and_model::Title;
 use crate::position::Position;
+use crate::protocol::{
+    usi::{Go, IsReady, Position as UsiPosition, SetOption, Usi, UsiNewGame},
+    uxi::Do,
+};
 use crate::spaceship::crew::Chiyuri;
-use crate::usi_protocol::{Go, IsReady, Position as UsiPosition, SetOption, Usi, UsiNewGame};
 use crate::Config;
 use casual_logger::{Log, Table};
 
@@ -88,7 +91,7 @@ impl Engine {
         // D
         if p.starts_with("do ") {
             p.go_next_to("do ");
-            Chiyuri::do_(self, p);
+            Do::do_(self, p);
         // G
         } else if p.starts_with("genmove") {
             Chiyuri::genmove(&self);

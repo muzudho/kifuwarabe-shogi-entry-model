@@ -1,7 +1,7 @@
 use crate::command_line_seek::CommandLineSeek;
 use crate::engine::Engine;
 use crate::log::LogExt;
-use crate::usi_protocol::SetOption;
+use crate::protocol::usi::SetOption;
 use casual_logger::{Log, Table};
 
 impl SetOption {
