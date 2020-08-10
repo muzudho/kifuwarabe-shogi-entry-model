@@ -32,6 +32,7 @@ mod position;
 mod spaceship;
 mod test;
 mod usi_protocol;
+mod uxi_protocol;
 
 use crate::config::GameHashSeed;
 use crate::engine::{Engine, Response};
