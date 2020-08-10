@@ -1,5 +1,4 @@
 use crate::command_line_seek::CommandLineSeek;
-use crate::config::*;
 use crate::cosmic::{
     playing::PosNums,
     recording::{Movement, Phase},
@@ -13,6 +12,7 @@ use crate::look_and_model::{
     position::{PositionLook, PositionLook2a, PositionLook2b},
 };
 use crate::usi_protocol::input_usi::*;
+use crate::{ENGINE_AUTHOR, ENGINE_NAME};
 use casual_logger::Log;
 use rand::Rng;
 
@@ -152,11 +152,7 @@ impl Chiyuri {
     }
     pub fn startpos(engine: &mut Engine) {
         // 平手初期局面
-        set_position(
-            &engine.config,
-            &mut engine.position,
-            &mut CommandLineSeek::new(&POS_1.to_string()),
-        );
+        set_position(engine, &mut CommandLineSeek::new(&POS_1.to_string()));
     }
     pub fn teigi_conv() {
         Log::print_notice("teigi::convのテスト");

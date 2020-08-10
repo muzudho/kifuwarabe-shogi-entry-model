@@ -6,10 +6,6 @@ use crate::usi_protocol::Position;
 impl Position {
     pub fn position(engine: &mut Engine, line: &str) {
         // positionコマンドの読取を丸投げ
-        set_position(
-            &engine.config,
-            &mut engine.position,
-            &mut CommandLineSeek::new(line),
-        );
+        set_position(engine, &mut CommandLineSeek::new(line));
     }
 }

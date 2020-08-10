@@ -7,20 +7,6 @@ use crate::cosmic::smart::{features::HAND_MAX, square::BOARD_MEMORY_AREA};
 use crate::look_and_model::{piece::PIECE_LEN, DOUBLE_FACED_PIECES_LEN};
 use crate::Config;
 
-/// USI対応コンピューター将棋ソフトの名前☆（＾～＾）
-pub const ENGINE_NAME: &str = "KifuwarabeEM bld49";
-
-/// 作者の名前。姓・名の順にしたいぜ☆（＾～＾）異文化に通じる表記方法はないものか☆（＾～＾）
-pub const ENGINE_AUTHOR: &str = "TAKAHASHI, Satoshi";
-
-/// ログ
-pub const LOG_FILE: &str = "kifuwarabeEM";
-
-pub const PV_BUFFER: usize = 2048;
-
-/// info 表示の間隔（ミリ秒）
-pub const INFO_INTERVAL_MSEC: u128 = 1000;
-
 impl Default for Config {
     fn default() -> Self {
         Config {

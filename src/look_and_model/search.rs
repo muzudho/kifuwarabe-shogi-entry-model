@@ -1,7 +1,7 @@
 use crate::computer_player::{evaluator::Evaluation, search::Value};
-use crate::config::INFO_INTERVAL_MSEC;
 use crate::cosmic::recording::Movement;
 use crate::spaceship::equipment::PvString;
+use crate::INFO_INTERVAL_MSEC;
 use std::time::{Duration, Instant};
 
 /// ツリーは探索中に１つしか生成しないぜ☆（＾～＾）

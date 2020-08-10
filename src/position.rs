@@ -1,11 +1,11 @@
 //! GameTable. A record of the game used to suspend or resume it.  
 //! 局面。 ゲームを中断したり、再開したりするときに使うゲームの記録です。  
-use crate::config::PV_BUFFER;
 use crate::cosmic::playing::{MovegenPhase, PosNums};
 use crate::cosmic::recording::{FireAddress, HandAddress, History, Movement};
 use crate::log::LogExt;
 use crate::look_and_model::game_table::GameTable;
 use crate::Config;
+use crate::PV_BUFFER;
 use casual_logger::Log;
 
 /// Position. A record of the game used to suspend or resume it.  
@@ -36,6 +36,7 @@ impl Default for Position {
     }
 }
 impl Position {
+    /*
     /// 初期局面、現局面ともにクリアーします。
     /// 手目も 0 に戻します。
     pub fn usi_new_game(&mut self) {
@@ -50,6 +51,7 @@ impl Position {
         self.pv_len = 0;
         self.pv_text = String::with_capacity(PV_BUFFER);
     }
+    */
     pub fn pv_text(&self) -> &str {
         &self.pv_text
     }

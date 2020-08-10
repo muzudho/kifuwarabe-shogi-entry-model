@@ -7,6 +7,7 @@ use crate::cosmic::smart::features::PieceType;
 use crate::cosmic::smart::square::AbsoluteAddress2D;
 use crate::cosmic::smart::square::FILE9U8;
 use crate::cosmic::smart::square::RANK1U8;
+use crate::engine::Engine;
 use crate::log::LogExt;
 use crate::look_and_model::DoubleFacedPiece;
 use crate::position::Position;
@@ -362,9 +363,9 @@ pub fn read_board(config: &Config, pos: &mut Position, p: &mut CommandLineSeek) 
 }
 
 /// position コマンド読取
-pub fn set_position(config: &Config, pos: &mut Position, p: &mut CommandLineSeek) {
+pub fn set_position(engine: &mut Engine, p: &mut CommandLineSeek) {
     // 局面をクリアー。手目も 0 に戻します。
-    pos.usi_new_game();
+    engine.position = Position::default();
 
     if p.starts_with("position startpos") {
         // 'position startpos' を読み飛ばし
@@ -372,7 +373,7 @@ pub fn set_position(config: &Config, pos: &mut Position, p: &mut CommandLineSeek
 
         // 別途用意した平手初期局面文字列を読取
         let mut p2 = CommandLineSeek::new(STARTPOS);
-        read_board(config, pos, &mut p2);
+        read_board(&engine.config, &mut engine.position, &mut p2);
 
         // 元のパーサーで続行。
         if p.starts_with(" ") {
@@ -383,7 +384,7 @@ pub fn set_position(config: &Config, pos: &mut Position, p: &mut CommandLineSeek
         let sfen_enable = p.starts_with("position sfen ");
         // 'position sfen ' を読み飛ばし
         p.go_next_to("position sfen ");
-        read_board(config, pos, p);
+        read_board(&engine.config, &mut engine.position, p);
 
         if p.starts_with(" ") {
             p.go_next_to(" ");
@@ -483,7 +484,7 @@ pub fn set_position(config: &Config, pos: &mut Position, p: &mut CommandLineSeek
 
                     for _i in 0..hand_num {
                         // 散らばっている駒に、背番号を付けて、駒台に置くぜ☆（＾～＾）
-                        pos.mut_starting().init_hand(turn, piece_type);
+                        engine.position.mut_starting().init_hand(turn, piece_type);
                     }
                 } //if
             } //loop
@@ -501,7 +502,7 @@ pub fn set_position(config: &Config, pos: &mut Position, p: &mut CommandLineSeek
             // TODO 数字読取
             let num = p.read_natural_number();
             if let Some(num) = num {
-                pos.history.length_from_the_beginning = num - 1;
+                engine.position.history.length_from_the_beginning = num - 1;
             } else {
                 panic!(Log::print_fatal(
                     "(Err.510) 途中図の次の局面が何手目か読めなかった。",
@@ -528,16 +529,19 @@ pub fn set_position(config: &Config, pos: &mut Position, p: &mut CommandLineSeek
     }
 
     // 初期局面を、現局面にコピーします
-    pos.table.copy_from(&pos.starting_table);
+    engine
+        .position
+        .table
+        .copy_from(&engine.position.starting_table);
 
     // 指し手を全部読んでいくぜ☆（＾～＾）手目のカウントも増えていくぜ☆（＾～＾）
-    while read_sasite(pos, p) {
+    while read_sasite(&mut engine.position, p) {
         // 手目を戻す
-        pos.history.add_moves(-1);
+        engine.position.history.add_moves(-1);
         // 入っている指し手の通り指すぜ☆（＾～＾）
-        let ply = pos.history.length_from_the_middle();
+        let ply = engine.position.history.length_from_the_middle();
 
-        let move_ = pos.history.movements[ply as usize];
-        pos.redo_move(config, &move_);
+        let move_ = engine.position.history.movements[ply as usize];
+        engine.position.redo_move(&engine.config, &move_);
     }
 }
