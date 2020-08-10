@@ -11,13 +11,17 @@ pub mod piece_type;
 pub mod position;
 pub mod recording;
 pub mod search;
+pub mod searching;
 pub mod title;
 
 use crate::{
     computer_player::evaluator::Evaluation,
-    cosmic::{playing::MovegenPhase, smart::square::BOARD_MEMORY_AREA},
+    cosmic::smart::square::BOARD_MEMORY_AREA,
     law::generate_move::Area,
-    look_and_model::recording::{FireAddress, History},
+    look_and_model::{
+        recording::{FireAddress, History},
+        searching::MovegenPhase,
+    },
 };
 use num_derive::FromPrimitive;
 use std::time::{Duration, Instant};
