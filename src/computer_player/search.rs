@@ -5,7 +5,7 @@
 use crate::computer_player::evaluator::REPITITION_VALUE;
 use crate::cosmic::recording::{Movement, Phase, SENNTITE_NUM};
 use crate::cosmic::smart::features::PieceType;
-use crate::cosmic::universe::Universe;
+use crate::engine::Engine;
 use crate::law::generate_move::{MoveGen, Ways};
 use crate::log::LogExt;
 use crate::look_and_model::search::Search;
@@ -16,18 +16,18 @@ use std::fmt;
 
 impl Search {
     /// 反復深化探索だぜ☆（＾～＾）
-    pub fn iteration_deeping(&mut self, universe: &mut Universe) -> TreeState {
+    pub fn iteration_deeping(&mut self, engine: &mut Engine) -> TreeState {
         self.remake_info_display();
 
         let max_ply = std::cmp::max(
-            universe.option_max_depth,
-            universe.option_max_ply - universe.position.history.length_from_the_middle() as usize,
+            engine.option_max_depth,
+            engine.option_max_ply - engine.position.history.length_from_the_middle() as usize,
         );
         // とりあえず 1手読み を叩き台にするぜ☆（＾～＾）
         // 初手の３０手が葉になるぜ☆（＾～＾）
         self.evaluation.before_search();
         self.max_depth0 = 0;
-        let mut best_ts = self.node(&mut universe.position, Value::Win);
+        let mut best_ts = self.node(&mut engine.position, Value::Win);
         self.evaluation.after_search();
 
         // 一番深く潜ったときの最善手を選ぼうぜ☆（＾～＾）
@@ -73,7 +73,7 @@ impl Search {
 
             // 探索局面数は引き継ぐぜ☆（＾～＾）積み上げていった方が見てて面白いだろ☆（＾～＾）
             self.evaluation.before_search();
-            let ts = self.node(&mut universe.position, Value::Win);
+            let ts = self.node(&mut engine.position, Value::Win);
             self.evaluation.after_search();
             if ts.timeout {
                 // 思考時間切れなら この探索結果は使わないぜ☆（＾～＾）

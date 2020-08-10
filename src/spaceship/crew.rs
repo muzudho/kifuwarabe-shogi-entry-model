@@ -4,14 +4,15 @@ use crate::cosmic::{
     playing::PosNums,
     recording::{Movement, Phase},
     smart::square::{AbsoluteAddress2D, FILE1U8},
-    universe::Universe,
 };
+use crate::engine::Engine;
 use crate::law::{cryptographic::*, generate_move::MoveGen};
 use crate::log::LogExt;
 use crate::look_and_model::{
-    facility::{CommandRoom, Kitchen},
+    facility::Kitchen,
     position::{PositionLook, PositionLook2a, PositionLook2b},
     search::Search,
+    Title,
 };
 use crate::spaceship::{engine, equipment::PvString};
 use crate::usi_protocol::input_usi::*;
@@ -24,11 +25,11 @@ use rand::Rng;
 pub struct Kifuwarabe {}
 impl Kifuwarabe {
     /// bestmoveコマンドを送るぜ☆（＾～＾） 思考するのもこの中だぜ☆（＾～＾）
-    pub fn go(universe: &mut Universe, p: &mut CommandLineSeek) {
+    pub fn go(engine: &mut Engine, p: &mut CommandLineSeek) {
         // go btime 40000 wtime 50000 binc 10000 winc 10000
         let go1 = engine::Go::parse(p);
         Log::debug(&format!("Debug   | go=|{}|", go1));
-        let mut tree = Search::new(universe.option_depth_not_to_give_up);
+        let mut tree = Search::new(engine.option_depth_not_to_give_up);
 
         // 残り時間と、追加時間☆（＾～＾）
         fn margined_msec(msec: u64) -> u64 {
@@ -38,20 +39,18 @@ impl Kifuwarabe {
                 0
             }
         }
-        let (msec, _minc) = match universe.position.history.get_turn() {
+        let (msec, _minc) = match engine.position.history.get_turn() {
             // 2秒余裕を見ておけば、探索を中断できるだろ……☆（＾～＾）負の数になったらエラーな☆（＾～＾）
             Phase::First => (margined_msec(go1.btime), go1.binc),
             Phase::Second => (margined_msec(go1.wtime), go1.winc),
         };
-        tree.think_msec = if universe.option_max_think_msec < msec {
+        tree.think_msec = if engine.option_max_think_msec < msec {
             // 残り時間が、最大思考時間より長ければ充分だぜ☆（＾～＾）
-            rand::thread_rng().gen_range(
-                universe.option_min_think_msec,
-                universe.option_max_think_msec,
-            ) as u128
-        } else if universe.option_min_think_msec < msec {
+            rand::thread_rng().gen_range(engine.option_min_think_msec, engine.option_max_think_msec)
+                as u128
+        } else if engine.option_min_think_msec < msec {
             // 残り時間が、最小思考時間より長いが、最長思考時間まで考えてられないな☆（＾～＾）
-            rand::thread_rng().gen_range(universe.option_min_think_msec, msec) as u128
+            rand::thread_rng().gen_range(engine.option_min_think_msec, msec) as u128
         } else if 3000 < msec {
             // 持ち時間が、最小思考時間未満、3秒より多いになったら☆（＾～＾）
             // 第一引数が負の数にならないように注意☆（＾～＾）
@@ -61,7 +60,7 @@ impl Kifuwarabe {
             1
         };
 
-        let ts = tree.iteration_deeping(universe);
+        let ts = tree.iteration_deeping(engine);
         // その手を選んだ理由☆（＾～＾）
         Log::print_info(&Search::info_str(
             None,
@@ -84,11 +83,11 @@ impl Kifuwarabe {
     pub fn isready() {
         Log::print_notice("readyok");
     }
-    pub fn position(universe: &mut Universe, line: &str) {
+    pub fn position(engine: &mut Engine, line: &str) {
         // positionコマンドの読取を丸投げ
-        set_position(&mut universe.position, &mut CommandLineSeek::new(line));
+        set_position(&mut engine.position, &mut CommandLineSeek::new(line));
     }
-    pub fn setoption_name(universe: &mut Universe, p: &mut CommandLineSeek) {
+    pub fn setoption_name(engine: &mut Engine, p: &mut CommandLineSeek) {
         // Example: setoption name USI_Ponder value true
         p.go_next_to("setoption name ");
         if let Some(name_len) = p.line()[p.current()..].find(' ') {
@@ -102,7 +101,7 @@ impl Kifuwarabe {
             );
             match name.as_str() {
                 "MaxPly" => {
-                    universe.option_max_ply = match value.parse() {
+                    engine.option_max_ply = match value.parse() {
                         Result::Ok(val) => val,
                         Result::Err(e) => panic!(Log::print_fatal(&format!(
                             "(Err.108) Invalid value=|{}|",
@@ -111,7 +110,7 @@ impl Kifuwarabe {
                     };
                 }
                 "DepthNotToGiveUp" => {
-                    universe.option_depth_not_to_give_up = match value.parse() {
+                    engine.option_depth_not_to_give_up = match value.parse() {
                         Result::Ok(val) => val,
                         Result::Err(e) => panic!(Log::print_fatal(&format!(
                             "(Err.117) Invalid value=|{}|",
@@ -120,7 +119,7 @@ impl Kifuwarabe {
                     };
                 }
                 "MaxDepth" => {
-                    universe.option_max_depth = match value.parse() {
+                    engine.option_max_depth = match value.parse() {
                         Result::Ok(val) => val,
                         Result::Err(e) => panic!(Log::print_fatal(&format!(
                             "(Err.126) Invalid value=|{}|",
@@ -129,7 +128,7 @@ impl Kifuwarabe {
                     };
                 }
                 "MinThinkMsec" => {
-                    universe.option_min_think_msec = match value.parse() {
+                    engine.option_min_think_msec = match value.parse() {
                         Result::Ok(val) => val,
                         Result::Err(e) => panic!(Log::print_fatal(&format!(
                             "(Err.135) Invalid value=|{}|",
@@ -138,7 +137,7 @@ impl Kifuwarabe {
                     };
                 }
                 "MaxThinkMsec" => {
-                    universe.option_max_think_msec = match value.parse() {
+                    engine.option_max_think_msec = match value.parse() {
                         Result::Ok(val) => val,
                         Result::Err(e) => panic!(Log::print_fatal(&format!(
                             "(Err.144) Invalid value=|{}|",
@@ -174,8 +173,8 @@ impl Kifuwarabe {
         Log::print_notice("option name MaxThinkMsec type spin default 17000 min 1000 max 600000");
         Log::print_notice("usiok");
     }
-    pub fn usinewgame(universe: &mut Universe) {
-        universe.position.clear();
+    pub fn usinewgame(engine: &mut Engine) {
+        engine.position.clear();
     }
 }
 
@@ -184,38 +183,38 @@ impl Kifuwarabe {
 /// 対局でやっちゃいかん命令なら任せろだぜ☆（＾～＾）
 pub struct Chiyuri {}
 impl Chiyuri {
-    pub fn do_(universe: &mut Universe, p: &mut CommandLineSeek) {
+    pub fn do_(engine: &mut Engine, p: &mut CommandLineSeek) {
         // コマンド読取。棋譜に追加され、手目も増える
-        if read_sasite(&mut universe.position, p) {
+        if read_sasite(&mut engine.position, p) {
             // 手目を戻す
-            universe.position.history.add_moves(-1);
+            engine.position.history.add_moves(-1);
             // 入っている指し手の通り指すぜ☆（＾～＾）
-            let ply = universe.position.history.length_from_the_middle();
-            let move_ = universe.position.history.movements[ply as usize];
-            universe.position.redo_move(&move_);
+            let ply = engine.position.history.length_from_the_middle();
+            let move_ = engine.position.history.movements[ply as usize];
+            engine.position.redo_move(&move_);
         }
     }
-    pub fn genmove(universe: &Universe) {
+    pub fn genmove(engine: &Engine) {
         // Generation move.
         // FIXME 合法手とは限らない
         let mut ways = Vec::<Movement>::new();
         MoveGen::make_move(
-            &universe.position,
-            match universe.position.history.get_turn() {
-                Phase::First => &universe.position.movegen_phase.first_movegen,
-                Phase::Second => &universe.position.movegen_phase.second_movegen,
+            &engine.position,
+            match engine.position.history.get_turn() {
+                Phase::First => &engine.position.movegen_phase.first_movegen,
+                Phase::Second => &engine.position.movegen_phase.second_movegen,
             },
             &mut |way| {
                 ways.push(way);
             },
         );
         Log::print_notice("----指し手生成(合法手とは限らない) ここから----");
-        Kitchen::print_ways(&universe.position.table, &ways);
+        Kitchen::print_ways(&engine.position.table, &ways);
         Log::print_notice("----指し手生成(合法手とは限らない) ここまで----");
     }
-    pub fn hash(universe: &Universe) {
+    pub fn hash(engine: &Engine) {
         Log::print_notice("局面ハッシュ表示");
-        let s = universe.position.get_positions_hash_text();
+        let s = engine.position.get_positions_hash_text();
         Log::print_notice(&s);
     }
     pub fn how_much(line: &str) {
@@ -223,15 +222,15 @@ impl Chiyuri {
         let bestmove = &line[9..];
         Log::print_notice(&format!("Debug   | bestmove=|{}|", bestmove));
     }
-    pub fn kifu(universe: &Universe) {
+    pub fn kifu(engine: &Engine) {
         Log::print_notice("棋譜表示");
-        let s = universe.position.get_moves_history_text();
+        let s = engine.position.get_moves_history_text();
         Log::print_notice(&s);
     }
     /// 表示するだけ☆（＾～＾）
-    pub fn list40(universe: &Universe) {
+    pub fn list40(engine: &Engine) {
         Log::print_notice("----駒リスト40表示 ここから----");
-        universe
+        engine
             .position
             .table
             .for_all_pieces_on_table(&mut |i, adr, piece| {
@@ -252,40 +251,40 @@ impl Chiyuri {
             });
         Log::print_notice("----駒リスト40表示 ここまで----");
     }
-    pub fn len0(universe: &mut Universe) {
+    pub fn len0(engine: &mut Engine) {
         Log::debug("info string EnterEmpty.");
-        if !&universe.dialogue_mode {
+        if !&engine.dialogue_mode {
             // 空打ち１回目なら、対話モードへ☆（＾～＾）
-            universe.dialogue_mode = true;
+            engine.dialogue_mode = true;
             // タイトル表示
             // １画面は２５行だが、最後の２行は開けておかないと、
             // カーソルが２行分場所を取るんだぜ☆（＾～＾）
-            CommandRoom::print_title();
+            Title::pretty();
         } else {
             // 局面表示
-            let s = PositionLook::to_string(&universe.position, PosNums::Current);
+            let s = PositionLook::to_string(&engine.position, PosNums::Current);
             Log::print_notice(&s);
         }
     }
-    pub fn pos(universe: &Universe) {
+    pub fn pos(engine: &Engine) {
         // 現局面表示
-        let s = PositionLook::to_string(&universe.position, PosNums::Current);
+        let s = PositionLook::to_string(&engine.position, PosNums::Current);
         Log::print_notice(&s);
     }
-    pub fn pos2(universe: &Universe) {
+    pub fn pos2(engine: &Engine) {
         // 現局面表示
         let s = format!(
             "{}{}{}{}",
-            PositionLook2a::to_string(&universe.position, PosNums::Current),
-            PositionLook2b::to_string(&universe.position, PosNums::Current),
-            universe.position.table.pretty2c(),
-            universe.position.table.pretty2d()
+            PositionLook2a::to_string(&engine.position, PosNums::Current),
+            PositionLook2b::to_string(&engine.position, PosNums::Current),
+            engine.position.table.pretty2c(),
+            engine.position.table.pretty2d()
         );
         Log::print_notice(&s);
     }
-    pub fn pos0(universe: &Universe) {
+    pub fn pos0(engine: &Engine) {
         // 初期局面表示
-        let s = PositionLook::to_string(&universe.position, PosNums::Start);
+        let s = PositionLook::to_string(&engine.position, PosNums::Start);
         Log::print_notice(&s);
     }
     pub fn rand() {
@@ -293,14 +292,14 @@ impl Chiyuri {
         let secret_number = rand::thread_rng().gen_range(1, 101); //1~100
         Log::print_notice(&format!("乱数={}", secret_number));
     }
-    pub fn same(universe: &Universe) {
-        let count = universe.position.count_same_position();
+    pub fn same(engine: &Engine) {
+        let count = engine.position.count_same_position();
         Log::print_notice(&format!("同一局面調べ count={}", count));
     }
-    pub fn startpos(universe: &mut Universe) {
+    pub fn startpos(engine: &mut Engine) {
         // 平手初期局面
         set_position(
-            &mut universe.position,
+            &mut engine.position,
             &mut CommandLineSeek::new(&POS_1.to_string()),
         );
     }
@@ -322,11 +321,11 @@ impl Chiyuri {
             }
         }
     }
-    pub fn undo(universe: &mut Universe) {
-        if !universe.position.undo_move() {
+    pub fn undo(engine: &mut Engine) {
+        if !engine.position.undo_move() {
             Log::print_notice(&format!(
                 "info string ply={} を、これより戻せません",
-                universe.position.history.length_from_the_middle()
+                engine.position.history.length_from_the_middle()
             ));
         }
     }

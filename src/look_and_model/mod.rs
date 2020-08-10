@@ -5,6 +5,7 @@ pub mod game_table;
 pub mod piece;
 pub mod position;
 pub mod search;
+pub mod title;
 
 use num_derive::FromPrimitive;
 
@@ -62,3 +63,6 @@ pub enum DoubleFacedPieceType {
     Lance,
     Pawn,
 }
+
+/// タイトル画面。
+pub struct Title {}

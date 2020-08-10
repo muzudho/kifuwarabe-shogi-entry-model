@@ -34,7 +34,6 @@ mod test;
 mod usi_protocol;
 
 use crate::config::LOG_FILE;
-use crate::cosmic::universe::Universe;
 use crate::engine::{Engine, Response};
 use crate::log::LogExt;
 use casual_logger::{Log, Opt};
@@ -46,19 +45,13 @@ fn main() {
     // Log::set_level(Level::Notice);
     Log::remove_old_logs();
     // 宇宙☆（＾～＾）変化するぜ☆（＾～＾）
-    let mut universe: Universe = Universe::default();
+    let mut engine = Engine::default();
 
     // ビッグバン
-    universe.big_bang();
+    engine.big_bang();
 
     test();
 
-    main_loop(&mut universe);
-    // [Ctrl]+[C] で強制終了
-}
-
-fn main_loop(universe: &mut Universe) {
-    let mut engine = Engine::default();
     // End the loop with 'quit'. Forced termination with [Ctrl]+[C].
     // 'quit' でループを終了。 [Ctrl]+[C] で強制終了。
     loop {
@@ -75,7 +68,7 @@ fn main_loop(universe: &mut Universe) {
             ))),
         };
 
-        if let Some(response) = engine.enter(universe, &line) {
+        if let Some(response) = engine.enter(&line) {
             match response {
                 Response::Quit => {
                     break;

@@ -3,45 +3,6 @@ use crate::log::LogExt;
 use crate::look_and_model::game_table::GameTable;
 use casual_logger::Log;
 
-/// 指令室はこちらだぜ☆（＾～＾）！
-pub struct CommandRoom {}
-impl CommandRoom {
-    // 対話モードのタイトル画面
-    pub fn print_title() {
-        // 横幅は 半角79文字使えるぜ☆（＾～＾）
-        // 80文字目を使うと、次の行が改行で空行になってしまう☆（＾～＾）
-        Log::print_notice(
-            &"\
-+--------- --------- --------- --------- --------- --------- --------- -------+
-| KifuWarabe Shogi 2020                                                       |
-+---------+--------- --------- --------- --------- --------- --------- -------+
-          | Created by Muzudho (Doujin Circle Grayscale)                      |
-          +--------- --------- --------- --------- --------- --------- -------+
-05
-          [Enter]
-07
-08
-09
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23\
-"
-            .to_string(),
-        );
-    }
-}
-
 /// 台所はこちらだぜ☆（＾～＾）！指し手の一覧が見れるぜ☆（＾～＾）！
 pub struct Kitchen {}
 impl Kitchen {

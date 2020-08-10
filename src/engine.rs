@@ -1,17 +1,47 @@
 use crate::command_line_seek::CommandLineSeek;
-use crate::cosmic::universe::Universe;
 use crate::log::LogExt;
+use crate::position::Position;
 use crate::spaceship::crew::{Chiyuri, Kifuwarabe};
 use casual_logger::{Log, Table};
 
-pub struct Engine {}
+/// アプリケーション開始時に決め終えておくものだぜ☆（＾～＾）
+pub struct Engine {
+    /// 対局
+    pub position: Position,
+    /// 対話モード
+    pub dialogue_mode: bool,
+    /// 大会ルールの最大手数☆（＾～＾）
+    pub option_max_ply: usize,
+    /// 読みの最大深さ。
+    pub option_max_depth: usize,
+    /// 思考時間の最小秒☆（＾～＾）
+    pub option_min_think_msec: u64,
+    /// 思考時間の最大秒☆（＾～＾）
+    pub option_max_think_msec: u64,
+    /// 諦めない深さ☆（＾～＾）読み終わるまで、思考時間を無視するぜ☆（＾～＾）max_depth - 1 より小さくしろだぜ☆（＾～＾）
+    pub option_depth_not_to_give_up: usize,
+}
 impl Default for Engine {
     fn default() -> Self {
-        Engine {}
+        Engine {
+            position: Position::default(),
+            dialogue_mode: false,
+            option_max_ply: 320,
+            option_max_depth: 1,
+            option_depth_not_to_give_up: 2,
+            /// min < max にしろだぜ☆（＾～＾）
+            option_min_think_msec: 7000,
+            option_max_think_msec: 17000,
+        }
     }
 }
 impl Engine {
-    pub fn enter(&mut self, universe: &mut Universe, line: &str) -> Option<Response> {
+    /// 宇宙誕生
+    pub fn big_bang(&mut self) {
+        self.position.big_bang();
+    }
+
+    pub fn enter(&mut self, line: &str) -> Option<Response> {
         // Write input to log.
         // 入力をログに書きます。
         Log::notice_t(&line, Table::default().str("Description", "Input."));
@@ -22,73 +52,73 @@ impl Engine {
 
         if p.len() == 0 {
             // 任せろだぜ☆（＾～＾）
-            Chiyuri::len0(universe);
+            Chiyuri::len0(self);
         } else if p.starts_with("go") {
-            Kifuwarabe::go(universe, &mut p);
+            Kifuwarabe::go(self, &mut p);
         } else if p.starts_with("usinewgame") {
-            Kifuwarabe::usinewgame(universe);
+            Kifuwarabe::usinewgame(self);
         } else if p.starts_with("isready") {
             Kifuwarabe::isready();
         } else if p.starts_with("position") {
-            Kifuwarabe::position(universe, &line);
+            Kifuwarabe::position(self, &line);
         } else if p.starts_with("quit") {
             return Some(Response::Quit);
         } else if p.starts_with("setoption name ") {
-            Kifuwarabe::setoption_name(universe, &mut CommandLineSeek::new(&line));
+            Kifuwarabe::setoption_name(self, &mut CommandLineSeek::new(&line));
         } else if p.starts_with("sfen") {
-            Log::print_notice(&format!("{}", universe.position.to_xfen(true)));
+            Log::print_notice(&format!("{}", self.position.to_xfen(true)));
         } else if p.starts_with("usi") {
             Kifuwarabe::usi();
         } else if p.starts_with("xfen") {
-            Log::print_notice(&format!("{}", universe.position.to_xfen(false)));
+            Log::print_notice(&format!("{}", self.position.to_xfen(false)));
         } else {
-            Engine::help_chiyuri(universe, &mut p);
+            self.help_chiyuri(&mut p);
         }
 
         None
     }
 
     /// 独自コマンド☆（＾～＾）
-    fn help_chiyuri(universe: &mut Universe, p: &mut CommandLineSeek) {
+    fn help_chiyuri(&mut self, p: &mut CommandLineSeek) {
         // D
         if p.starts_with("do ") {
             p.go_next_to("do ");
-            Chiyuri::do_(universe, p);
+            Chiyuri::do_(self, p);
         // G
         } else if p.starts_with("genmove") {
-            Chiyuri::genmove(&universe);
+            Chiyuri::genmove(&self);
         // H
         } else if p.starts_with("how-much") {
             Chiyuri::how_much(p.line());
         } else if p.starts_with("hash") {
-            Chiyuri::hash(universe);
+            Chiyuri::hash(self);
         } else if p.starts_with("kifu") {
-            Chiyuri::kifu(universe);
+            Chiyuri::kifu(self);
         // L
         } else if p.starts_with("list40") {
-            Chiyuri::list40(universe);
+            Chiyuri::list40(self);
         // P
         } else if p.starts_with("pos0") {
-            Chiyuri::pos0(universe);
+            Chiyuri::pos0(self);
         } else if p.starts_with("pos2") {
-            Chiyuri::pos2(universe);
+            Chiyuri::pos2(self);
         } else if p.starts_with("pos") {
-            Chiyuri::pos(universe);
+            Chiyuri::pos(self);
         // S
         } else if p.starts_with("startpos") {
-            Chiyuri::startpos(universe);
+            Chiyuri::startpos(self);
         // R
         } else if p.starts_with("rand") {
             Chiyuri::rand();
         // S
         } else if p.starts_with("same") {
-            Chiyuri::same(universe);
+            Chiyuri::same(self);
         // T
         } else if p.starts_with("teigi::conv") {
             Chiyuri::teigi_conv();
         // U
         } else if p.starts_with("undo") {
-            Chiyuri::undo(universe);
+            Chiyuri::undo(self);
         }
     }
 }

@@ -13,7 +13,7 @@ use casual_logger::Log;
 pub struct Position {
     /// 棋譜
     pub history: History,
-    /// 初期の卓
+    /// 初期の卓。これは SFEN を持てばよくて、オブジェクトは持たなくていいんじゃないか☆（＾～＾）？
     pub starting_table: GameTable,
     /// 現対局ハッシュ種☆（＾～＾）
     pub hash_seed: GameHashSeed,
