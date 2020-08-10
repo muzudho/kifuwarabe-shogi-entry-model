@@ -1,12 +1,10 @@
 pub mod captured_move;
 pub mod fire_address;
+pub mod hand_address;
 pub mod movement;
 pub mod phase;
 
-use crate::{
-    cosmic::recording::*,
-    look_and_model::{AbsoluteAddress2D, PieceNum},
-};
+use crate::look_and_model::{AbsoluteAddress2D, DoubleFacedPiece, PieceNum};
 
 /// 取ることになる駒の移動。
 #[derive(Clone, Copy)]
@@ -22,6 +20,16 @@ pub struct CapturedMove {
 pub enum FireAddress {
     Board(AbsoluteAddress2D),
     Hand(HandAddress),
+}
+
+/// 持ち駒の番地。
+#[derive(Copy, Clone, Debug)]
+pub struct HandAddress {
+    /// USI出力に必要。 'R*' とか。 指し手生成で 歩、香、桂、その他の区別にも利用。
+    /// 利用するとき 先手／後手 情報はよく使うんで、めんとくさいんで 先手／後手 情報も持たせておきます。
+    pub piece: DoubleFacedPiece,
+    /// TODO 未使用☆（＾～＾）？
+    pub sq: AbsoluteAddress2D,
 }
 
 /// 駒の背番号も欲しいか☆（＾～＾）？

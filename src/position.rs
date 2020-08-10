@@ -3,11 +3,11 @@
 use crate::{
     cosmic::{
         playing::{MovegenPhase, PosNums},
-        recording::{HandAddress, History},
+        recording::History,
     },
     log::LogExt,
     look_and_model::{
-        recording::{FireAddress, Movement},
+        recording::{FireAddress, HandAddress, Movement},
         GameTable,
     },
     Config, Position, PV_BUFFER,

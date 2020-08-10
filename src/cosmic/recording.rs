@@ -4,10 +4,7 @@
 //! * Phase (先後。手番,相手番)
 //! * Person (先手,後手)
 //!
-use crate::look_and_model::{
-    recording::{Movement, Phase},
-    AbsoluteAddress2D, DoubleFacedPiece,
-};
+use crate::look_and_model::recording::{Movement, Phase};
 
 /// 手数☆（＾～＾） 大会ルールとは別で、このプログラムが対応できる上限値☆（＾～＾）
 /// 主要大会では、一番大きくても　電竜戦の 512 だろ☆（＾～＾）
@@ -85,22 +82,4 @@ impl History {
         self.position_hashs[self.ply as usize] = hash;
     }
     */
-}
-
-/// 持ち駒の番地。
-#[derive(Copy, Clone, Debug)]
-pub struct HandAddress {
-    /// USI出力に必要。 'R*' とか。 指し手生成で 歩、香、桂、その他の区別にも利用。
-    /// 利用するとき 先手／後手 情報はよく使うんで、めんとくさいんで 先手／後手 情報も持たせておきます。
-    pub piece: DoubleFacedPiece,
-    /// TODO 未使用☆（＾～＾）？
-    pub sq: AbsoluteAddress2D,
-}
-impl HandAddress {
-    pub fn new(piece: DoubleFacedPiece, sq: AbsoluteAddress2D) -> Self {
-        HandAddress {
-            piece: piece,
-            sq: sq,
-        }
-    }
 }

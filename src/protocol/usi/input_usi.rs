@@ -3,12 +3,11 @@
 //!
 use crate::{
     command_line_seek::CommandLineSeek,
-    cosmic::recording::HandAddress,
     cosmic::smart::square::{FILE9U8, RANK1U8},
     engine::Engine,
     log::LogExt,
     look_and_model::{
-        recording::{CapturedMove, FireAddress, Movement, Phase},
+        recording::{CapturedMove, FireAddress, HandAddress, Movement, Phase},
         AbsoluteAddress2D, DoubleFacedPiece, PieceType,
     },
     Config, Position,
