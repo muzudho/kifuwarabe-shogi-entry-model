@@ -3,11 +3,14 @@
 //!
 use crate::{
     command_line_seek::CommandLineSeek,
-    cosmic::recording::{CapturedMove, FireAddress, HandAddress, Movement},
+    cosmic::recording::{CapturedMove, FireAddress, HandAddress},
     cosmic::smart::square::{FILE9U8, RANK1U8},
     engine::Engine,
     log::LogExt,
-    look_and_model::{recording::Phase, AbsoluteAddress2D, DoubleFacedPiece, PieceType},
+    look_and_model::{
+        recording::{Movement, Phase},
+        AbsoluteAddress2D, DoubleFacedPiece, PieceType,
+    },
     Config, Position,
 };
 use atoi::atoi;

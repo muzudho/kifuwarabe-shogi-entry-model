@@ -43,7 +43,7 @@ use casual_logger::{Log, Opt};
 use test::test;
 
 /// USI対応コンピューター将棋ソフトの名前☆（＾～＾）
-pub const ENGINE_NAME: &str = "KifuwarabeEM bld58";
+pub const ENGINE_NAME: &str = "KifuwarabeEM bld59";
 
 /// 作者の名前。姓・名の順にしたいぜ☆（＾～＾）異文化に通じる表記方法はないものか☆（＾～＾）
 pub const ENGINE_AUTHOR: &str = "TAKAHASHI, Satoshi";

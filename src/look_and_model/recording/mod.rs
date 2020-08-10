@@ -1,4 +1,29 @@
+pub mod movement;
 pub mod phase;
+
+use crate::cosmic::recording::*;
+use crate::look_and_model::PieceNum;
+
+/// 駒の背番号も欲しいか☆（＾～＾）？
+/// 棋譜にも使うので、取った駒の情報を記憶しておくんだぜ☆（＾～＾）
+/// 投了なら これを使わず、None にしろだぜ☆（＾～＾）
+///
+/// 移動していないことを表すには、移動元と移動先を同じにすればいいんだぜ☆（＾～＾）
+///
+/// Copy: 配列の要素の初期化時に使う☆（＾～＾）
+#[derive(Clone, Copy)]
+pub struct Movement {
+    /// 動かす駒の背番号
+    pub piece_num: PieceNum,
+    /// 移動元マス。
+    pub source: FireAddress,
+    /// 移動先マス。リバーシブルに作りたいので、駒台にも指せる。
+    pub destination: FireAddress,
+    /// 移動後に成るなら真
+    pub promote: bool,
+    /// 取ることになる駒。先後がひっくり返るのは駒を取られた時だけだぜ☆（＾～＾）
+    pub captured: Option<CapturedMove>,
+}
 
 /// 局面ハッシュを作るときに、フェーズ用に配列があって、それのサイズに使ってるぜ☆（＾～＾）
 // pub const PHASE_FIRST: usize = 0;

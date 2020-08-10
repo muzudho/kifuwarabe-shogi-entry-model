@@ -1,8 +1,6 @@
 use crate::{
     computer_player::{evaluator::Evaluation, search::Value},
-    cosmic::recording::Movement,
-    look_and_model::PvString,
-    look_and_model::{InfoDisplay, Search},
+    look_and_model::{recording::Movement, InfoDisplay, PvString, Search},
     INFO_INTERVAL_MSEC,
 };
 use std::time::Instant;

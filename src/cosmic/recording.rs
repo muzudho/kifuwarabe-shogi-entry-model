@@ -5,7 +5,10 @@
 //! * Person (先手,後手)
 //!
 use crate::law::cryptographic::num_to_lower_case;
-use crate::look_and_model::{recording::Phase, AbsoluteAddress2D, DoubleFacedPiece, PieceNum};
+use crate::look_and_model::{
+    recording::{Movement, Phase},
+    AbsoluteAddress2D, DoubleFacedPiece, PieceNum,
+};
 use std::fmt;
 
 /// 手数☆（＾～＾） 大会ルールとは別で、このプログラムが対応できる上限値☆（＾～＾）
@@ -152,26 +155,6 @@ impl CapturedMove {
     }
 }
 
-/// 駒の背番号も欲しいか☆（＾～＾）？
-/// 棋譜にも使うので、取った駒の情報を記憶しておくんだぜ☆（＾～＾）
-/// 投了なら これを使わず、None にしろだぜ☆（＾～＾）
-///
-/// 移動していないことを表すには、移動元と移動先を同じにすればいいんだぜ☆（＾～＾）
-///
-/// Copy: 配列の要素の初期化時に使う☆（＾～＾）
-#[derive(Clone, Copy)]
-pub struct Movement {
-    /// 動かす駒の背番号
-    pub piece_num: PieceNum,
-    /// 移動元マス。
-    pub source: FireAddress,
-    /// 移動先マス。リバーシブルに作りたいので、駒台にも指せる。
-    pub destination: FireAddress,
-    /// 移動後に成るなら真
-    pub promote: bool,
-    /// 取ることになる駒。先後がひっくり返るのは駒を取られた時だけだぜ☆（＾～＾）
-    pub captured: Option<CapturedMove>,
-}
 impl Default for Movement {
     /// ゴミの値を作るぜ☆（＾～＾）
     fn default() -> Self {

@@ -1,9 +1,11 @@
 use crate::{
-    cosmic::recording::Movement,
     engine::Engine,
     law::generate_move::MoveGen,
     log::LogExt,
-    look_and_model::{facility::Kitchen, recording::Phase},
+    look_and_model::{
+        facility::Kitchen,
+        recording::{Movement, Phase},
+    },
     protocol::uxi::GenMove,
 };
 use casual_logger::Log;
