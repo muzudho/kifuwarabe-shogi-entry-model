@@ -2,8 +2,8 @@ use crate::command_line_seek::CommandLineSeek;
 use crate::log::LogExt;
 use crate::look_and_model::Title;
 use crate::position::Position;
-use crate::spaceship::crew::{Chiyuri, Kifuwarabe};
-use crate::usi_protocol::{Go, IsReady, Position as UsiPosition, SetOption, UsiNewGame};
+use crate::spaceship::crew::Chiyuri;
+use crate::usi_protocol::{Go, IsReady, Position as UsiPosition, SetOption, Usi, UsiNewGame};
 use crate::Config;
 use casual_logger::{Log, Table};
 
@@ -73,7 +73,7 @@ impl Engine {
         } else if p.starts_with("sfen") {
             Log::print_notice(&format!("{}", self.position.to_xfen(true)));
         } else if p.starts_with("usi") {
-            Kifuwarabe::usi();
+            Usi::usi();
         } else if p.starts_with("xfen") {
             Log::print_notice(&format!("{}", self.position.to_xfen(false)));
         } else {
