@@ -3,7 +3,7 @@ use crate::log::LogExt;
 use crate::look_and_model::Title;
 use crate::position::Position;
 use crate::spaceship::crew::{Chiyuri, Kifuwarabe};
-use crate::usi_protocol::{Go, IsReady, Position as UsiPosition, SetOption};
+use crate::usi_protocol::{Go, IsReady, Position as UsiPosition, SetOption, UsiNewGame};
 use casual_logger::{Log, Table};
 
 /// アプリケーション開始時に決め終えておくものだぜ☆（＾～＾）
@@ -56,7 +56,7 @@ impl Engine {
         if p.starts_with("go") {
             Go::go(self, &mut p);
         } else if p.starts_with("usinewgame") {
-            Kifuwarabe::usinewgame(self);
+            UsiNewGame::usinewgame(self);
         } else if p.starts_with("isready") {
             IsReady::isready();
         } else if p.starts_with("position") {

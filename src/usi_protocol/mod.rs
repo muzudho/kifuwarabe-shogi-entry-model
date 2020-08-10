@@ -4,6 +4,7 @@ pub mod is_ready;
 pub mod output_xfen;
 pub mod position;
 pub mod set_option;
+pub mod usi_new_game;
 
 pub struct Go {
     pub btime: u64,
@@ -17,3 +18,5 @@ pub struct IsReady {}
 pub struct Position {}
 
 pub struct SetOption {}
+
+pub struct UsiNewGame {}

@@ -3,7 +3,7 @@
 use crate::config::PV_BUFFER;
 use crate::cosmic::playing::{MovegenPhase, PosNums};
 use crate::cosmic::pos_hash::pos_hash::*;
-use crate::cosmic::recording::{FireAddress, HandAddress, History, Movement, Phase};
+use crate::cosmic::recording::{FireAddress, HandAddress, History, Movement};
 use crate::log::LogExt;
 use crate::look_and_model::game_table::GameTable;
 use casual_logger::Log;
@@ -28,26 +28,30 @@ pub struct Position {
 impl Default for Position {
     fn default() -> Position {
         Position {
-            history: History::default(),
-            starting_table: GameTable::default(),
             hash_seed: GameHashSeed::default(),
-            table: GameTable::default(),
+            history: History::default(),
             movegen_phase: MovegenPhase::default(),
-            pv_text: String::with_capacity(PV_BUFFER),
+            starting_table: GameTable::default(),
+            table: GameTable::default(),
             pv_len: 0,
+            pv_text: String::with_capacity(PV_BUFFER),
         }
     }
 }
 impl Position {
     /// 初期局面、現局面ともにクリアーします。
     /// 手目も 0 に戻します。
-    pub fn clear(&mut self) {
+    pub fn usi_new_game(&mut self) {
+        // ダメ self.hash_seed = GameHashSeed::default();
+
+        self.history = History::default();
+
+        self.movegen_phase = MovegenPhase::default();
+
         self.starting_table = GameTable::default();
         self.table = GameTable::default();
-        self.history.clear_moves();
-        self.history.starting_turn = Phase::First;
-        self.pv_text = String::with_capacity(PV_BUFFER);
         self.pv_len = 0;
+        self.pv_text = String::with_capacity(PV_BUFFER);
     }
     pub fn pv_text(&self) -> &str {
         &self.pv_text

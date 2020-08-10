@@ -57,11 +57,6 @@ impl History {
     pub fn add_moves(&mut self, offset: isize) {
         self.length_from_the_middle += offset;
     }
-    /// 手数をクリアします。
-    pub fn clear_moves(&mut self) {
-        self.length_from_the_middle = 0;
-        self.length_from_the_beginning = 0;
-    }
     /// 手番
     pub fn get_turn(&self) -> Phase {
         match self.starting_turn {

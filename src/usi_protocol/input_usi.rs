@@ -363,7 +363,7 @@ pub fn read_board(pos: &mut Position, p: &mut CommandLineSeek) {
 /// position コマンド読取
 pub fn set_position(pos: &mut Position, p: &mut CommandLineSeek) {
     // 局面をクリアー。手目も 0 に戻します。
-    pos.clear();
+    pos.usi_new_game();
 
     if p.starts_with("position startpos") {
         // 'position startpos' を読み飛ばし

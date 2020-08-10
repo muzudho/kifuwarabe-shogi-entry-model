@@ -45,9 +45,6 @@ impl Kifuwarabe {
         Log::print_notice("option name MaxThinkMsec type spin default 17000 min 1000 max 600000");
         Log::print_notice("usiok");
     }
-    pub fn usinewgame(engine: &mut Engine) {
-        engine.position.clear();
-    }
 }
 
 /// 副船長：ちゆり
