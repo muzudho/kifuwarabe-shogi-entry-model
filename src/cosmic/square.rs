@@ -298,7 +298,7 @@ impl RelAdr2D {
     /// ---------
     /// * `r` - (Relative file, relative rank).
     pub fn rotate(&mut self, angle: Angle) -> &mut Self {
-        use crate::cosmic::smart::square::Angle::*;
+        use crate::cosmic::square::Angle::*;
         match angle {
             Ccw0 => self,
             Ccw45 => self.rotate_45_ccw(),

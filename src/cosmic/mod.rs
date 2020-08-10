@@ -1,1 +1,1 @@
-pub mod smart;
+pub mod square;

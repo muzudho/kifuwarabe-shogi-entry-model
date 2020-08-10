@@ -3,7 +3,7 @@
 // use crate::look_and_model::{GameResult, Piece};
 
 use crate::{
-    cosmic::smart::square::{FILE10U8, FILE1U8, RANK10U8, RANK1U8},
+    cosmic::square::{FILE10U8, FILE1U8, RANK10U8, RANK1U8},
     look_and_model::{recording::Phase, AbsoluteAddress2D, GameTable, Position},
 };
 

@@ -8,7 +8,7 @@
 //! 駒種類早見表 (PieceTypeChart).
 //!
 use crate::{
-    cosmic::smart::square::{Angle, RelAdr2D, ANGLE_LEN},
+    cosmic::square::{Angle, RelAdr2D, ANGLE_LEN},
     law::generate_move::{Agility, Mobility},
     look_and_model::{
         recording::{FireAddress, HandAddress, Phase, PHASE_LEN},

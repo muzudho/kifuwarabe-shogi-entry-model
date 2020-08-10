@@ -1,6 +1,6 @@
 use crate::{
-    cosmic::smart::square::FILE1U8, law::cryptographic::*, log::LogExt,
-    look_and_model::AbsoluteAddress2D, protocol::uxi::TeigiConv,
+    cosmic::square::FILE1U8, law::cryptographic::*, log::LogExt, look_and_model::AbsoluteAddress2D,
+    protocol::uxi::TeigiConv,
 };
 use casual_logger::Log;
 

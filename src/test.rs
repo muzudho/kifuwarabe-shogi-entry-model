@@ -1,7 +1,7 @@
 //! テスト。
 
 use crate::{
-    cosmic::smart::square::{Angle, Degree45Orthant, DictOrthant, RelAdr2D},
+    cosmic::square::{Angle, Degree45Orthant, DictOrthant, RelAdr2D},
     law::speed_of_light::Nine299792458,
 };
 

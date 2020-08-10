@@ -1,4 +1,4 @@
-use crate::cosmic::smart::square::{RelAdr2D, FILE0U8, FILE13U8, RANK0U8, RANK10U8};
+use crate::cosmic::square::{RelAdr2D, FILE0U8, FILE13U8, RANK0U8, RANK10U8};
 use crate::law::cryptographic::num_to_lower_case;
 use crate::look_and_model::AbsoluteAddress2D;
 use std::fmt;

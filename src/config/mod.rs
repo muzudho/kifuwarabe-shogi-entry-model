@@ -3,7 +3,7 @@
 pub mod game_hash_seed;
 
 use crate::{
-    cosmic::smart::square::BOARD_MEMORY_AREA,
+    cosmic::square::BOARD_MEMORY_AREA,
     look_and_model::{recording::PHASE_LEN, DOUBLE_FACED_PIECES_LEN, PIECE_LEN},
     Config,
 };

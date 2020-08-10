@@ -3,7 +3,7 @@
 //!
 
 use crate::{
-    cosmic::smart::square::{
+    cosmic::square::{
         Angle, RelAdr2D, FILE10U8, FILE1U8, RANK10U8, RANK1U8, RANK2U8, RANK3U8, RANK4U8, RANK6U8,
         RANK7U8, RANK9U8,
     },

@@ -3,7 +3,7 @@
 
 use crate::{
     config::{GameHashSeed, HAND_MAX},
-    cosmic::smart::square::{BOARD_MEMORY_AREA, FILE10U8, FILE1U8, RANK10U8, RANK1U8, SQUARE_NONE},
+    cosmic::square::{BOARD_MEMORY_AREA, FILE10U8, FILE1U8, RANK10U8, RANK1U8, SQUARE_NONE},
     law::speed_of_light::HandAddresses,
     log::LogExt,
     look_and_model::{

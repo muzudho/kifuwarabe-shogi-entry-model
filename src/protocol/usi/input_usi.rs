@@ -3,7 +3,7 @@
 //!
 use crate::{
     command_line_seek::CommandLineSeek,
-    cosmic::smart::square::{FILE9U8, RANK1U8},
+    cosmic::square::{FILE9U8, RANK1U8},
     engine::Engine,
     log::LogExt,
     look_and_model::{
