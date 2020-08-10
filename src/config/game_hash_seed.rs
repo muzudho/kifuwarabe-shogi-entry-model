@@ -1,6 +1,7 @@
 //! 局面ハッシュ。
 //!
 
+use crate::config::GameHashSeed;
 use crate::cosmic::recording::{FireAddress, History, Movement, Phase, PHASE_LEN, PHASE_SECOND};
 use crate::cosmic::smart::{
     features::HAND_MAX,
@@ -17,16 +18,6 @@ use crate::position::Position;
 use casual_logger::Log;
 use rand::Rng;
 
-/// 現対局ハッシュ種
-/// ゾブリストハッシュを使って、局面の一致判定をするのに使う☆（＾～＾）
-pub struct GameHashSeed {
-    // 盤上の駒
-    pub piece: [[u64; PIECE_LEN]; BOARD_MEMORY_AREA as usize],
-    // 持ち駒
-    pub hands: [[u64; HAND_MAX]; DOUBLE_FACED_PIECES_LEN],
-    // 先後
-    pub phase: [u64; PHASE_LEN],
-}
 impl Default for GameHashSeed {
     fn default() -> Self {
         GameHashSeed {

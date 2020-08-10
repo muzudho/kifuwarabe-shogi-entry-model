@@ -2,10 +2,10 @@
 //! 局面。 ゲームを中断したり、再開したりするときに使うゲームの記録です。  
 use crate::config::PV_BUFFER;
 use crate::cosmic::playing::{MovegenPhase, PosNums};
-use crate::cosmic::pos_hash::pos_hash::*;
 use crate::cosmic::recording::{FireAddress, HandAddress, History, Movement};
 use crate::log::LogExt;
 use crate::look_and_model::game_table::GameTable;
+use crate::Config;
 use casual_logger::Log;
 
 /// Position. A record of the game used to suspend or resume it.  
@@ -15,8 +15,6 @@ pub struct Position {
     pub history: History,
     /// 初期の卓。これは SFEN を持てばよくて、オブジェクトは持たなくていいんじゃないか☆（＾～＾）？
     pub starting_table: GameTable,
-    /// 現対局ハッシュ種☆（＾～＾）
-    pub hash_seed: GameHashSeed,
     /// 現在の卓
     pub table: GameTable,
     pub movegen_phase: MovegenPhase,
@@ -28,7 +26,6 @@ pub struct Position {
 impl Default for Position {
     fn default() -> Position {
         Position {
-            hash_seed: GameHashSeed::default(),
             history: History::default(),
             movegen_phase: MovegenPhase::default(),
             starting_table: GameTable::default(),
@@ -58,11 +55,6 @@ impl Position {
     }
     pub fn pv_len(&self) -> usize {
         self.pv_len
-    }
-    /// 宇宙誕生
-    pub fn big_bang(&mut self) {
-        // 局面ハッシュの種をリセット
-        self.hash_seed.big_bang();
     }
 
     /// 棋譜の作成
@@ -136,7 +128,7 @@ impl Position {
 
     /// Place the stone.  
     /// １手指します。  
-    pub fn do_move(&mut self, move_: &Movement) {
+    pub fn do_move(&mut self, config: &Config, move_: &Movement) {
         // Principal variation.
         if self.pv_text.is_empty() {
             self.pv_text.push_str(&move_.to_string());
@@ -146,16 +138,17 @@ impl Position {
         self.pv_len += 1;
 
         self.set_move(&move_);
-        self.redo_move(move_);
+        self.redo_move(config, move_);
     }
 
     /// Place the stone.  
     /// Do not write to the pv.  
     /// １手指します。  
     /// 読み筋への書き込みを行いません。  
-    pub fn redo_move(&mut self, move_: &Movement) {
+    pub fn redo_move(&mut self, config: &Config, move_: &Movement) {
         // 局面ハッシュを作り直す
-        self.hash_seed
+        config
+            .hash_seed
             .update_by_do_move(&mut self.history, &self.table, move_);
 
         // 移動元のマスにある駒をポップすることは確定。

@@ -10,6 +10,7 @@ use crate::cosmic::smart::square::RANK1U8;
 use crate::log::LogExt;
 use crate::look_and_model::DoubleFacedPiece;
 use crate::position::Position;
+use crate::Config;
 use atoi::atoi;
 use casual_logger::Log;
 
@@ -257,7 +258,7 @@ pub fn read_sasite(pos: &mut Position, p: &mut CommandLineSeek) -> bool {
 
 /// position コマンド 盤上部分のみ 読取
 /// 初期化は既に終わらせてあります。
-pub fn read_board(pos: &mut Position, p: &mut CommandLineSeek) {
+pub fn read_board(config: &Config, pos: &mut Position, p: &mut CommandLineSeek) {
     // 初期盤面
     let table = pos.mut_starting();
     let mut file = FILE9U8; //９筋から右方向へ読取
@@ -356,12 +357,12 @@ pub fn read_board(pos: &mut Position, p: &mut CommandLineSeek) {
     }
 
     // 初期局面ハッシュを作り直す
-    let ky_hash = pos.hash_seed.starting_position(pos);
+    let ky_hash = config.hash_seed.starting_position(pos);
     pos.history.starting_position_hash = ky_hash;
 }
 
 /// position コマンド読取
-pub fn set_position(pos: &mut Position, p: &mut CommandLineSeek) {
+pub fn set_position(config: &Config, pos: &mut Position, p: &mut CommandLineSeek) {
     // 局面をクリアー。手目も 0 に戻します。
     pos.usi_new_game();
 
@@ -371,7 +372,7 @@ pub fn set_position(pos: &mut Position, p: &mut CommandLineSeek) {
 
         // 別途用意した平手初期局面文字列を読取
         let mut p2 = CommandLineSeek::new(STARTPOS);
-        read_board(pos, &mut p2);
+        read_board(config, pos, &mut p2);
 
         // 元のパーサーで続行。
         if p.starts_with(" ") {
@@ -382,7 +383,7 @@ pub fn set_position(pos: &mut Position, p: &mut CommandLineSeek) {
         let sfen_enable = p.starts_with("position sfen ");
         // 'position sfen ' を読み飛ばし
         p.go_next_to("position sfen ");
-        read_board(pos, p);
+        read_board(config, pos, p);
 
         if p.starts_with(" ") {
             p.go_next_to(" ");
@@ -537,6 +538,6 @@ pub fn set_position(pos: &mut Position, p: &mut CommandLineSeek) {
         let ply = pos.history.length_from_the_middle();
 
         let move_ = pos.history.movements[ply as usize];
-        pos.redo_move(&move_);
+        pos.redo_move(config, &move_);
     }
 }

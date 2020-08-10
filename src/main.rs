@@ -33,6 +33,7 @@ mod spaceship;
 mod test;
 mod usi_protocol;
 
+use crate::config::GameHashSeed;
 use crate::config::LOG_FILE;
 use crate::engine::{Engine, Response};
 use crate::log::LogExt;
@@ -78,4 +79,10 @@ fn main() {
     }
 
     Log::flush();
+}
+
+/// プレイ中の対局があるときに変更してはいけないデータ。
+pub struct Config {
+    /// ハッシュ種☆（＾～＾）ゲームの途中でクリアしてはいけないぜ☆（＾～＾）
+    pub hash_seed: GameHashSeed,
 }

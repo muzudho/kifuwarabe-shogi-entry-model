@@ -4,12 +4,15 @@ use crate::look_and_model::Title;
 use crate::position::Position;
 use crate::spaceship::crew::{Chiyuri, Kifuwarabe};
 use crate::usi_protocol::{Go, IsReady, Position as UsiPosition, SetOption, UsiNewGame};
+use crate::Config;
 use casual_logger::{Log, Table};
 
 /// アプリケーション開始時に決め終えておくものだぜ☆（＾～＾）
 pub struct Engine {
     /// 対局
     pub position: Position,
+    /// 設定。プレイ中の対局があるときに変更してはいけないデータ。
+    pub config: Config,
     /// 大会ルールの最大手数☆（＾～＾）
     pub option_max_ply: usize,
     /// 読みの最大深さ。
@@ -25,6 +28,7 @@ impl Default for Engine {
     fn default() -> Self {
         Engine {
             position: Position::default(),
+            config: Config::default(),
             option_max_ply: 320,
             option_max_depth: 1,
             option_depth_not_to_give_up: 2,
@@ -37,7 +41,8 @@ impl Default for Engine {
 impl Engine {
     /// 宇宙誕生
     pub fn big_bang(&mut self) {
-        self.position.big_bang();
+        // ゲームのハッシュの種をリセット
+        self.config.hash_seed.big_bang();
         // タイトル表示
         // １画面は２５行だが、最後の２行は開けておかないと、
         // カーソルが２行分場所を取るんだぜ☆（＾～＾）

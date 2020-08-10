@@ -60,7 +60,7 @@ impl Chiyuri {
             // 入っている指し手の通り指すぜ☆（＾～＾）
             let ply = engine.position.history.length_from_the_middle();
             let move_ = engine.position.history.movements[ply as usize];
-            engine.position.redo_move(&move_);
+            engine.position.redo_move(&engine.config, &move_);
         }
     }
     pub fn genmove(engine: &Engine) {
@@ -153,6 +153,7 @@ impl Chiyuri {
     pub fn startpos(engine: &mut Engine) {
         // 平手初期局面
         set_position(
+            &engine.config,
             &mut engine.position,
             &mut CommandLineSeek::new(&POS_1.to_string()),
         );
