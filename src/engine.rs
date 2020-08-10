@@ -4,9 +4,11 @@ use crate::look_and_model::Title;
 use crate::position::Position;
 use crate::protocol::{
     usi::{Go, IsReady, Position as UsiPosition, SetOption, Usi, UsiNewGame},
-    uxi::Do,
+    uxi::{
+        Do, GenMove, Hash, HowMuch, Kifu, List40, Pos, Pos0, Pos2, Rand, Same, Startpos, TeigiConv,
+        Undo,
+    },
 };
-use crate::spaceship::crew::Chiyuri;
 use crate::Config;
 use casual_logger::{Log, Table};
 
@@ -94,39 +96,39 @@ impl Engine {
             Do::do_(self, p);
         // G
         } else if p.starts_with("genmove") {
-            Chiyuri::genmove(&self);
+            GenMove::genmove(&self);
         // H
         } else if p.starts_with("how-much") {
-            Chiyuri::how_much(p.line());
+            HowMuch::how_much(p.line());
         } else if p.starts_with("hash") {
-            Chiyuri::hash(self);
+            Hash::hash(self);
         } else if p.starts_with("kifu") {
-            Chiyuri::kifu(self);
+            Kifu::kifu(self);
         // L
         } else if p.starts_with("list40") {
-            Chiyuri::list40(self);
+            List40::list40(self);
         // P
         } else if p.starts_with("pos0") {
-            Chiyuri::pos0(self);
+            Pos0::pos0(self);
         } else if p.starts_with("pos2") {
-            Chiyuri::pos2(self);
+            Pos2::pos2(self);
         } else if p.starts_with("pos") {
-            Chiyuri::pos(self);
+            Pos::pos(self);
         // S
         } else if p.starts_with("startpos") {
-            Chiyuri::startpos(self);
+            Startpos::startpos(self);
         // R
         } else if p.starts_with("rand") {
-            Chiyuri::rand();
+            Rand::rand();
         // S
         } else if p.starts_with("same") {
-            Chiyuri::same(self);
+            Same::same(self);
         // T
         } else if p.starts_with("teigi::conv") {
-            Chiyuri::teigi_conv();
+            TeigiConv::teigi_conv();
         // U
         } else if p.starts_with("undo") {
-            Chiyuri::undo(self);
+            Undo::undo(self);
         }
     }
 }
