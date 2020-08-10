@@ -1,3 +1,4 @@
+pub mod absolute_address_2d;
 pub mod control_board;
 pub mod double_faced_piece;
 pub mod double_faced_piece_type;
@@ -20,6 +21,33 @@ use crate::{
 };
 use num_derive::FromPrimitive;
 use std::time::{Duration, Instant};
+
+/// このオブジェクトは大量に生成されるから、容量を小さく抑えた方がいいんだろうか☆（＾～＾）？
+/// 1～9 は 4 byte.
+/// 11～99 は 8 byte.
+///
+/// 絶対番地☆（＾～＾）相対番地と同じだが、回転の操作は座標 55 が中心になるぜ☆（＾～＾）
+/// きふわらべでは 辞書象限 を採用している☆（＾～＾）
+/// これは、file, rank は別々に持ち、しかも軸毎にプラス・マイナスを持つぜ☆（＾～＾）
+///
+/// Copy: 配列の要素の初期化時に使う☆（＾～＾）
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+pub struct AbsoluteAddress2D {
+    /// Square is shogi coordinate. file*10+rank.
+    ///
+    ///           North
+    ///   91 81 71 61 51 41 31 21 11
+    ///   92 82 72 62 52 42 32 22 12
+    /// W 93 83 73 63 53 43 33 23 13 E
+    /// E 94 84 74 64 54 44 34 24 14 A
+    /// S 95 85 75 65 55 45 35 25 15 S
+    /// T 96 86 76 66 56 46 36 26 16 T
+    ///   97 87 77 67 57 47 37 27 17
+    ///   98 88 78 68 58 48 38 28 18
+    ///   99 89 79 69 59 49 39 29 19
+    ///           Source
+    serial: u8,
+}
 
 // 利きボード☆（＾～＾）
 #[derive(Clone, Copy)]

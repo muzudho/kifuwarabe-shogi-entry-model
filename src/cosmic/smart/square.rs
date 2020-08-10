@@ -27,10 +27,9 @@
 //!              Source
 //!
 //! None is 0.
-use crate::law::cryptographic::num_to_lower_case;
-use std::cmp::{max, Eq, PartialEq};
+use crate::look_and_model::AbsoluteAddress2D;
+use std::cmp::max;
 use std::fmt;
-use std::hash::Hash;
 
 ///
 /// 打はテストできない
@@ -339,126 +338,6 @@ impl fmt::Debug for RelAdr2D {
             self.file,
             self.rank,
             self.get_address()
-        )
-    }
-}
-
-/// このオブジェクトは大量に生成されるから、容量を小さく抑えた方がいいんだろうか☆（＾～＾）？
-/// 1～9 は 4 byte.
-/// 11～99 は 8 byte.
-///
-/// 絶対番地☆（＾～＾）相対番地と同じだが、回転の操作は座標 55 が中心になるぜ☆（＾～＾）
-/// きふわらべでは 辞書象限 を採用している☆（＾～＾）
-/// これは、file, rank は別々に持ち、しかも軸毎にプラス・マイナスを持つぜ☆（＾～＾）
-///
-/// Copy: 配列の要素の初期化時に使う☆（＾～＾）
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
-pub struct AbsoluteAddress2D {
-    /// Square is shogi coordinate. file*10+rank.
-    ///
-    ///           North
-    ///   91 81 71 61 51 41 31 21 11
-    ///   92 82 72 62 52 42 32 22 12
-    /// W 93 83 73 63 53 43 33 23 13 E
-    /// E 94 84 74 64 54 44 34 24 14 A
-    /// S 95 85 75 65 55 45 35 25 15 S
-    /// T 96 86 76 66 56 46 36 26 16 T
-    ///   97 87 77 67 57 47 37 27 17
-    ///   98 88 78 68 58 48 38 28 18
-    ///   99 89 79 69 59 49 39 29 19
-    ///           Source
-    serial: u8,
-}
-impl Default for AbsoluteAddress2D {
-    /// ゴミの値を作るぜ☆（＾～＾）
-    fn default() -> Self {
-        AbsoluteAddress2D { serial: 11 }
-    }
-}
-impl AbsoluteAddress2D {
-    pub fn new(file: u8, rank: u8) -> Self {
-        debug_assert!(FILE0U8 <= file && file < FILE13U8, format!("file={}", file));
-        debug_assert!(
-            RANK0U8 <= rank && rank < RANK10U8 as u8,
-            format!("rank={}", rank)
-        );
-        AbsoluteAddress2D {
-            serial: 10 * file as u8 + rank as u8,
-        }
-    }
-
-    pub fn from_absolute_address(serial: u8) -> Option<AbsoluteAddress2D> {
-        let file = serial / 10; // 12 列まであるぜ☆（＾～＾） // (serial / 10) % 10
-        let rank = serial % 10;
-        if serial == 0 {
-            None
-        } else {
-            debug_assert!(FILE0U8 <= file && file < FILE13U8, format!("file={}", file));
-            debug_assert!(RANK0U8 <= rank && rank < RANK10U8, format!("rank={}", rank));
-            Some(AbsoluteAddress2D::new(file, rank))
-        }
-    }
-
-    /// 列番号。いわゆる筋。右から 1, 2, 3 ...
-    pub fn file(&self) -> u8 {
-        self.serial / 10 // 12 列まであるぜ☆（＾～＾） // (self.serial / 10) % 10
-    }
-
-    /// 行番号。いわゆる段。上から 1, 2, 3 ...
-    pub fn rank(&self) -> u8 {
-        self.serial % 10
-    }
-
-    pub fn to_file_rank(&self) -> (u8, u8) {
-        (self.file(), self.rank())
-    }
-
-    /*
-    pub fn rotate_180(&self) -> Self {
-        let file = FILE10U8 - self.file();
-        let rank = RANK10U8 - self.rank();
-        debug_assert!(FILE0U8 < file && file < FILE10U8, format!("file={}", file));
-        debug_assert!(RANK0U8 < rank && rank < RANK10U8, format!("rank={}", rank));
-        AbsoluteAddress2D::new(file, rank)
-    }
-    */
-
-    /// 壁の中にいる☆（＾～＾）
-    pub fn wall(&self) -> bool {
-        self.file() % 10 == 0 || self.rank() % 10 == 0
-    }
-
-    /// 連番
-    pub fn serial_number(&self) -> u8 {
-        self.serial
-    }
-
-    pub fn offset(&mut self, r: &RelAdr2D) -> &mut Self {
-        // TODO rankの符号はどうだったか……☆（＾～＾） 絶対番地の使い方をしてれば問題ないだろ☆（＾～＾）
-        // TODO sum は負数になることもあり、そのときは明らかにイリーガルだぜ☆（＾～＾）
-        self.serial = (self.serial_number() as isize + r.get_address()) as u8;
-        self
-    }
-}
-/// USI向け。
-impl fmt::Display for AbsoluteAddress2D {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(
-            f,
-            "{}{}",
-            self.file(),
-            num_to_lower_case(self.rank() as usize),
-        )
-    }
-}
-impl fmt::Debug for AbsoluteAddress2D {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(
-            f,
-            "({}x {}y {}adr)",
-            self.file(),
-            self.rank(),
-            self.serial_number()
         )
     }
 }

@@ -1,7 +1,7 @@
 //!
 //! なんか難しいやつはここだぜ☆（＾～＾）
 //!
-use crate::cosmic::smart::square::AbsoluteAddress2D;
+use crate::look_and_model::AbsoluteAddress2D;
 
 /// ハッシュ値を作る
 pub fn push_sq_to_hash(hash: u64, square: Option<&AbsoluteAddress2D>) -> u64 {

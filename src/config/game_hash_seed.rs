@@ -5,13 +5,13 @@ use crate::{
     config::{GameHashSeed, HAND_MAX},
     cosmic::{
         recording::{FireAddress, History, Movement, Phase, PHASE_LEN, PHASE_SECOND},
-        smart::square::{
-            AbsoluteAddress2D, BOARD_MEMORY_AREA, FILE10U8, FILE1U8, RANK10U8, RANK1U8, SQUARE_NONE,
-        },
+        smart::square::{BOARD_MEMORY_AREA, FILE10U8, FILE1U8, RANK10U8, RANK1U8, SQUARE_NONE},
     },
     law::speed_of_light::HandAddresses,
     log::LogExt,
-    look_and_model::{DoubleFacedPiece, GameTable, DOUBLE_FACED_PIECES_LEN, PIECE_LEN},
+    look_and_model::{
+        AbsoluteAddress2D, DoubleFacedPiece, GameTable, DOUBLE_FACED_PIECES_LEN, PIECE_LEN,
+    },
     Position,
 };
 use casual_logger::Log;

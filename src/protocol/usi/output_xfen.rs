@@ -5,9 +5,9 @@
 use crate::{
     cosmic::{
         recording::Phase,
-        smart::square::{AbsoluteAddress2D, FILE10U8, FILE1U8, RANK10U8, RANK1U8},
+        smart::square::{FILE10U8, FILE1U8, RANK10U8, RANK1U8},
     },
-    look_and_model::GameTable,
+    look_and_model::{AbsoluteAddress2D, GameTable},
     Position,
 };
 
