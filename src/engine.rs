@@ -1,5 +1,6 @@
 use crate::command_line_seek::CommandLineSeek;
 use crate::log::LogExt;
+use crate::look_and_model::Title;
 use crate::position::Position;
 use crate::spaceship::crew::{Chiyuri, Kifuwarabe};
 use casual_logger::{Log, Table};
@@ -8,8 +9,6 @@ use casual_logger::{Log, Table};
 pub struct Engine {
     /// 対局
     pub position: Position,
-    /// 対話モード
-    pub dialogue_mode: bool,
     /// 大会ルールの最大手数☆（＾～＾）
     pub option_max_ply: usize,
     /// 読みの最大深さ。
@@ -25,7 +24,6 @@ impl Default for Engine {
     fn default() -> Self {
         Engine {
             position: Position::default(),
-            dialogue_mode: false,
             option_max_ply: 320,
             option_max_depth: 1,
             option_depth_not_to_give_up: 2,
@@ -39,6 +37,10 @@ impl Engine {
     /// 宇宙誕生
     pub fn big_bang(&mut self) {
         self.position.big_bang();
+        // タイトル表示
+        // １画面は２５行だが、最後の２行は開けておかないと、
+        // カーソルが２行分場所を取るんだぜ☆（＾～＾）
+        Title::pretty();
     }
 
     pub fn enter(&mut self, line: &str) -> Option<Response> {
@@ -50,10 +52,7 @@ impl Engine {
         // p は parser の頭文字。
         let mut p = CommandLineSeek::new(&line);
 
-        if p.len() == 0 {
-            // 任せろだぜ☆（＾～＾）
-            Chiyuri::len0(self);
-        } else if p.starts_with("go") {
+        if p.starts_with("go") {
             Kifuwarabe::go(self, &mut p);
         } else if p.starts_with("usinewgame") {
             Kifuwarabe::usinewgame(self);

@@ -12,7 +12,6 @@ use crate::look_and_model::{
     facility::Kitchen,
     position::{PositionLook, PositionLook2a, PositionLook2b},
     search::Search,
-    Title,
 };
 use crate::spaceship::{engine, equipment::PvString};
 use crate::usi_protocol::input_usi::*;
@@ -250,21 +249,6 @@ impl Chiyuri {
                 ));
             });
         Log::print_notice("----駒リスト40表示 ここまで----");
-    }
-    pub fn len0(engine: &mut Engine) {
-        Log::debug("info string EnterEmpty.");
-        if !&engine.dialogue_mode {
-            // 空打ち１回目なら、対話モードへ☆（＾～＾）
-            engine.dialogue_mode = true;
-            // タイトル表示
-            // １画面は２５行だが、最後の２行は開けておかないと、
-            // カーソルが２行分場所を取るんだぜ☆（＾～＾）
-            Title::pretty();
-        } else {
-            // 局面表示
-            let s = PositionLook::to_string(&engine.position, PosNums::Current);
-            Log::print_notice(&s);
-        }
     }
     pub fn pos(engine: &Engine) {
         // 現局面表示
