@@ -1,4 +1,4 @@
-use crate::{cosmic::playing::PosNums, engine::Engine, log::LogExt, protocol::uxi::Pos};
+use crate::{engine::Engine, log::LogExt, look_and_model::PosNums, protocol::uxi::Pos};
 use casual_logger::Log;
 
 impl Pos {

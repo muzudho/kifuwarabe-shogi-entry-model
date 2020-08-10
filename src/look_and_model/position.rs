@@ -1,11 +1,12 @@
 //! GameTable. A record of the game used to suspend or resume it.  
 //! 局面。 ゲームを中断したり、再開したりするときに使うゲームの記録です。  
 use crate::{
-    cosmic::playing::{MovegenPhase, PosNums},
+    cosmic::playing::MovegenPhase,
     log::LogExt,
     look_and_model::{
         recording::{FireAddress, HandAddress, History, Movement},
-        AbsoluteAddress2D, DoubleFacedPiece, GameTable, PieceNum, Position, PIECE_WHITE_SPACE,
+        AbsoluteAddress2D, DoubleFacedPiece, GameTable, PieceNum, PosNums, Position,
+        PIECE_WHITE_SPACE,
     },
     Config, PV_BUFFER,
 };

@@ -14,11 +14,3 @@ impl Default for MovegenPhase {
         }
     }
 }
-
-/// 局面
-pub enum PosNums {
-    // 現局面
-    Current,
-    // 初期局面
-    Start,
-}

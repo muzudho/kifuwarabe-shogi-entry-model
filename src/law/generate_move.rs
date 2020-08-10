@@ -3,17 +3,14 @@
 //!
 
 use crate::{
-    cosmic::{
-        playing::PosNums,
-        smart::square::{
-            Angle, RelAdr2D, FILE10U8, FILE1U8, RANK10U8, RANK1U8, RANK2U8, RANK3U8, RANK4U8,
-            RANK6U8, RANK7U8, RANK9U8,
-        },
+    cosmic::smart::square::{
+        Angle, RelAdr2D, FILE10U8, FILE1U8, RANK10U8, RANK1U8, RANK2U8, RANK3U8, RANK4U8, RANK6U8,
+        RANK7U8, RANK9U8,
     },
     log::LogExt,
     look_and_model::{
         recording::{CapturedMove, FireAddress, HandAddress, Movement, Phase},
-        AbsoluteAddress2D, PieceType, Position,
+        AbsoluteAddress2D, PieceType, PosNums, Position,
     },
 };
 use casual_logger::{Log, Table};

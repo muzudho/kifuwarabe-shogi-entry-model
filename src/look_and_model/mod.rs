@@ -353,6 +353,14 @@ pub struct Position {
     pv_len: usize,
 }
 
+/// 局面
+pub enum PosNums {
+    // 現局面
+    Current,
+    // 初期局面
+    Start,
+}
+
 /// PV表示、または 文字列表示だぜ☆（＾～＾）
 pub enum PvString {
     /// 思考を開始してからのミリ秒と、読み筋。
