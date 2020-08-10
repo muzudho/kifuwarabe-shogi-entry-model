@@ -2,15 +2,18 @@
 //! 駒たちが躍動するぜ☆（＾～＾）
 //!
 
-use crate::computer_player::evaluator::REPITITION_VALUE;
-use crate::cosmic::recording::{Movement, Phase, SENNTITE_NUM};
-use crate::cosmic::smart::features::PieceType;
-use crate::engine::Engine;
-use crate::law::generate_move::{MoveGen, Ways};
-use crate::log::LogExt;
-use crate::look_and_model::{PvString, Search};
-use crate::position::Position;
-use crate::Config;
+use crate::{
+    computer_player::evaluator::REPITITION_VALUE,
+    cosmic::{
+        recording::{Movement, Phase, SENNTITE_NUM},
+        smart::features::PieceType,
+    },
+    engine::Engine,
+    law::generate_move::{MoveGen, Ways},
+    log::LogExt,
+    look_and_model::{PvString, Search},
+    Config, Position,
+};
 use casual_logger::Log;
 use std::fmt;
 

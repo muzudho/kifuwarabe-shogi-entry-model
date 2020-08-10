@@ -1,6 +1,4 @@
-use crate::engine::Engine;
-use crate::log::LogExt;
-use crate::protocol::uxi::Kifu;
+use crate::{engine::Engine, log::LogExt, protocol::uxi::Kifu};
 use casual_logger::Log;
 
 impl Kifu {

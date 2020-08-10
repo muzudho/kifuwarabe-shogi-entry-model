@@ -1,17 +1,18 @@
 //! USIプロトコル
 //!
 //!
-use crate::command_line_seek::CommandLineSeek;
-use crate::cosmic::recording::{CapturedMove, FireAddress, HandAddress, Movement, Phase};
-use crate::cosmic::smart::features::PieceType;
-use crate::cosmic::smart::square::AbsoluteAddress2D;
-use crate::cosmic::smart::square::FILE9U8;
-use crate::cosmic::smart::square::RANK1U8;
-use crate::engine::Engine;
-use crate::log::LogExt;
-use crate::look_and_model::DoubleFacedPiece;
-use crate::position::Position;
-use crate::Config;
+use crate::{
+    command_line_seek::CommandLineSeek,
+    cosmic::recording::{CapturedMove, FireAddress, HandAddress, Movement, Phase},
+    cosmic::smart::{
+        features::PieceType,
+        square::{AbsoluteAddress2D, FILE9U8, RANK1U8},
+    },
+    engine::Engine,
+    log::LogExt,
+    look_and_model::DoubleFacedPiece,
+    Config, Position,
+};
 use atoi::atoi;
 use casual_logger::Log;
 

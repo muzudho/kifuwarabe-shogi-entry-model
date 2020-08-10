@@ -1,7 +1,8 @@
-use crate::command_line_seek::CommandLineSeek;
-use crate::engine::Engine;
-use crate::protocol::usi::input_usi::set_position;
-use crate::protocol::usi::Position;
+use crate::{
+    command_line_seek::CommandLineSeek,
+    engine::Engine,
+    protocol::{usi::input_usi::set_position, usi::Position},
+};
 
 impl Position {
     pub fn position(engine: &mut Engine, line: &str) {

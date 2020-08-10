@@ -1,16 +1,17 @@
-use crate::cosmic::{
-    recording::{FireAddress, HandAddress, Movement, Phase},
-    smart::{
-        features::PieceType,
-        square::{AbsoluteAddress2D, BOARD_MEMORY_AREA, RANK10U8, RANK1U8},
+use crate::{
+    cosmic::{
+        recording::{FireAddress, HandAddress, Movement, Phase},
+        smart::{
+            features::PieceType,
+            square::{AbsoluteAddress2D, BOARD_MEMORY_AREA, RANK10U8, RANK1U8},
+        },
+        toy_box::{PieceInfo, PieceNum, NAMED_PIECES_LEN},
     },
-    toy_box::{PieceInfo, PieceNum, NAMED_PIECES_LEN},
-};
-use crate::law::{generate_move::Area, speed_of_light::Nine299792458};
-use crate::log::LogExt;
-use crate::look_and_model::{
-    piece::{Piece, PIECE_WHITE_SPACE},
-    DoubleFacedPiece, GameTable, DOUBLE_FACED_PIECE_TYPE_LEN,
+    law::{generate_move::Area, speed_of_light::Nine299792458},
+    log::LogExt,
+    look_and_model::{
+        DoubleFacedPiece, GameTable, Piece, DOUBLE_FACED_PIECE_TYPE_LEN, PIECE_WHITE_SPACE,
+    },
 };
 use casual_logger::{Log, Table};
 use num_traits::FromPrimitive;

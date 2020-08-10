@@ -1,7 +1,7 @@
 //!
 //! 駒 と 盤
 //!
-use crate::look_and_model::{piece::Piece, DoubleFacedPiece};
+use crate::look_and_model::{DoubleFacedPiece, Piece};
 use num_derive::FromPrimitive;
 use std::*;
 

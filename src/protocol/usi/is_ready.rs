@@ -1,5 +1,4 @@
-use crate::log::LogExt;
-use crate::protocol::usi::IsReady;
+use crate::{log::LogExt, protocol::usi::IsReady};
 use casual_logger::Log;
 
 impl IsReady {

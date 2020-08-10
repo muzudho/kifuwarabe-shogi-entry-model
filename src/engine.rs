@@ -1,15 +1,16 @@
-use crate::command_line_seek::CommandLineSeek;
-use crate::log::LogExt;
-use crate::look_and_model::Title;
-use crate::position::Position;
-use crate::protocol::{
-    usi::{Go, IsReady, Position as UsiPosition, SetOption, Usi, UsiNewGame},
-    uxi::{
-        Do, GenMove, Hash, HowMuch, Kifu, List40, Pos, Pos0, Pos2, Rand, Same, Startpos, TeigiConv,
-        Undo,
+use crate::{
+    command_line_seek::CommandLineSeek,
+    log::LogExt,
+    look_and_model::Title,
+    protocol::{
+        usi::{Go, IsReady, Position as UsiPosition, SetOption, Usi, UsiNewGame},
+        uxi::{
+            Do, GenMove, Hash, HowMuch, Kifu, List40, Pos, Pos0, Pos2, Rand, Same, Startpos,
+            TeigiConv, Undo,
+        },
     },
+    Config, Position,
 };
-use crate::Config;
 use casual_logger::{Log, Table};
 
 /// アプリケーション開始時に決め終えておくものだぜ☆（＾～＾）

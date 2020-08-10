@@ -2,10 +2,14 @@
 //! 局面を文字列に変換したり、文字列を局面に復元します。  
 // use crate::look_and_model::{GameResult, Piece};
 
-use crate::cosmic::recording::Phase;
-use crate::cosmic::smart::square::{AbsoluteAddress2D, FILE10U8, FILE1U8, RANK10U8, RANK1U8};
-use crate::look_and_model::GameTable;
-use crate::position::Position;
+use crate::{
+    cosmic::{
+        recording::Phase,
+        smart::square::{AbsoluteAddress2D, FILE10U8, FILE1U8, RANK10U8, RANK1U8},
+    },
+    look_and_model::GameTable,
+    Position,
+};
 
 /// A record of the game used to suspend or resume it.
 /// ゲームを中断したり、再開したりするときに使うゲームの記録です。

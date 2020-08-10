@@ -1,6 +1,5 @@
 /// 指令室はこちらだぜ☆（＾～＾）！
-use crate::log::LogExt;
-use crate::look_and_model::Title;
+use crate::{log::LogExt, look_and_model::Title};
 use casual_logger::Log;
 
 impl Title {

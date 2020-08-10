@@ -1,6 +1,4 @@
-use crate::engine::Engine;
-use crate::log::LogExt;
-use crate::protocol::uxi::Undo;
+use crate::{engine::Engine, log::LogExt, protocol::uxi::Undo};
 use casual_logger::Log;
 
 impl Undo {

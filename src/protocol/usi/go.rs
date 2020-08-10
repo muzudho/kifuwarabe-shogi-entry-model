@@ -1,9 +1,11 @@
-use crate::command_line_seek::CommandLineSeek;
-use crate::cosmic::recording::Phase;
-use crate::engine::Engine;
-use crate::log::LogExt;
-use crate::look_and_model::{PvString, Search};
-use crate::protocol::usi::Go;
+use crate::{
+    command_line_seek::CommandLineSeek,
+    cosmic::recording::Phase,
+    engine::Engine,
+    log::LogExt,
+    look_and_model::{PvString, Search},
+    protocol::usi::Go,
+};
 use casual_logger::Log;
 use rand::Rng;
 use regex::Regex;

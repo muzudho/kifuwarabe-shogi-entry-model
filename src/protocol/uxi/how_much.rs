@@ -1,5 +1,4 @@
-use crate::log::LogExt;
-use crate::protocol::uxi::HowMuch;
+use crate::{log::LogExt, protocol::uxi::HowMuch};
 use casual_logger::Log;
 
 impl HowMuch {

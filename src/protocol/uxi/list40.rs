@@ -1,6 +1,4 @@
-use crate::engine::Engine;
-use crate::log::LogExt;
-use crate::protocol::uxi::List40;
+use crate::{engine::Engine, log::LogExt, protocol::uxi::List40};
 use casual_logger::Log;
 
 impl List40 {

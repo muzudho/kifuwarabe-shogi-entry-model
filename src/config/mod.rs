@@ -2,10 +2,14 @@
 
 pub mod game_hash_seed;
 
-use crate::cosmic::recording::PHASE_LEN;
-use crate::cosmic::smart::{features::HAND_MAX, square::BOARD_MEMORY_AREA};
-use crate::look_and_model::{piece::PIECE_LEN, DOUBLE_FACED_PIECES_LEN};
-use crate::Config;
+use crate::{
+    cosmic::{
+        recording::PHASE_LEN,
+        smart::{features::HAND_MAX, square::BOARD_MEMORY_AREA},
+    },
+    look_and_model::{DOUBLE_FACED_PIECES_LEN, PIECE_LEN},
+    Config,
+};
 
 impl Default for Config {
     fn default() -> Self {

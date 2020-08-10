@@ -1,7 +1,11 @@
-use crate::command_line_seek::CommandLineSeek;
-use crate::engine::Engine;
-use crate::protocol::usi::input_usi::*;
-use crate::protocol::uxi::Startpos;
+use crate::{
+    command_line_seek::CommandLineSeek,
+    engine::Engine,
+    protocol::{
+        usi::input_usi::{set_position, POS_1},
+        uxi::Startpos,
+    },
+};
 
 impl Startpos {
     pub fn startpos(engine: &mut Engine) {

@@ -1,8 +1,7 @@
-use crate::cosmic::playing::PosNums;
-use crate::engine::Engine;
-use crate::log::LogExt;
-use crate::look_and_model::position::PositionLook;
-use crate::protocol::uxi::Pos0;
+use crate::{
+    cosmic::playing::PosNums, engine::Engine, log::LogExt, look_and_model::position::PositionLook,
+    protocol::uxi::Pos0,
+};
 use casual_logger::Log;
 
 impl Pos0 {

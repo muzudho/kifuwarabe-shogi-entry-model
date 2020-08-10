@@ -1,8 +1,10 @@
-use crate::cosmic::playing::PosNums;
-use crate::engine::Engine;
-use crate::log::LogExt;
-use crate::look_and_model::position::{PositionLook2a, PositionLook2b};
-use crate::protocol::uxi::Pos2;
+use crate::{
+    cosmic::playing::PosNums,
+    engine::Engine,
+    log::LogExt,
+    look_and_model::position::{PositionLook2a, PositionLook2b},
+    protocol::uxi::Pos2,
+};
 use casual_logger::Log;
 
 impl Pos2 {

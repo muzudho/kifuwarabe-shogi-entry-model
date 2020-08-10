@@ -1,9 +1,11 @@
-use crate::cosmic::playing::PosNums;
-use crate::cosmic::recording::FireAddress;
-use crate::cosmic::smart::square::AbsoluteAddress2D;
-use crate::cosmic::toy_box::PieceNum;
-use crate::look_and_model::{piece::PIECE_WHITE_SPACE, DoubleFacedPiece, GameTable};
-use crate::position::Position;
+use crate::{
+    cosmic::{
+        playing::PosNums, recording::FireAddress, smart::square::AbsoluteAddress2D,
+        toy_box::PieceNum,
+    },
+    look_and_model::{DoubleFacedPiece, GameTable, PIECE_WHITE_SPACE},
+    Position,
+};
 
 /// 局面
 pub struct PositionLook {}

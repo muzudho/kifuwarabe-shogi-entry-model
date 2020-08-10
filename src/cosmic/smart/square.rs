@@ -28,9 +28,7 @@
 //!
 //! None is 0.
 use crate::law::cryptographic::num_to_lower_case;
-use std::cmp::max;
-use std::cmp::Eq;
-use std::cmp::PartialEq;
+use std::cmp::{max, Eq, PartialEq};
 use std::fmt;
 use std::hash::Hash;
 

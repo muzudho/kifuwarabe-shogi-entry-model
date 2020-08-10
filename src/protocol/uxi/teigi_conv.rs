@@ -1,7 +1,9 @@
-use crate::cosmic::smart::square::{AbsoluteAddress2D, FILE1U8};
-use crate::law::cryptographic::*;
-use crate::log::LogExt;
-use crate::protocol::uxi::TeigiConv;
+use crate::{
+    cosmic::smart::square::{AbsoluteAddress2D, FILE1U8},
+    law::cryptographic::*,
+    log::LogExt,
+    protocol::uxi::TeigiConv,
+};
 use casual_logger::Log;
 
 impl TeigiConv {

@@ -1,5 +1,4 @@
-use crate::log::LogExt;
-use crate::protocol::uxi::Rand;
+use crate::{log::LogExt, protocol::uxi::Rand};
 use casual_logger::Log;
 use rand::Rng;
 

@@ -1,6 +1,4 @@
-use crate::log::LogExt;
-use crate::protocol::usi::Usi;
-use crate::{ENGINE_AUTHOR, ENGINE_NAME};
+use crate::{log::LogExt, protocol::usi::Usi, ENGINE_AUTHOR, ENGINE_NAME};
 use casual_logger::Log;
 
 /// 船長：きふわらべ

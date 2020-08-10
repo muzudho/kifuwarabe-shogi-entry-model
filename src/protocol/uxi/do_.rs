@@ -1,7 +1,8 @@
-use crate::command_line_seek::CommandLineSeek;
-use crate::engine::Engine;
-use crate::protocol::usi::input_usi::*;
-use crate::protocol::uxi::Do;
+use crate::{
+    command_line_seek::CommandLineSeek,
+    engine::Engine,
+    protocol::{usi::input_usi::*, uxi::Do},
+};
 
 impl Do {
     pub fn do_(engine: &mut Engine, p: &mut CommandLineSeek) {

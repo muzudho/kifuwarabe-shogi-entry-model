@@ -1,6 +1,4 @@
-use crate::cosmic::recording::Movement;
-use crate::log::LogExt;
-use crate::look_and_model::GameTable;
+use crate::{cosmic::recording::Movement, log::LogExt, look_and_model::GameTable};
 use casual_logger::Log;
 
 /// 台所はこちらだぜ☆（＾～＾）！指し手の一覧が見れるぜ☆（＾～＾）！

@@ -1,9 +1,11 @@
-use crate::cosmic::recording::{Movement, Phase};
-use crate::engine::Engine;
-use crate::law::generate_move::MoveGen;
-use crate::log::LogExt;
-use crate::look_and_model::facility::Kitchen;
-use crate::protocol::uxi::GenMove;
+use crate::{
+    cosmic::recording::{Movement, Phase},
+    engine::Engine,
+    law::generate_move::MoveGen,
+    log::LogExt,
+    look_and_model::facility::Kitchen,
+    protocol::uxi::GenMove,
+};
 use casual_logger::Log;
 
 impl GenMove {

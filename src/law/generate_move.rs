@@ -2,23 +2,22 @@
 //! 現局面を使った指し手生成☆（＾～＾）
 //!
 
-use crate::cosmic::playing::PosNums;
-use crate::cosmic::recording::{CapturedMove, FireAddress, HandAddress, Movement, Phase};
-use crate::cosmic::smart::features::PieceType;
-use crate::cosmic::smart::square::FILE10U8;
-use crate::cosmic::smart::square::FILE1U8;
-use crate::cosmic::smart::square::RANK10U8;
-use crate::cosmic::smart::square::RANK1U8;
-use crate::cosmic::smart::square::RANK2U8;
-use crate::cosmic::smart::square::RANK3U8;
-use crate::cosmic::smart::square::RANK4U8;
-use crate::cosmic::smart::square::RANK6U8;
-use crate::cosmic::smart::square::RANK7U8;
-use crate::cosmic::smart::square::RANK9U8;
-use crate::cosmic::smart::square::{AbsoluteAddress2D, Angle, RelAdr2D};
-use crate::log::LogExt;
-use crate::look_and_model::position::PositionLook;
-use crate::position::Position;
+use crate::{
+    cosmic::{
+        playing::PosNums,
+        recording::{CapturedMove, FireAddress, HandAddress, Movement, Phase},
+        smart::{
+            features::PieceType,
+            square::{
+                AbsoluteAddress2D, Angle, RelAdr2D, FILE10U8, FILE1U8, RANK10U8, RANK1U8, RANK2U8,
+                RANK3U8, RANK4U8, RANK6U8, RANK7U8, RANK9U8,
+            },
+        },
+    },
+    log::LogExt,
+    look_and_model::position::PositionLook,
+    Position,
+};
 use casual_logger::{Log, Table};
 
 /// 先手、後手で処理が変わるやつを吸収するぜ☆（＾～＾）

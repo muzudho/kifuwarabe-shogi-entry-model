@@ -1,20 +1,23 @@
 //! 局面ハッシュ。
 //!
 
-use crate::config::GameHashSeed;
-use crate::cosmic::recording::{FireAddress, History, Movement, Phase, PHASE_LEN, PHASE_SECOND};
-use crate::cosmic::smart::{
-    features::HAND_MAX,
-    square::{
-        AbsoluteAddress2D, BOARD_MEMORY_AREA, FILE10U8, FILE1U8, RANK10U8, RANK1U8, SQUARE_NONE,
+use crate::{
+    config::GameHashSeed,
+    cosmic::{
+        recording::{FireAddress, History, Movement, Phase, PHASE_LEN, PHASE_SECOND},
+        smart::{
+            features::HAND_MAX,
+            square::{
+                AbsoluteAddress2D, BOARD_MEMORY_AREA, FILE10U8, FILE1U8, RANK10U8, RANK1U8,
+                SQUARE_NONE,
+            },
+        },
     },
+    law::speed_of_light::HandAddresses,
+    log::LogExt,
+    look_and_model::{DoubleFacedPiece, GameTable, DOUBLE_FACED_PIECES_LEN, PIECE_LEN},
+    Position,
 };
-use crate::law::speed_of_light::HandAddresses;
-use crate::log::LogExt;
-use crate::look_and_model::{
-    piece::PIECE_LEN, DoubleFacedPiece, GameTable, DOUBLE_FACED_PIECES_LEN,
-};
-use crate::position::Position;
 use casual_logger::Log;
 use rand::Rng;
 
