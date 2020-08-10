@@ -4,13 +4,10 @@
 use crate::{
     command_line_seek::CommandLineSeek,
     cosmic::recording::{CapturedMove, FireAddress, HandAddress, Movement, Phase},
-    cosmic::smart::{
-        features::PieceType,
-        square::{AbsoluteAddress2D, FILE9U8, RANK1U8},
-    },
+    cosmic::smart::square::{AbsoluteAddress2D, FILE9U8, RANK1U8},
     engine::Engine,
     log::LogExt,
-    look_and_model::DoubleFacedPiece,
+    look_and_model::{DoubleFacedPiece, PieceType},
     Config, Position,
 };
 use atoi::atoi;

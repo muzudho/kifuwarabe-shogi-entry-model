@@ -3,10 +3,7 @@
 pub mod game_hash_seed;
 
 use crate::{
-    cosmic::{
-        recording::PHASE_LEN,
-        smart::{features::HAND_MAX, square::BOARD_MEMORY_AREA},
-    },
+    cosmic::{recording::PHASE_LEN, smart::square::BOARD_MEMORY_AREA},
     look_and_model::{DOUBLE_FACED_PIECES_LEN, PIECE_LEN},
     Config,
 };
@@ -28,3 +25,6 @@ pub struct GameHashSeed {
     // 先後
     pub phase: [u64; PHASE_LEN],
 }
+
+// 持ち駒の駒のうち、最大の枚数は歩の 18。
+pub const HAND_MAX: usize = 18;

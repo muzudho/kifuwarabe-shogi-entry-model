@@ -2,15 +2,11 @@
 //!
 
 use crate::{
-    config::GameHashSeed,
+    config::{GameHashSeed, HAND_MAX},
     cosmic::{
         recording::{FireAddress, History, Movement, Phase, PHASE_LEN, PHASE_SECOND},
-        smart::{
-            features::HAND_MAX,
-            square::{
-                AbsoluteAddress2D, BOARD_MEMORY_AREA, FILE10U8, FILE1U8, RANK10U8, RANK1U8,
-                SQUARE_NONE,
-            },
+        smart::square::{
+            AbsoluteAddress2D, BOARD_MEMORY_AREA, FILE10U8, FILE1U8, RANK10U8, RANK1U8, SQUARE_NONE,
         },
     },
     law::speed_of_light::HandAddresses,

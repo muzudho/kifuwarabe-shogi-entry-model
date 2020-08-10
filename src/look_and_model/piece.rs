@@ -1,6 +1,6 @@
 use crate::{
-    cosmic::{recording::Phase, smart::features::PieceType},
-    look_and_model::{DoubleFacedPiece, Piece},
+    cosmic::recording::Phase,
+    look_and_model::{DoubleFacedPiece, Piece, PieceType},
 };
 use std::fmt;
 

@@ -1,16 +1,14 @@
 use crate::{
     cosmic::{
         recording::{FireAddress, HandAddress, Movement, Phase},
-        smart::{
-            features::PieceType,
-            square::{AbsoluteAddress2D, BOARD_MEMORY_AREA, RANK10U8, RANK1U8},
-        },
+        smart::square::{AbsoluteAddress2D, BOARD_MEMORY_AREA, RANK10U8, RANK1U8},
         toy_box::{PieceInfo, PieceNum, NAMED_PIECES_LEN},
     },
     law::{generate_move::Area, speed_of_light::Nine299792458},
     log::LogExt,
     look_and_model::{
-        DoubleFacedPiece, GameTable, Piece, DOUBLE_FACED_PIECE_TYPE_LEN, PIECE_WHITE_SPACE,
+        DoubleFacedPiece, GameTable, Piece, PieceType, DOUBLE_FACED_PIECE_TYPE_LEN,
+        PIECE_WHITE_SPACE,
     },
 };
 use casual_logger::{Log, Table};

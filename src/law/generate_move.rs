@@ -6,16 +6,13 @@ use crate::{
     cosmic::{
         playing::PosNums,
         recording::{CapturedMove, FireAddress, HandAddress, Movement, Phase},
-        smart::{
-            features::PieceType,
-            square::{
-                AbsoluteAddress2D, Angle, RelAdr2D, FILE10U8, FILE1U8, RANK10U8, RANK1U8, RANK2U8,
-                RANK3U8, RANK4U8, RANK6U8, RANK7U8, RANK9U8,
-            },
+        smart::square::{
+            AbsoluteAddress2D, Angle, RelAdr2D, FILE10U8, FILE1U8, RANK10U8, RANK1U8, RANK2U8,
+            RANK3U8, RANK4U8, RANK6U8, RANK7U8, RANK9U8,
         },
     },
     log::LogExt,
-    look_and_model::position::PositionLook,
+    look_and_model::{position::PositionLook, PieceType},
     Position,
 };
 use casual_logger::{Log, Table};
@@ -427,7 +424,7 @@ impl MoveGen {
                     let drop_fn = &mut |destination: &FireAddress| {
                         if let None = game.table.piece_num_at(&destination) {
                             // 駒が無いところに打つ
-                            use crate::cosmic::smart::features::PieceType::*;
+                            use crate::look_and_model::PieceType::*;
                             match piece_type {
                                 Pawn => {
                                     match destination {

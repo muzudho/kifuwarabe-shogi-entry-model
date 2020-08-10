@@ -1,8 +1,10 @@
+pub mod control_board;
 pub mod double_faced_piece;
 pub mod double_faced_piece_type;
 pub mod facility;
 pub mod game_table;
 pub mod piece;
+pub mod piece_type;
 pub mod position;
 pub mod search;
 pub mod title;
@@ -18,6 +20,10 @@ use crate::{
 };
 use num_derive::FromPrimitive;
 use std::time::{Duration, Instant};
+
+// 利きボード☆（＾～＾）
+#[derive(Clone, Copy)]
+pub struct ControlBoard {}
 
 // Note: 持ち駒には玉も含むぜ☆（＾～＾）
 pub const DOUBLE_FACED_PIECES_LEN: usize = 16;
@@ -170,6 +176,41 @@ pub enum Piece {
     PromotedLance2,
     // ▽パワーアップヒヨコ
     PromotedPawn2,
+}
+
+pub const PIECE_TYPE_LEN: usize = 14;
+
+/// USIでCopyするので、Copyが要る。
+#[derive(Copy, Clone, PartialEq)]
+pub enum PieceType {
+    // 玉
+    King,
+    // 飛
+    Rook,
+    // 角
+    Bishop,
+    // 金
+    Gold,
+    // 銀
+    Silver,
+    // 桂
+    Knight,
+    // 香
+    Lance,
+    // 歩
+    Pawn,
+    // 竜
+    Dragon,
+    // 馬
+    Horse,
+    // 全
+    PromotedSilver,
+    // 圭
+    PromotedKnight,
+    // 杏
+    PromotedLance,
+    // ぱわーあっぷひよこ
+    PromotedPawn,
 }
 
 /// PV表示、または 文字列表示だぜ☆（＾～＾）

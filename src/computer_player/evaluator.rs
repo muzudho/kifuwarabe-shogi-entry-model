@@ -1,7 +1,7 @@
 //!
 //! １手指して、何点動いたかを評価するぜ☆（＾～＾）
 //!
-use crate::cosmic::smart::features::PieceType;
+use crate::look_and_model::PieceType;
 
 /// TODO 千日手の価値☆（＾～＾） ENGIN OPTIONにしたいぜ☆（＾～＾）
 pub const REPITITION_VALUE: isize = -300;
