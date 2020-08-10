@@ -1,8 +1,28 @@
+pub mod captured_move;
+pub mod fire_address;
 pub mod movement;
 pub mod phase;
 
-use crate::cosmic::recording::*;
-use crate::look_and_model::PieceNum;
+use crate::{
+    cosmic::recording::*,
+    look_and_model::{AbsoluteAddress2D, PieceNum},
+};
+
+/// 取ることになる駒の移動。
+#[derive(Clone, Copy)]
+pub struct CapturedMove {
+    /// 元あった所。
+    pub source: FireAddress,
+    /// 移動先。
+    pub destination: FireAddress,
+}
+
+/// 盤上と、駒台で　共通しないものを並列にします。
+#[derive(Copy, Clone, Debug)]
+pub enum FireAddress {
+    Board(AbsoluteAddress2D),
+    Hand(HandAddress),
+}
 
 /// 駒の背番号も欲しいか☆（＾～＾）？
 /// 棋譜にも使うので、取った駒の情報を記憶しておくんだぜ☆（＾～＾）

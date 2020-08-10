@@ -9,12 +9,12 @@
 //!
 use crate::{
     cosmic::{
-        recording::{FireAddress, HandAddress},
+        recording::HandAddress,
         smart::square::{Angle, RelAdr2D, ANGLE_LEN},
     },
     law::generate_move::{Agility, Mobility},
     look_and_model::{
-        recording::{Phase, PHASE_LEN},
+        recording::{FireAddress, Phase, PHASE_LEN},
         AbsoluteAddress2D, DoubleFacedPiece, DoubleFacedPieceType, PieceNum, PieceType,
         DOUBLE_FACED_PIECES_LEN, DOUBLE_FACED_PIECE_TYPE_LEN, PIECE_TYPE_LEN,
     },

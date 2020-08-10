@@ -14,9 +14,8 @@ pub mod search;
 pub mod title;
 
 use crate::{
-    computer_player::evaluator::Evaluation,
-    cosmic::{recording::FireAddress, smart::square::BOARD_MEMORY_AREA},
-    law::generate_move::Area,
+    computer_player::evaluator::Evaluation, cosmic::smart::square::BOARD_MEMORY_AREA,
+    law::generate_move::Area, look_and_model::recording::FireAddress,
 };
 use num_derive::FromPrimitive;
 use std::time::{Duration, Instant};

@@ -1,12 +1,12 @@
 use crate::{
     cosmic::{
-        recording::{FireAddress, HandAddress},
+        recording::HandAddress,
         smart::square::{BOARD_MEMORY_AREA, RANK10U8, RANK1U8},
     },
     law::{generate_move::Area, speed_of_light::Nine299792458},
     log::LogExt,
     look_and_model::{
-        recording::{Movement, Phase},
+        recording::{FireAddress, Movement, Phase},
         AbsoluteAddress2D, DoubleFacedPiece, GameTable, Piece, PieceInfo, PieceNum, PieceType,
         DOUBLE_FACED_PIECE_TYPE_LEN, PIECE_NUM_LEN, PIECE_WHITE_SPACE,
     },

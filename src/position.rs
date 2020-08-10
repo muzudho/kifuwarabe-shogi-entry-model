@@ -3,10 +3,13 @@
 use crate::{
     cosmic::{
         playing::{MovegenPhase, PosNums},
-        recording::{FireAddress, HandAddress, History},
+        recording::{HandAddress, History},
     },
     log::LogExt,
-    look_and_model::{recording::Movement, GameTable},
+    look_and_model::{
+        recording::{FireAddress, Movement},
+        GameTable,
+    },
     Config, Position, PV_BUFFER,
 };
 use casual_logger::Log;

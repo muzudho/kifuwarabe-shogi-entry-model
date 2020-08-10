@@ -1,7 +1,9 @@
 use crate::{
-    cosmic::recording::{CapturedMove, FireAddress},
     law::cryptographic::num_to_lower_case,
-    look_and_model::{recording::Movement, PieceNum},
+    look_and_model::{
+        recording::{CapturedMove, FireAddress, Movement},
+        PieceNum,
+    },
 };
 use std::fmt;
 

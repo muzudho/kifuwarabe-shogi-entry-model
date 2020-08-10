@@ -4,12 +4,10 @@
 //! * Phase (先後。手番,相手番)
 //! * Person (先手,後手)
 //!
-use crate::law::cryptographic::num_to_lower_case;
 use crate::look_and_model::{
     recording::{Movement, Phase},
     AbsoluteAddress2D, DoubleFacedPiece,
 };
-use std::fmt;
 
 /// 手数☆（＾～＾） 大会ルールとは別で、このプログラムが対応できる上限値☆（＾～＾）
 /// 主要大会では、一番大きくても　電竜戦の 512 だろ☆（＾～＾）
@@ -103,54 +101,6 @@ impl HandAddress {
         HandAddress {
             piece: piece,
             sq: sq,
-        }
-    }
-}
-
-/// 盤上と、駒台で　共通しないものを並列にします。
-#[derive(Copy, Clone, Debug)]
-pub enum FireAddress {
-    Board(AbsoluteAddress2D),
-    Hand(HandAddress),
-}
-/// USI向け。
-impl fmt::Display for FireAddress {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            match self {
-                FireAddress::Board(sq) => {
-                    let (file, rank) = sq.to_file_rank();
-                    format!("{}{}", file, num_to_lower_case(rank as usize))
-                }
-                FireAddress::Hand(drop) => {
-                    format!("{}", drop.piece.type_())
-                }
-            },
-        )
-    }
-}
-impl Default for FireAddress {
-    /// ゴミ値だぜ☆（＾～＾）
-    fn default() -> Self {
-        FireAddress::Board(AbsoluteAddress2D::default())
-    }
-}
-
-/// 取ることになる駒の移動。
-#[derive(Clone, Copy)]
-pub struct CapturedMove {
-    /// 元あった所。
-    pub source: FireAddress,
-    /// 移動先。
-    pub destination: FireAddress,
-}
-impl CapturedMove {
-    pub fn new(source: FireAddress, destination: FireAddress) -> Self {
-        CapturedMove {
-            source: source,
-            destination: destination,
         }
     }
 }
