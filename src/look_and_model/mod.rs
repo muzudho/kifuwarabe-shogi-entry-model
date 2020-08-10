@@ -14,8 +14,10 @@ pub mod search;
 pub mod title;
 
 use crate::{
-    computer_player::evaluator::Evaluation, cosmic::smart::square::BOARD_MEMORY_AREA,
-    law::generate_move::Area, look_and_model::recording::FireAddress,
+    computer_player::evaluator::Evaluation,
+    cosmic::{playing::MovegenPhase, smart::square::BOARD_MEMORY_AREA},
+    law::generate_move::Area,
+    look_and_model::recording::{FireAddress, History},
 };
 use num_derive::FromPrimitive;
 use std::time::{Duration, Instant};
@@ -333,6 +335,22 @@ pub enum PieceType {
     PromotedLance,
     // ぱわーあっぷひよこ
     PromotedPawn,
+}
+
+/// Position. A record of the game used to suspend or resume it.  
+/// 局面。 ゲームを中断したり、再開したりするときに使うゲームの記録です。  
+pub struct Position {
+    /// 棋譜
+    pub history: History,
+    /// 初期の卓。これは SFEN を持てばよくて、オブジェクトは持たなくていいんじゃないか☆（＾～＾）？
+    pub starting_table: GameTable,
+    /// 現在の卓
+    pub table: GameTable,
+    pub movegen_phase: MovegenPhase,
+
+    // Principal variation(読み筋)☆（＾～＾）
+    pv_text: String,
+    pv_len: usize,
 }
 
 /// PV表示、または 文字列表示だぜ☆（＾～＾）

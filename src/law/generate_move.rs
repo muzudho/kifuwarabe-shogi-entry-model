@@ -13,9 +13,8 @@ use crate::{
     log::LogExt,
     look_and_model::{
         recording::{CapturedMove, FireAddress, HandAddress, Movement, Phase},
-        AbsoluteAddress2D, PieceType,
+        AbsoluteAddress2D, PieceType, Position,
     },
-    Position,
 };
 use casual_logger::{Log, Table};
 

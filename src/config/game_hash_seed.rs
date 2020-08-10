@@ -8,9 +8,9 @@ use crate::{
     log::LogExt,
     look_and_model::{
         recording::{FireAddress, History, Movement, Phase, PHASE_LEN, PHASE_SECOND},
-        AbsoluteAddress2D, DoubleFacedPiece, GameTable, DOUBLE_FACED_PIECES_LEN, PIECE_LEN,
+        AbsoluteAddress2D, DoubleFacedPiece, GameTable, Position, DOUBLE_FACED_PIECES_LEN,
+        PIECE_LEN,
     },
-    Position,
 };
 use casual_logger::Log;
 use rand::Rng;

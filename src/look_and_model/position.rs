@@ -1,11 +1,28 @@
+//! GameTable. A record of the game used to suspend or resume it.  
+//! 局面。 ゲームを中断したり、再開したりするときに使うゲームの記録です。  
 use crate::{
-    cosmic::playing::PosNums,
+    cosmic::playing::{MovegenPhase, PosNums},
+    log::LogExt,
     look_and_model::{
-        recording::FireAddress, AbsoluteAddress2D, DoubleFacedPiece, GameTable, PieceNum,
-        PIECE_WHITE_SPACE,
+        recording::{FireAddress, HandAddress, History, Movement},
+        AbsoluteAddress2D, DoubleFacedPiece, GameTable, PieceNum, Position, PIECE_WHITE_SPACE,
     },
-    Position,
+    Config, PV_BUFFER,
 };
+use casual_logger::Log;
+
+impl Default for Position {
+    fn default() -> Position {
+        Position {
+            history: History::default(),
+            movegen_phase: MovegenPhase::default(),
+            starting_table: GameTable::default(),
+            table: GameTable::default(),
+            pv_len: 0,
+            pv_text: String::with_capacity(PV_BUFFER),
+        }
+    }
+}
 
 /// 局面
 impl Position {
@@ -460,6 +477,209 @@ P x{87:2}   |{63}|{64}|{65}|{66}|{67}|{68}|{69}|{70}|{71}| h8   p x{94:2}
             format!("{: >4}", piece_info_val.text1).to_string()
         } else {
             "    ".to_string()
+        }
+    }
+
+    pub fn pv_text(&self) -> &str {
+        &self.pv_text
+    }
+    pub fn pv_len(&self) -> usize {
+        self.pv_len
+    }
+
+    /// 棋譜の作成
+    pub fn set_move(&mut self, move_: &Movement) {
+        self.history.movements[self.history.length_from_the_middle() as usize] = *move_;
+        // クローンが入る☆（＾～＾）？
+    }
+    /// テスト用に棋譜表示☆（＾～＾）
+    pub fn get_moves_history_text(&self) -> String {
+        let mut s = String::new();
+        for ply in 0..self.history.length_from_the_middle() {
+            let movement = &self.history.movements[ply as usize];
+            s.push_str(&format!("[{}] {}", ply, movement));
+        }
+        s
+    }
+
+    pub fn get_table(&self, num: PosNums) -> &GameTable {
+        match num {
+            PosNums::Current => &self.table,
+            PosNums::Start => &self.starting_table,
+        }
+    }
+    pub fn mut_starting(&mut self) -> &mut GameTable {
+        &mut self.starting_table
+    }
+
+    /// テスト用に局面ハッシュ☆（＾～＾）
+    pub fn get_positions_hash_text(&self) -> String {
+        let mut s = String::new();
+        s.push_str(&format!(
+            "[ini] {:20}\n",
+            &self.history.starting_position_hash
+        ));
+
+        for ply in 0..self.history.length_from_the_middle() {
+            let hash = &self.history.position_hashs[ply as usize];
+            // 64bitは10進数20桁。改行する
+            s.push_str(&format!("[{:3}] {:20}\n", ply, hash));
+        }
+        s
+    }
+
+    /// 千日手を調べるために、
+    /// 現局面は、同一局面が何回目かを調べるぜ☆（＾～＾）
+    /// TODO 初期局面を何に使ってるのか☆（＾～＾）？
+    pub fn count_same_position(&self) -> isize {
+        if self.history.length_from_the_middle() < 1 {
+            return 0;
+        }
+
+        let mut count = 0;
+        let last_ply = self.history.length_from_the_middle() - 1;
+        let new_ply = self.history.length_from_the_middle();
+        for i_ply in 0..new_ply {
+            let t = last_ply - i_ply;
+            if self.history.position_hashs[t as usize]
+                == self.history.position_hashs[last_ply as usize]
+            {
+                count += 1;
+            }
+        }
+
+        // 初期局面のハッシュ
+        if self.history.starting_position_hash == self.history.position_hashs[last_ply as usize] {
+            count += 1;
+        }
+
+        count
+    }
+
+    /// Place the stone.  
+    /// １手指します。  
+    pub fn do_move(&mut self, config: &Config, move_: &Movement) {
+        // Principal variation.
+        if self.pv_text.is_empty() {
+            self.pv_text.push_str(&move_.to_string());
+        } else {
+            self.pv_text.push_str(&format!(" {}", move_));
+        }
+        self.pv_len += 1;
+
+        self.set_move(&move_);
+        self.redo_move(config, move_);
+    }
+
+    /// Place the stone.  
+    /// Do not write to the pv.  
+    /// １手指します。  
+    /// 読み筋への書き込みを行いません。  
+    pub fn redo_move(&mut self, config: &Config, move_: &Movement) {
+        // 局面ハッシュを作り直す
+        config
+            .hash_seed
+            .update_by_do_move(&mut self.history, &self.table, move_);
+
+        // 移動元のマスにある駒をポップすることは確定。
+        let src_piece_num = self.table.pop_piece(&move_.source);
+
+        // 持ち駒は成ることは無いので、成るなら盤上の駒であることが確定。
+        if move_.promote {
+            // 成ったのなら、元のマスの駒を成らすぜ☆（＾～＾）
+            if let Some(piece_num) = src_piece_num {
+                self.table.promote(piece_num);
+            } else {
+                panic!(Log::print_fatal(
+                    "(Err.248) 成ったのに、元の升に駒がなかった☆（＾～＾）"
+                ));
+            }
+        }
+        // 移動先升に駒があるかどうか
+        // あれば　盤の相手の駒を先後反転して、自分の駒台に置きます。
+        self.table.rotate_piece_board_to_hand_on_do(&move_);
+
+        // 移動先升に駒を置く
+        self.table.push_piece(&move_.destination, src_piece_num);
+
+        // // 局面ハッシュを作り直す
+        // let ky_hash = self.hash_seed.current_position(&self);
+        // self.history.set_position_hash(ky_hash);
+
+        self.history.add_moves(1);
+    }
+
+    /// 逆順に指します。
+    pub fn undo_move(&mut self) -> bool {
+        // Principal variation.
+        // None か スペースが出てくるまで削除しようぜ☆（＾～＾）
+        loop {
+            if let Some(ch) = self.pv_text.pop() {
+                if ch == ' ' {
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+
+        if 0 < self.pv_len {
+            self.pv_len -= 1;
+        }
+        if 0 < self.history.length_from_the_middle() {
+            // 棋譜から読取、手目も減る
+            self.history.add_moves(-1);
+            let move_ = &self.history.get_move();
+            // 移動先にある駒をポップするのは確定。
+            let moveing_piece_num = self.table.pop_piece(&move_.destination);
+            match move_.source {
+                FireAddress::Board(_src_sq) => {
+                    // 盤上の移動なら
+                    if move_.promote {
+                        // 成ったなら、成る前へ
+                        if let Some(source_piece_num) = moveing_piece_num {
+                            self.table.demote(source_piece_num);
+                        } else {
+                            panic!(Log::print_fatal(
+                                "(Err.305) 成ったのに移動先に駒が無いぜ☆（＾～＾）！"
+                            ))
+                        }
+                    }
+
+                    // 打でなければ、移動元升に、動かした駒を置く☆（＾～＾）打なら何もしないぜ☆（＾～＾）
+                    self.table.push_piece(&move_.source, moveing_piece_num);
+                }
+                FireAddress::Hand(src_drop) => {
+                    // 打なら
+                    // 打った場所に駒があるはずだぜ☆（＾～＾）
+                    let piece_num = if let Some(piece_num) = moveing_piece_num {
+                        piece_num
+                    } else {
+                        panic!(Log::print_fatal("(Err.250) Invalid moveing_piece_num"));
+                    };
+                    // 置いた駒を、駒台に戻すだけだぜ☆（＾～＾）
+                    // TODO この駒を置くことになる場所は☆（＾～＾）？
+                    self.table.push_piece(
+                        &FireAddress::Hand(HandAddress::new(
+                            self.table.get_double_faced_piece(piece_num),
+                            src_drop.sq,
+                        )),
+                        moveing_piece_num,
+                    );
+                }
+            }
+
+            // 取った駒が有ったか。
+            // あれば、指し手で取った駒の先後をひっくり返せば、自分の駒台にある駒を取り出せるので取り出して、盤の上に指し手の取った駒のまま駒を置きます。
+            self.table
+                .rotate_piece_hand_to_board_on_undo(self.history.get_turn(), &move_);
+
+            // TODO 局面ハッシュを作り直したいぜ☆（＾～＾）
+
+            // 棋譜にアンドゥした指し手がまだ残っているが、とりあえず残しとく
+            true
+        } else {
+            false
         }
     }
 }

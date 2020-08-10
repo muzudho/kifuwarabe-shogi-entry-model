@@ -8,9 +8,9 @@ use crate::{
     log::LogExt,
     look_and_model::{
         recording::{CapturedMove, FireAddress, HandAddress, Movement, Phase},
-        AbsoluteAddress2D, DoubleFacedPiece, PieceType,
+        AbsoluteAddress2D, DoubleFacedPiece, PieceType, Position,
     },
-    Config, Position,
+    Config,
 };
 use atoi::atoi;
 use casual_logger::Log;

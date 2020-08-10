@@ -28,22 +28,19 @@ mod law;
 mod log;
 mod look_and_model;
 mod performance_measurement;
-mod position;
 mod protocol;
 mod test;
 
 use crate::{
     config::GameHashSeed,
-    cosmic::playing::MovegenPhase,
     engine::{Engine, Response},
     log::LogExt,
-    look_and_model::{recording::History, GameTable},
 };
 use casual_logger::{Log, Opt};
 use test::test;
 
 /// USI対応コンピューター将棋ソフトの名前☆（＾～＾）
-pub const ENGINE_NAME: &str = "KifuwarabeEM bld63";
+pub const ENGINE_NAME: &str = "KifuwarabeEM bld64";
 
 /// 作者の名前。姓・名の順にしたいぜ☆（＾～＾）異文化に通じる表記方法はないものか☆（＾～＾）
 pub const ENGINE_AUTHOR: &str = "TAKAHASHI, Satoshi";
@@ -101,20 +98,4 @@ fn main() {
 pub struct Config {
     /// ハッシュ種☆（＾～＾）ゲームの途中でクリアしてはいけないぜ☆（＾～＾）
     pub hash_seed: GameHashSeed,
-}
-
-/// Position. A record of the game used to suspend or resume it.  
-/// 局面。 ゲームを中断したり、再開したりするときに使うゲームの記録です。  
-pub struct Position {
-    /// 棋譜
-    pub history: History,
-    /// 初期の卓。これは SFEN を持てばよくて、オブジェクトは持たなくていいんじゃないか☆（＾～＾）？
-    pub starting_table: GameTable,
-    /// 現在の卓
-    pub table: GameTable,
-    pub movegen_phase: MovegenPhase,
-
-    // Principal variation(読み筋)☆（＾～＾）
-    pv_text: String,
-    pv_len: usize,
 }

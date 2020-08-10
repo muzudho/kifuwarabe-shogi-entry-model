@@ -1,7 +1,7 @@
 use crate::{
     command_line_seek::CommandLineSeek,
     log::LogExt,
-    look_and_model::Title,
+    look_and_model::{Position, Title},
     protocol::{
         usi::{Go, IsReady, Position as UsiPosition, SetOption, Usi, UsiNewGame},
         uxi::{
@@ -9,7 +9,7 @@ use crate::{
             TeigiConv, Undo,
         },
     },
-    Config, Position,
+    Config,
 };
 use casual_logger::{Log, Table};
 

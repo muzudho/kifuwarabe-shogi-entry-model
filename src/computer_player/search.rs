@@ -9,9 +9,9 @@ use crate::{
     log::LogExt,
     look_and_model::{
         recording::{Movement, Phase, SENNTITE_NUM},
-        PieceType, PvString, Search,
+        PieceType, Position, PvString, Search,
     },
-    Config, Position,
+    Config,
 };
 use casual_logger::Log;
 use std::fmt;
