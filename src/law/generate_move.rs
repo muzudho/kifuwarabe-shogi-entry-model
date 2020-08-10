@@ -12,7 +12,6 @@ use crate::{
     },
     log::LogExt,
     look_and_model::{
-        position::PositionLook,
         recording::{CapturedMove, FireAddress, HandAddress, Movement, Phase},
         AbsoluteAddress2D, PieceType,
     },
@@ -286,10 +285,7 @@ impl MoveGen {
                         panic!(Log::print_fatal_t(
                             "(Err.287) Invalid piece_num.",
                             Table::default()
-                                .str(
-                                    "Position",
-                                    &PositionLook::to_string(&game, PosNums::Current)
-                                )
+                                .str("Position", &game.pretty1(PosNums::Current))
                                 .str("GameTable1", &game.table.pretty1())
                                 .str("GameTable2a", &game.table.pretty2a())
                                 .str("GameTable2b", &game.table.pretty2b())
