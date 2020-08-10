@@ -2,13 +2,12 @@ use crate::{
     cosmic::{
         recording::{FireAddress, HandAddress, Movement, Phase},
         smart::square::{BOARD_MEMORY_AREA, RANK10U8, RANK1U8},
-        toy_box::{PieceInfo, PieceNum, NAMED_PIECES_LEN},
     },
     law::{generate_move::Area, speed_of_light::Nine299792458},
     log::LogExt,
     look_and_model::{
-        AbsoluteAddress2D, DoubleFacedPiece, GameTable, Piece, PieceType,
-        DOUBLE_FACED_PIECE_TYPE_LEN, PIECE_WHITE_SPACE,
+        AbsoluteAddress2D, DoubleFacedPiece, GameTable, Piece, PieceInfo, PieceNum, PieceType,
+        DOUBLE_FACED_PIECE_TYPE_LEN, PIECE_NUM_LEN, PIECE_WHITE_SPACE,
     },
 };
 use casual_logger::{Log, Table};
@@ -523,9 +522,9 @@ impl Default for GameTable {
             // 盤上
             board: [None; BOARD_MEMORY_AREA],
             /// 初期値はゴミ値だぜ☆（＾～＾）上書きして消せだぜ☆（＾～＾）
-            address_list: [FireAddress::default(); NAMED_PIECES_LEN],
+            address_list: [FireAddress::default(); PIECE_NUM_LEN],
             /// 初期値はゴミ値だぜ☆（＾～＾）上書きして消せだぜ☆（＾～＾）
-            piece_list: [Piece::King1; NAMED_PIECES_LEN],
+            piece_list: [Piece::King1; PIECE_NUM_LEN],
             double_faced_piece_type_index: [
                 PieceNum::King1 as usize,
                 PieceNum::Rook21 as usize,

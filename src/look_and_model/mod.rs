@@ -5,6 +5,8 @@ pub mod double_faced_piece_type;
 pub mod facility;
 pub mod game_table;
 pub mod piece;
+pub mod piece_info;
+pub mod piece_num;
 pub mod piece_type;
 pub mod position;
 pub mod search;
@@ -12,11 +14,7 @@ pub mod title;
 
 use crate::{
     computer_player::evaluator::Evaluation,
-    cosmic::{
-        recording::FireAddress,
-        smart::square::BOARD_MEMORY_AREA,
-        toy_box::{PieceNum, NAMED_PIECES_LEN},
-    },
+    cosmic::{recording::FireAddress, smart::square::BOARD_MEMORY_AREA},
     law::generate_move::Area,
 };
 use num_derive::FromPrimitive;
@@ -118,9 +116,9 @@ pub struct GameTable {
     /// 持ち駒を次に置く番地。
     hand_next: [isize; DOUBLE_FACED_PIECES_LEN],
     /// 背番号付きの駒に、番地が紐づいているぜ☆（＾～＾）
-    address_list: [FireAddress; NAMED_PIECES_LEN],
+    address_list: [FireAddress; PIECE_NUM_LEN],
     /// 駒の背番号に、駒が紐づくぜ☆（＾～＾）
-    piece_list: [Piece; NAMED_PIECES_LEN],
+    piece_list: [Piece; PIECE_NUM_LEN],
     /// 駒の背番号を付けるのに使うぜ☆（＾～＾）
     double_faced_piece_type_index: [usize; DOUBLE_FACED_PIECE_TYPE_LEN],
     /// 指し手生成に利用☆（＾～＾）
@@ -204,6 +202,102 @@ pub enum Piece {
     PromotedLance2,
     // ▽パワーアップヒヨコ
     PromotedPawn2,
+}
+
+/// ちゆり「駒そのものではなく、駒の情報が欲しいだけなら、これだぜ☆」
+/// きふわらべ「USIでは使わないから、独自の表記でOKだぜ☆」
+/// 夢美「new()で引数２つ設定する必要があるけど、必ずしもそれを利用する必要はないのね」
+pub struct PieceInfo {
+    pub text1: String,
+    pub num: String,
+}
+
+/// 背番号(名前)付きの駒の数。
+pub const PIECE_NUM_LEN: usize = 40;
+
+/// 駒の背番号（名前）だぜ☆（＾～＾）大橋流で触る駒の順だぜ☆（＾～＾）
+#[derive(Clone, Copy, FromPrimitive, Debug, PartialEq)]
+pub enum PieceNum {
+    /// 1 先手玉
+    King1,
+    /// 2 後手玉
+    King2,
+    /// 3 金
+    Gold3,
+    /// 4 金
+    Gold4,
+    /// 5 金
+    Gold5,
+    /// 6 金
+    Gold6,
+    /// 7 銀
+    Silver7,
+    /// 8 銀
+    Silver8,
+    /// 9 銀
+    Silver9,
+    /// 10 銀
+    Silver10,
+    /// 11 桂
+    Knight11,
+    /// 12 桂
+    Knight12,
+    /// 13 桂
+    Knight13,
+    /// 14 桂
+    Knight14,
+    /// 15 香
+    Lance15,
+    /// 16 香
+    Lance16,
+    /// 17 香
+    Lance17,
+    /// 18 香
+    Lance18,
+    /// 19 角
+    Bishop19,
+    /// 20 角
+    Bishop20,
+    /// 21 飛
+    Rook21,
+    /// 22 飛
+    Rook22,
+    /// 23 歩
+    Pawn23,
+    /// 24 歩
+    Pawn24,
+    /// 25 歩
+    Pawn25,
+    /// 26 歩
+    Pawn26,
+    /// 27 歩
+    Pawn27,
+    /// 28 歩
+    Pawn28,
+    /// 29 歩
+    Pawn29,
+    /// 30 歩
+    Pawn30,
+    /// 31 歩
+    Pawn31,
+    /// 32 歩
+    Pawn32,
+    /// 33 歩
+    Pawn33,
+    /// 34 歩
+    Pawn34,
+    /// 35 歩
+    Pawn35,
+    /// 36 歩
+    Pawn36,
+    /// 37 歩
+    Pawn37,
+    /// 38 歩
+    Pawn38,
+    /// 39 歩
+    Pawn39,
+    /// 40 歩
+    Pawn40,
 }
 
 pub const PIECE_TYPE_LEN: usize = 14;

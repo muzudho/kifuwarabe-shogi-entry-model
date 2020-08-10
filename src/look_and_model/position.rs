@@ -1,6 +1,6 @@
 use crate::{
-    cosmic::{playing::PosNums, recording::FireAddress, toy_box::PieceNum},
-    look_and_model::{AbsoluteAddress2D, DoubleFacedPiece, GameTable, PIECE_WHITE_SPACE},
+    cosmic::{playing::PosNums, recording::FireAddress},
+    look_and_model::{AbsoluteAddress2D, DoubleFacedPiece, GameTable, PieceNum, PIECE_WHITE_SPACE},
     Position,
 };
 

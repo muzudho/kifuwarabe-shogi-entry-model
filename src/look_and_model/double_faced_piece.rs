@@ -1,4 +1,4 @@
-use crate::look_and_model::DoubleFacedPiece;
+use crate::look_and_model::{DoubleFacedPiece, Piece};
 
 impl DoubleFacedPiece {
     /// 開始地点。
@@ -42,5 +42,25 @@ impl DoubleFacedPiece {
             DoubleFacedPiece::Lance2 => 10,
             DoubleFacedPiece::Pawn2 => 1,
         }
+    }
+    pub fn nonpromoted_piece_hash_index(self) -> usize {
+        (match self {
+            DoubleFacedPiece::King1 => Piece::King1,
+            DoubleFacedPiece::Rook1 => Piece::Rook1,
+            DoubleFacedPiece::Bishop1 => Piece::Bishop1,
+            DoubleFacedPiece::Gold1 => Piece::Gold1,
+            DoubleFacedPiece::Silver1 => Piece::Silver1,
+            DoubleFacedPiece::Knight1 => Piece::Knight1,
+            DoubleFacedPiece::Lance1 => Piece::Lance1,
+            DoubleFacedPiece::Pawn1 => Piece::Pawn1,
+            DoubleFacedPiece::King2 => Piece::King2,
+            DoubleFacedPiece::Rook2 => Piece::Rook2,
+            DoubleFacedPiece::Bishop2 => Piece::Bishop2,
+            DoubleFacedPiece::Gold2 => Piece::Gold2,
+            DoubleFacedPiece::Silver2 => Piece::Silver2,
+            DoubleFacedPiece::Knight2 => Piece::Knight2,
+            DoubleFacedPiece::Lance2 => Piece::Lance2,
+            DoubleFacedPiece::Pawn2 => Piece::Pawn2,
+        }) as usize
     }
 }
