@@ -3,7 +3,7 @@ use crate::log::LogExt;
 use crate::look_and_model::Title;
 use crate::position::Position;
 use crate::spaceship::crew::{Chiyuri, Kifuwarabe};
-use crate::usi_protocol::Go;
+use crate::usi_protocol::{Go, IsReady, Position as UsiPosition, SetOption};
 use casual_logger::{Log, Table};
 
 /// アプリケーション開始時に決め終えておくものだぜ☆（＾～＾）
@@ -58,13 +58,13 @@ impl Engine {
         } else if p.starts_with("usinewgame") {
             Kifuwarabe::usinewgame(self);
         } else if p.starts_with("isready") {
-            Kifuwarabe::isready();
+            IsReady::isready();
         } else if p.starts_with("position") {
-            Kifuwarabe::position(self, &line);
+            UsiPosition::position(self, &line);
         } else if p.starts_with("quit") {
             return Some(Response::Quit);
         } else if p.starts_with("setoption name ") {
-            Kifuwarabe::setoption_name(self, &mut CommandLineSeek::new(&line));
+            SetOption::setoption_name(self, &mut CommandLineSeek::new(&line));
         } else if p.starts_with("sfen") {
             Log::print_notice(&format!("{}", self.position.to_xfen(true)));
         } else if p.starts_with("usi") {
