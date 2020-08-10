@@ -1,7 +1,7 @@
 //! Measure performance.  
 //! 性能を測ります。  
 
-use crate::look_and_model::search::Search;
+use crate::look_and_model::Search;
 
 /// Search.  
 /// 探索部。  

@@ -7,7 +7,9 @@ pub mod position;
 pub mod search;
 pub mod title;
 
+use crate::computer_player::evaluator::Evaluation;
 use num_derive::FromPrimitive;
+use std::time::{Duration, Instant};
 
 // Note: 持ち駒には玉も含むぜ☆（＾～＾）
 pub const DOUBLE_FACED_PIECES_LEN: usize = 16;
@@ -62,6 +64,46 @@ pub enum DoubleFacedPieceType {
     Knight,
     Lance,
     Pawn,
+}
+
+/// 行き先表示案内板だぜ☆（＾～＾）
+/// 読み筋とか表示されてるぜ☆（＾～＾）
+pub struct InfoDisplay {
+    /// 情報表示。現在の経過時間。
+    info_stopwatch: Instant,
+    /// 情報表示。前回表示したタイム。
+    info_previous: Duration,
+    /// 情報表示。初回は必ず表示。
+    info_first: bool,
+}
+
+/// PV表示、または 文字列表示だぜ☆（＾～＾）
+pub enum PvString {
+    /// 思考を開始してからのミリ秒と、読み筋。
+    PV(u128, String),
+    String(String),
+}
+
+/// ツリーは探索中に１つしか生成しないぜ☆（＾～＾）
+pub struct Search {
+    /// Number of state nodes searched.  
+    /// 探索した状態ノード数。  
+    pub nodes: u64,
+    /// Start the stopwatch when this structure is created.  
+    /// この構造体を生成した時点からストップ・ウォッチを開始します。  
+    pub stopwatch: Instant,
+
+    // 思考時間（ミリ秒）をランダムにすることで、指し手を変えるぜ☆（＾～＾）
+    pub think_msec: u128,
+
+    pub evaluation: Evaluation,
+
+    // 反復深化探索の１回目だけ真☆（＾～＾）
+    pub depth_not_to_give_up: usize,
+    // 読みの深さの上限☆（＾～＾）１手を読み切るなら 0 を指定しろだぜ☆（＾～＾）
+    pub max_depth0: usize,
+    /// 情報表示担当
+    pub info: InfoDisplay,
 }
 
 /// タイトル画面。
