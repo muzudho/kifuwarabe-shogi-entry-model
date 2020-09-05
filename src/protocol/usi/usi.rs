@@ -9,14 +9,12 @@ impl Usi {
         Log::print_notice(&format!("id name {}", ENGINE_NAME));
         Log::print_notice(&format!("id author {}", ENGINE_AUTHOR));
         /*
-        IO::writeln("option name BookFile type string default public.bin");
-        IO::writeln("option name UseBook type check default true");
-        IO::writeln("option name Selectivity type spin default 2 min 0 max 4");
-        IO::writeln(
-            "option name Style type combo default Normal var Solid var Normal var Risky",
-        );
-        IO::writeln("option name ResetLearning type button");
-        IO::writeln("option name LearningFile type filename default <empty>");
+        "option name BookFile type string default public.bin"
+        "option name UseBook type check default true"
+        "option name Selectivity type spin default 2 min 0 max 4"
+        "option name Style type combo default Normal var Solid var Normal var Risky"
+        "option name ResetLearning type button"
+        "option name LearningFile type filename default <empty>"
         */
         // アルファベット順ではなく、将棋所のダイアログボックスが見やすくなるように並べろだぜ☆（＾～＾）
         // 大会ルール関連☆（＾～＾）

@@ -3,6 +3,18 @@
 This program is entry model for computer shogi.  
 However, Kifuwarabe is not a common implementation.  
 
+## Build
+
+```
+cargo build --release
+```
+
+## Run
+
+```plain
+cargo run
+```
+
 ## Special implementation notes
 
 ![20200614dr54a6.png](./doc/20200614dr54a6.png)
