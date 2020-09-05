@@ -1,7 +1,7 @@
 use crate::{
     command_line_seek::CommandLineSeek,
-    engine::Engine,
     protocol::{usi::input_usi::set_position, usi::Position},
+    Engine,
 };
 
 impl Position {

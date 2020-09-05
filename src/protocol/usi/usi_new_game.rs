@@ -1,4 +1,4 @@
-use crate::{engine::Engine, look_and_model::Position, protocol::usi::UsiNewGame};
+use crate::{look_and_model::Position, protocol::usi::UsiNewGame, Engine};
 
 impl UsiNewGame {
     pub fn usinewgame(engine: &mut Engine) {

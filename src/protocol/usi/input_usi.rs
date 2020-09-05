@@ -4,13 +4,12 @@
 use crate::{
     command_line_seek::CommandLineSeek,
     cosmic::square::{FILE9U8, RANK1U8},
-    engine::Engine,
     log::LogExt,
     look_and_model::{
         recording::{CapturedMove, FireAddress, HandAddress, Movement, Phase},
         AbsoluteAddress2D, DoubleFacedPiece, PieceType, Position,
     },
-    Config,
+    Config, Engine,
 };
 use atoi::atoi;
 use casual_logger::Log;

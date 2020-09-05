@@ -1,4 +1,4 @@
-use crate::{engine::Engine, log::LogExt, look_and_model::PosNums, protocol::uxi::Pos2};
+use crate::{log::LogExt, look_and_model::PosNums, protocol::uxi::Pos2, Engine};
 use casual_logger::Log;
 
 impl Pos2 {

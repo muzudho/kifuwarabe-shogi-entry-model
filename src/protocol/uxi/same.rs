@@ -1,4 +1,4 @@
-use crate::{engine::Engine, log::LogExt, protocol::uxi::Same};
+use crate::{log::LogExt, protocol::uxi::Same, Engine};
 use casual_logger::Log;
 
 impl Same {

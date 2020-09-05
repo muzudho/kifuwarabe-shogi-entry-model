@@ -1,9 +1,9 @@
 use crate::{
     command_line_seek::CommandLineSeek,
-    engine::Engine,
     log::LogExt,
     look_and_model::{recording::Phase, PvString, Search},
     protocol::usi::Go,
+    Engine,
 };
 use casual_logger::Log;
 use rand::Rng;

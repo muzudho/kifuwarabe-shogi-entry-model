@@ -1,5 +1,4 @@
 use crate::{
-    engine::Engine,
     law::generate_move::MoveGen,
     log::LogExt,
     look_and_model::{
@@ -7,6 +6,7 @@ use crate::{
         recording::{Movement, Phase},
     },
     protocol::uxi::GenMove,
+    Engine,
 };
 use casual_logger::Log;
 

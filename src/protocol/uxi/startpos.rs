@@ -1,10 +1,10 @@
 use crate::{
     command_line_seek::CommandLineSeek,
-    engine::Engine,
     protocol::{
         usi::input_usi::{set_position, POS_1},
         uxi::Startpos,
     },
+    Engine,
 };
 
 impl Startpos {

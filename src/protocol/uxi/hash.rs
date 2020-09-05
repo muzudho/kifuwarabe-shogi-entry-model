@@ -1,4 +1,4 @@
-use crate::{engine::Engine, log::LogExt, protocol::uxi::Hash};
+use crate::{log::LogExt, protocol::uxi::Hash, Engine};
 use casual_logger::Log;
 
 impl Hash {

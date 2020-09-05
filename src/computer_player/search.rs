@@ -4,14 +4,13 @@
 
 use crate::{
     computer_player::evaluator::REPITITION_VALUE,
-    engine::Engine,
     law::generate_move::{MoveGen, Ways},
     log::LogExt,
     look_and_model::{
         recording::{Movement, Phase, SENNTITE_NUM},
         PieceType, Position, PvString, Search,
     },
-    Config,
+    Config, Engine,
 };
 use casual_logger::Log;
 use std::fmt;

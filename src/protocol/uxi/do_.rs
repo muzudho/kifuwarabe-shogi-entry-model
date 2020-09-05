@@ -1,7 +1,7 @@
 use crate::{
     command_line_seek::CommandLineSeek,
-    engine::Engine,
     protocol::{usi::input_usi::*, uxi::Do},
+    Engine,
 };
 
 impl Do {

@@ -31,11 +31,7 @@ mod performance_measurement;
 mod protocol;
 mod test;
 
-use crate::{
-    config::GameHashSeed,
-    engine::{Engine, Response},
-    log::LogExt,
-};
+use crate::{config::GameHashSeed, engine::Response, log::LogExt, look_and_model::Position};
 use casual_logger::{Log, Opt};
 use test::test;
 
@@ -98,4 +94,22 @@ fn main() {
 pub struct Config {
     /// ハッシュ種☆（＾～＾）ゲームの途中でクリアしてはいけないぜ☆（＾～＾）
     pub hash_seed: GameHashSeed,
+}
+
+/// アプリケーション開始時に決め終えておくものだぜ☆（＾～＾）
+pub struct Engine {
+    /// 対局
+    pub position: Position,
+    /// 設定。プレイ中の対局があるときに変更してはいけないデータ。
+    pub config: Config,
+    /// 大会ルールの最大手数☆（＾～＾）
+    pub option_max_ply: usize,
+    /// 読みの最大深さ。
+    pub option_max_depth: usize,
+    /// 思考時間の最小秒☆（＾～＾）
+    pub option_min_think_msec: u64,
+    /// 思考時間の最大秒☆（＾～＾）
+    pub option_max_think_msec: u64,
+    /// 諦めない深さ☆（＾～＾）読み終わるまで、思考時間を無視するぜ☆（＾～＾）max_depth - 1 より小さくしろだぜ☆（＾～＾）
+    pub option_depth_not_to_give_up: usize,
 }
