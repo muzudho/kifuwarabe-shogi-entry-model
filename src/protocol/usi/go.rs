@@ -57,20 +57,20 @@ impl Go {
             1
         };
 
-        let ts = tree.iteration_deeping(engine);
+        let best_n_state = tree.iteration_deeping(engine);
         // その手を選んだ理由☆（＾～＾）
         Log::print_info(&Search::info_str(
             None,
             Some((tree.nodes, tree.nps())),
-            Some(ts.bestmove.value),
-            ts.bestmove.movement,
-            &Some(PvString::String(ts.bestmove.reason.to_string())),
+            Some(best_n_state.bestmove_value()),
+            best_n_state.bestmove_movement().as_ref(),
+            &Some(PvString::String(best_n_state.bestmove.reason.to_string())),
         ));
         // 例: bestmove 7g7f
         // 例: bestmove resign
         Log::print_notice(&format!(
             "bestmove {}",
-            if let Some(bestmove) = ts.bestmove.movement {
+            if let Some(bestmove) = best_n_state.bestmove.movement {
                 format!("{}", bestmove)
             } else {
                 "resign".to_string()

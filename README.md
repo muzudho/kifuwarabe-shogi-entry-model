@@ -13,6 +13,7 @@ cargo build --release
 
 ```plain
 cargo run
+# cargo run --release
 ```
 
 ## Special implementation notes

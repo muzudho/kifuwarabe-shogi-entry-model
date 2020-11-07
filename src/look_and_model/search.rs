@@ -22,8 +22,8 @@ impl Search {
     pub fn info_str(
         cur_depth: Option<usize>,
         state_nodes_nps: Option<(u64, u64)>,
-        value: Option<Value>,
-        movement: Option<Movement>,
+        value: Option<&Value>,
+        movement: Option<&Movement>,
         pv_string: &Option<PvString>,
     ) -> String {
         // TODO 評価値が自分のか相手のか調べてないぜ☆（＾～＾）

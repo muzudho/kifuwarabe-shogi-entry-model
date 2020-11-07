@@ -17,7 +17,7 @@ use std::fmt;
 
 impl Search {
     /// 反復深化探索だぜ☆（＾～＾）
-    pub fn iteration_deeping(&mut self, engine: &mut Engine) -> TreeState {
+    pub fn iteration_deeping(&mut self, engine: &mut Engine) -> NodeState {
         self.remake_info_display();
 
         let max_ply = std::cmp::max(
@@ -28,24 +28,30 @@ impl Search {
         // 初手の３０手が葉になるぜ☆（＾～＾）
         self.evaluation.before_search();
         self.max_depth0 = 0;
-        let mut best_ts = self.node(&engine.config, &mut engine.position, Value::Win);
+        let mut best_n_state = Some(self.node(&engine.config, &mut engine.position, Value::Win));
         self.evaluation.after_search();
 
         // 一番深く潜ったときの最善手を選ぼうぜ☆（＾～＾）
         for id in 1..max_ply {
             self.max_depth0 = id;
             // 現在のベストムーブ表示☆（＾～＾） PV にすると将棋所は符号を日本語に翻訳してくれるぜ☆（＾～＾）
-            let movement = best_ts.bestmove.movement;
+            let old_n_state = best_n_state.take().unwrap();
+            let bestmove_value = old_n_state.bestmove_value();
+            let bestmove_movement = old_n_state.bestmove_movement();
             Log::print_info(&Search::info_str(
                 Some(self.max_depth0),
                 Some((self.nodes, self.nps())),
-                Some(best_ts.bestmove.value),
-                movement,
+                Some(bestmove_value),
+                bestmove_movement.as_ref(), /*if let Some(bestmove_movement) = bestmove_movement {
+                                                Some(&bestmove_movement)
+                                            } else {
+                                                None
+                                            }*/
                 &Some(PvString::PV(
                     self.msec(),
                     format!(
                         "{}",
-                        if let Some(movement_val) = movement {
+                        if let Some(movement_val) = bestmove_movement {
                             format!("{}", movement_val)
                         } else {
                             "resign".to_string()
@@ -55,7 +61,7 @@ impl Search {
             ));
             self.info.set_interval();
 
-            if let None = movement {
+            if let None = bestmove_movement {
                 // すでに投了が見えているのなら探索終了だぜ☆（＾～＾）
                 break;
             }
@@ -74,18 +80,18 @@ impl Search {
 
             // 探索局面数は引き継ぐぜ☆（＾～＾）積み上げていった方が見てて面白いだろ☆（＾～＾）
             self.evaluation.before_search();
-            let ts = self.node(&engine.config, &mut engine.position, Value::Win);
+            let n_state = self.node(&engine.config, &mut engine.position, Value::Win);
             self.evaluation.after_search();
-            if ts.timeout {
+            if n_state.timeout {
                 // 思考時間切れなら この探索結果は使わないぜ☆（＾～＾）
                 break;
             }
 
             // 無条件に更新だぜ☆（＾～＾）初手の高得点を引きずられて王手回避漏れされたら嫌だしな☆（＾～＾）
-            best_ts = ts.clone();
+            best_n_state.replace(n_state);
         }
 
-        best_ts
+        best_n_state.unwrap()
     }
 
     /// 先手の気持ちで、勝てだぜ☆（*＾～＾*）
@@ -103,8 +109,8 @@ impl Search {
         config: &Config,
         pos: &mut Position,
         another_branch_best: Value,
-    ) -> TreeState {
-        let mut ts = TreeState::default();
+    ) -> NodeState {
+        let mut n_state = NodeState::default();
 
         // この手を指すと負けてしまう、という手が見えていたら、このフラグを立てろだぜ☆（＾～＾）
         let mut exists_lose = false;
@@ -130,7 +136,7 @@ impl Search {
 
         // 指せる手が無ければ投了☆（＾～＾）
         if ways.is_empty() {
-            return ts;
+            return n_state;
         }
 
         // 指し手のオーダリングをしたいぜ☆（＾～＾） 取った駒は指し手生成の段階で調べているし☆（＾～＾）
@@ -182,14 +188,14 @@ impl Search {
             if self.think_msec < self.msec() && self.depth_not_to_give_up <= self.max_depth0 {
                 // とりあえず ランダム秒で探索を打ち切ろうぜ☆（＾～＾）？
                 // タイムアウトしたんだったら、終了処理 すっとばして早よ終われだぜ☆（＾～＾）
-                ts.timeout = true;
+                n_state.timeout = true;
                 forward_cut_off1 = Some(ForwardCutOff1::TimeOut);
             }
 
             if let Some(forward_cut_off1) = forward_cut_off1 {
                 match forward_cut_off1 {
                     ForwardCutOff1::TimeOut => {
-                        return ts;
+                        return n_state;
                     }
                 }
             }
@@ -238,23 +244,24 @@ impl Search {
             if let Some(forward_cut_off2) = &forward_cut_off2 {
                 match forward_cut_off2 {
                     ForwardCutOff2::KingCatch => {
-                        ts.bestmove.catch_king(move_);
+                        n_state.bestmove.catch_king(move_);
                     }
                     ForwardCutOff2::Leaf => {
                         // 葉だぜ☆（＾～＾）
 
                         // 評価を集計するぜ☆（＾～＾）
-                        ts.choice_friend(&Value::CentiPawn(self.evaluation.centi_pawn()), move_);
+                        n_state
+                            .choice_friend(&Value::CentiPawn(self.evaluation.centi_pawn()), move_);
 
                         if self.info.is_printable() {
                             // 何かあったタイミングで読み筋表示するのではなく、定期的に表示しようぜ☆（＾～＾）
                             // PV を表示するには、葉のタイミングで出すしかないぜ☆（＾～＾）
-                            let movement = ts.bestmove.movement;
+                            let movement = n_state.bestmove.movement;
                             Log::print_info(&Search::info_str(
                                 Some(pos.pv_len()),
                                 Some((self.nodes, self.nps())),
-                                Some(ts.bestmove.value),
-                                movement,
+                                Some(n_state.bestmove_value()),
+                                movement.as_ref(),
                                 &Some(PvString::PV(self.msec(), pos.pv_text().to_string())),
                             ));
                             self.info.set_interval();
@@ -267,7 +274,7 @@ impl Search {
                 // 千日手かどうかを判定する☆（＾～＾）
                 if SENNTITE_NUM <= pos.count_same_position() {
                     // 千日手か……☆（＾～＾） 一応覚えておくぜ☆（＾～＾）
-                    ts.repetition_movement = Some(move_);
+                    n_state.repetition_movement = Some(move_);
                 } else if self.max_depth0 < pos.pv_len() {
                 } else {
                     // 枝局面なら、更に深く進むぜ☆（＾～＾）
@@ -275,22 +282,25 @@ impl Search {
                     let opponent_ts = self.node(
                         &config,
                         pos,
-                        match ts.bestmove.value {
+                        match n_state.bestmove.value {
                             Value::CentiPawn(centi_pawn) => Value::CentiPawn(-centi_pawn),
                             Value::Win => Value::Lose,
                             Value::Lose => Value::Win,
                         },
                     );
 
-                    if ts.timeout {
+                    if n_state.timeout {
                         // すでにタイムアウトしていたのなら、終了処理 すっとばして早よ終われだぜ☆（＾～＾）
-                        return ts;
+                        return n_state;
                     }
                     self.evaluation.after_search();
 
                     // 下の木の結果を、ひっくり返して、引き継ぎます。
-                    exists_lose =
-                        ts.turn_over_and_choice(&opponent_ts, move_, self.evaluation.centi_pawn());
+                    exists_lose = n_state.turn_over_and_choice(
+                        &opponent_ts,
+                        move_,
+                        self.evaluation.centi_pawn(),
+                    );
                 }
             }
 
@@ -309,7 +319,7 @@ impl Search {
             }
 
             let mut backword_cut_off = None;
-            match ts.bestmove.value {
+            match n_state.bestmove.value {
                 Value::Win => {
                     // この手について、次の手ではなく、２手以上先で勝ったんだろ☆（＾～＾）もう探索しなくていいぜ☆（＾～＾）この手にしようぜ☆（＾～＾）！
                     backword_cut_off = Some(BackwardCutOff::YouWin);
@@ -352,10 +362,10 @@ impl Search {
         }
 
         if !exists_lose {
-            if let None = ts.bestmove.movement {
-                if let Some(repetition_movement_val) = ts.repetition_movement {
+            if let None = n_state.bestmove.movement {
+                if let Some(repetition_movement_val) = n_state.repetition_movement {
                     // 負けを認めていないうえで、投了するぐらいなら千日手を選ぶぜ☆（＾～＾）
-                    ts.bestmove.update(
+                    n_state.bestmove.update(
                         repetition_movement_val,
                         &Value::CentiPawn(REPITITION_VALUE),
                         Reason::RepetitionBetterThanResign,
@@ -364,7 +374,7 @@ impl Search {
             }
         }
 
-        ts
+        n_state
     }
 }
 
@@ -428,26 +438,31 @@ impl Bestmove {
         self.reason = reason;
     }
 }
-#[derive(Clone)]
-pub struct TreeState {
+pub struct NodeState {
     pub bestmove: Bestmove,
     // あれば千日手の手☆（＾～＾）投了よりはマシ☆（＾～＾）
     pub repetition_movement: Option<Movement>,
     pub timeout: bool,
 }
-impl Default for TreeState {
+impl Default for NodeState {
     fn default() -> Self {
-        TreeState {
+        NodeState {
             bestmove: Bestmove::default(),
             repetition_movement: None,
             timeout: false,
         }
     }
 }
-impl TreeState {
+impl NodeState {
+    pub fn bestmove_value(&self) -> &Value {
+        &self.bestmove.value
+    }
+    pub fn bestmove_movement(&self) -> &Option<Movement> {
+        &self.bestmove.movement
+    }
     pub fn turn_over_and_choice(
         &mut self,
-        opponent_ts: &TreeState,
+        opponent_ts: &NodeState,
         friend_movement: Movement,
         friend_centi_pawn1: isize,
     ) -> bool {
