@@ -8,7 +8,7 @@ use crate::{
     log::LogExt,
     look_and_model::{
         recording::{Movement, Phase, SENNTITE_NUM},
-        PieceType, Position, PvString, Search,
+        PieceType, Position, Search,
     },
     Config, Engine,
 };
@@ -41,8 +41,9 @@ impl Search {
             self.max_depth0 = id;
             // 現在のベストムーブ表示☆（＾～＾） PV にすると将棋所は符号を日本語に翻訳してくれるぜ☆（＾～＾）
             let old_n_state = best_n_state.take().unwrap();
-            let bestmove_value = old_n_state.bestmove_value();
+            // let bestmove_value = old_n_state.bestmove_value();
             let bestmove_movement = old_n_state.bestmove_movement();
+            /* TODO
             Log::print_info(&Search::info_str(
                 Some(self.max_depth0),
                 Some((self.nodes, self.nps())),
@@ -64,6 +65,7 @@ impl Search {
                     ),
                 )), // この指し手を選んだ時の pv の読み筋が欲しいぜ☆（＾～＾）
             ));
+            */
             self.info.set_interval();
 
             if let None = bestmove_movement {
@@ -71,6 +73,7 @@ impl Search {
                 break;
             }
 
+            /* TODO
             // 横線で仕切るぜ☆（＾～＾）
             Log::print_info(&Search::info_str(
                 None,
@@ -81,6 +84,7 @@ impl Search {
                     "----------Iteration deeping----------"
                 ))),
             ));
+            */
             self.info.set_interval();
 
             // 探索局面数は引き継ぐぜ☆（＾～＾）積み上げていった方が見てて面白いだろ☆（＾～＾）
@@ -261,7 +265,9 @@ impl Search {
                         if self.info.is_printable() {
                             // 何かあったタイミングで読み筋表示するのではなく、定期的に表示しようぜ☆（＾～＾）
                             // PV を表示するには、葉のタイミングで出すしかないぜ☆（＾～＾）
-                            let movement = n_state.bestmove.movement;
+                            // let movement = n_state.bestmove.movement;
+
+                            /* TODO
                             Log::print_info(&Search::info_str(
                                 Some(pos.pv_len()),
                                 Some((self.nodes, self.nps())),
@@ -269,6 +275,7 @@ impl Search {
                                 movement.as_ref(),
                                 &Some(PvString::PV(self.msec(), pos.pv_text().to_string())),
                             ));
+                            */
                             self.info.set_interval();
                         }
                     }
@@ -459,9 +466,11 @@ impl Default for NodeState {
     }
 }
 impl NodeState {
+    /*
     pub fn bestmove_value(&self) -> &Value {
         &self.bestmove.value
     }
+    */
     pub fn bestmove_movement(&self) -> &Option<Movement> {
         &self.bestmove.movement
     }

@@ -1,6 +1,6 @@
 use crate::{
-    computer_player::{evaluator::Evaluation, search::Value},
-    look_and_model::{recording::Movement, InfoDisplay, PvString, Search},
+    computer_player::evaluator::Evaluation,
+    look_and_model::{InfoDisplay, Search},
     INFO_INTERVAL_MSEC,
 };
 use std::time::Instant;
@@ -18,6 +18,7 @@ impl Search {
         }
     }
 
+    /*
     /// 情報表示
     pub fn info_str(
         cur_depth: Option<usize>,
@@ -85,6 +86,7 @@ impl Search {
         );
         s.to_string()
     }
+    */
 
     /// ストップウォッチを初期化します。
     pub fn remake_info_display(&mut self) {

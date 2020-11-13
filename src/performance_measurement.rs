@@ -6,11 +6,13 @@ use crate::look_and_model::Search;
 /// Search.  
 /// 探索部。  
 impl Search {
-    /// Seconds.  
-    /// 秒。  
+    /*
+    /// Seconds.
+    /// 秒。
     pub fn sec(&self) -> u64 {
         self.stopwatch.elapsed().as_secs()
     }
+    */
 
     /// Milli seconds.  
     /// ミリ秒。  
@@ -18,8 +20,9 @@ impl Search {
         self.stopwatch.elapsed().as_millis()
     }
 
-    /// Node per second.  
-    /// １秒当たりの状態ノード数。  
+    /*
+    /// Node per second.
+    /// １秒当たりの状態ノード数。
     pub fn nps(&self) -> u64 {
         let sec = self.sec();
         if 0 < sec {
@@ -30,4 +33,5 @@ impl Search {
             self.nodes as u64
         }
     }
+    */
 }

@@ -365,12 +365,14 @@ pub enum PosNums {
     Start,
 }
 
+/*
 /// PV表示、または 文字列表示だぜ☆（＾～＾）
 pub enum PvString {
     /// 思考を開始してからのミリ秒と、読み筋。
     PV(u128, String),
     String(String),
 }
+*/
 
 /// ツリーは探索中に１つしか生成しないぜ☆（＾～＾）
 pub struct Search {

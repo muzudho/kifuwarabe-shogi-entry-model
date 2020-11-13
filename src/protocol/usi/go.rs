@@ -1,7 +1,7 @@
 use crate::{
     command_line_seek::CommandLineSeek,
     log::LogExt,
-    look_and_model::{recording::Phase, PvString, Search},
+    look_and_model::{recording::Phase, Search},
     protocol::usi::Go,
     Engine,
 };
@@ -58,6 +58,8 @@ impl Go {
         };
 
         let best_n_state = tree.iteration_deeping(engine);
+
+        /*
         // その手を選んだ理由☆（＾～＾）
         Log::print_info(&Search::info_str(
             None,
@@ -66,6 +68,7 @@ impl Go {
             best_n_state.bestmove_movement().as_ref(),
             &Some(PvString::String(best_n_state.bestmove.reason.to_string())),
         ));
+        */
         // 例: bestmove 7g7f
         // 例: bestmove resign
         Log::print_notice(&format!(
