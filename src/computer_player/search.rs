@@ -20,10 +20,15 @@ impl Search {
     pub fn iteration_deeping(&mut self, engine: &mut Engine) -> NodeState {
         self.remake_info_display();
 
+        // 5 固定にするぜ☆（＾ｑ＾）
+        // 5 でもダメだったんで 4 で☆（＾～＾） 4 は弱すぎる☆（＾～＾）
+        let max_ply = 5;
+        /*
         let max_ply = std::cmp::max(
             engine.option_max_depth,
             engine.option_max_ply - engine.position.history.length_from_the_middle() as usize,
         );
+        */
         // とりあえず 1手読み を叩き台にするぜ☆（＾～＾）
         // 初手の３０手が葉になるぜ☆（＾～＾）
         self.evaluation.before_search();
